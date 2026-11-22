@@ -1,0 +1,4547 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>本征 · 换掉载体也不变的那部分</title>
+<style>
+:root{
+  --bg:#faf8f3; --panel:#f2eee6; --fg:#20242b; --muted:#6b6a63;
+  --gold:#9a7b3f; --line:#e2dbcd; --td:#f6f3ec; --code:#f1ece1;
+  --fs:17px;
+}
+html[data-theme="dark"]{
+  --bg:#14171d; --panel:#1e232c; --fg:#e7e4dd; --muted:#9a978f;
+  --gold:#c9a45c; --line:#2c313b; --td:#1c212a; --code:#1b2028;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);
+  font-family:"Source Han Sans SC","Noto Sans CJK SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  font-size:var(--fs);line-height:1.95;-webkit-font-smoothing:antialiased}
+
+/* ---- 侧栏 ---- */
+#sidebar{position:fixed;inset:0 auto 0 0;width:288px;background:var(--panel);
+  border-right:1px solid var(--line);overflow-y:auto;padding:26px 18px 60px;z-index:9}
+#sidebar .brand{font-size:26px;font-weight:700;letter-spacing:.14em;color:var(--fg)}
+#sidebar .brand::after{content:"";display:block;width:38px;height:2px;background:var(--gold);margin:10px 0 6px}
+#sidebar .sub{font-size:12px;color:var(--muted);letter-spacing:.06em;margin-bottom:22px}
+#sidebar nav a{display:block;text-decoration:none;color:var(--muted);
+  padding:4px 8px;border-radius:5px;font-size:13.5px;line-height:1.55;
+  border-left:2px solid transparent}
+#sidebar nav a.lv1{color:var(--fg);font-weight:600;font-size:14.5px;margin-top:14px}
+#sidebar nav a:hover{background:rgba(154,123,63,.10);color:var(--fg)}
+#sidebar nav a.on{color:var(--gold);border-left-color:var(--gold);background:rgba(154,123,63,.08)}
+#sidebar .meta{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);
+  font-size:11.5px;color:var(--muted);line-height:1.8}
+
+/* ---- 正文 ---- */
+main{margin-left:288px;padding:0 48px 140px}
+article{max-width:40em;margin:0 auto}
+.bookhead{padding:78px 0 54px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.bookhead .kick{font-size:11px;letter-spacing:.32em;color:var(--gold);text-transform:uppercase}
+.bookhead h1{font-size:2.9rem;margin:.35em 0 .1em;letter-spacing:.1em;font-weight:700;border:0;padding:0}
+.bookhead .s1{font-size:1.15rem;color:var(--fg);opacity:.85;margin:.2em 0}
+.bookhead .s2{font-size:.92rem;color:var(--muted);margin:.1em 0 1.4em}
+.bookhead .how{font-size:13.5px;color:var(--muted);line-height:1.9;border-left:2px solid var(--gold);padding-left:14px}
+
+.chapter h1{font-size:1.9rem;font-weight:700;letter-spacing:.04em;
+  margin:86px 0 26px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+h2{font-size:1.22rem;font-weight:600;margin:52px 0 14px;letter-spacing:.02em}
+h3{font-size:1.02rem;font-weight:600;margin:34px 0 10px;color:var(--fg)}
+h2::before{content:"";display:inline-block;width:7px;height:7px;background:var(--gold);
+  border-radius:50%;margin-right:10px;vertical-align:middle;transform:translateY(-2px)}
+p{margin:.75em 0}
+strong{font-weight:600;color:var(--fg)}
+em{font-style:normal;color:var(--gold)}
+a{color:var(--gold)}
+ul,ol{padding-left:1.5em;margin:.7em 0}
+li{margin:.3em 0}
+hr{display:none}
+
+blockquote{margin:20px 0;padding:2px 0 2px 16px;border-left:2px solid var(--gold);color:var(--muted)}
+blockquote p{margin:.2em 0}
+blockquote.lede{background:var(--td);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;
+  padding:16px 20px;margin:18px 0 34px;font-size:13.5px;line-height:1.95;color:var(--muted)}
+blockquote.lede strong{color:var(--gold);font-weight:600}
+
+.tw{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;font-size:13.5px;line-height:1.7}
+th,td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);
+  padding:8px 11px;text-align:left;vertical-align:top}
+th:last-child,td:last-child{border-right:0}
+tr:last-child td{border-bottom:0}
+th{background:var(--td);font-weight:600;white-space:nowrap}
+td.nw{white-space:nowrap}
+tbody tr:nth-child(even){background:rgba(154,123,63,.035)}
+
+code{font-family:"Source Han Mono SC","Source Han Mono",Consolas,monospace;
+  background:var(--code);padding:.1em .35em;border-radius:3px;font-size:.87em}
+pre{background:var(--code);border:1px solid var(--line);border-radius:6px;
+  padding:14px 16px;overflow-x:auto;line-height:1.7;margin:18px 0}
+pre code{background:none;padding:0;font-size:12.5px}
+
+/* ---- 工具条 ---- */
+#tools{position:fixed;right:26px;bottom:26px;display:flex;gap:8px;z-index:20}
+#tools button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);
+  background:var(--panel);color:var(--fg);cursor:pointer;font-size:13px;
+  font-family:inherit;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+#tools button:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ---- 插图：颜色只取读本变量，随明暗主题一起切 ---- */
+figure.fig{margin:22px 0 26px;padding:12px 14px 10px;background:var(--td);
+  border:1px solid var(--line);border-radius:8px;text-align:center;overflow-x:auto}
+figure.fig svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure.fig figcaption{margin-top:8px;font-size:12px;line-height:1.7;
+  color:var(--muted);letter-spacing:.01em}
+
+.tocpage{display:none}
+
+@media (max-width:900px){
+  #sidebar{display:none}
+  main{margin-left:0;padding:0 22px 100px}
+}
+@media print{
+  #sidebar,#tools{display:none!important}
+  main{margin:0}
+  article{max-width:100%}
+}
+</style>
+</head>
+<body>
+<aside id="sidebar">
+  <div class="brand">本征</div>
+  <div class="sub">换掉载体也不变的那部分　·　判 · 落 · 写 · 检 · 长 · 退</div>
+  <nav><a class="lv1" href="#c00">00｜体系全貌——六个动作与两条横切</a>
+<a class="lv2" href="#c00-s0">§0 引子：它不解决什么</a>
+<a class="lv2" href="#c00-s1">§1 三条硬约束</a>
+<a class="lv2" href="#c00-s2">§2 六个动作</a>
+<a class="lv2" href="#c00-s3">§3 两个横切：裁剪与渐进</a>
+<a class="lv2" href="#c00-s4">§4 走一遍：从接手到交出去</a>
+<a class="lv2" href="#c00-s5">§5 这套东西自己的三条自检</a>
+<a class="lv2" href="#c00-s6">§6 它从哪里来，以及为什么能用在人身上</a>
+<a class="lv2" href="#c00-s7">§7 后面各篇的分工</a>
+<a class="lv2" href="#c00-s8">§8 结语：一条链，两把尺</a>
+<a class="lv2" href="#c00-h10">延伸阅读</a>
+<a class="lv1" href="#c01">01｜为什么会烂——三种不报警的腐坏</a>
+<a class="lv2" href="#c01-s1">§1 引子：写过、找不到、不敢信</a>
+<a class="lv2" href="#c01-s2">§2 腐坏一：失忆不是忘了，是路径断了</a>
+<a class="lv2" href="#c01-s3">§3 腐坏二：膨胀不是变多，是同等重要</a>
+<a class="lv2" href="#c01-s4">§4 腐坏三：漂移不是错，是没人报错</a>
+<a class="lv2" href="#c01-s5">§5 三种腐坏的共同点：都不报警</a>
+<a class="lv2" href="#c01-s6">§6 反直觉：越完整，烂得越快</a>
+<a class="lv2" href="#c01-s7">§7 结语：一条判据管三种腐坏</a>
+<a class="lv2" href="#c01-h8">延伸阅读</a>
+<a class="lv1" href="#c02">02｜四条不变量——最小完备的约束集</a>
+<a class="lv2" href="#c02-s1">§1 引子：为什么有的规矩活下来，有的三个月就死</a>
+<a class="lv2" href="#c02-s2">§2 不变量一：一处正文，其余只许指向</a>
+<a class="lv2" href="#c02-s3">§3 不变量二：分层落点——按寿命落，不按重要性</a>
+<a class="lv2" href="#c02-s4">§4 不变量三：每条纪律配一个能失败的检查</a>
+<a class="lv2" href="#c02-s5">§5 不变量四：渐进加载——常驻层只放路由</a>
+<a class="lv2" href="#c02-s6">§6 漂移：不变量管的是哪一件事</a>
+<a class="lv2" href="#c02-s7">§7 四条为什么是四条：最小完备</a>
+<a class="lv2" href="#c02-s8">§8 什么不是不变量</a>
+<a class="lv2" href="#c02-s9">§9 结语：不变量是删不掉的那部分</a>
+<a class="lv2" href="#c02-h10">延伸阅读</a>
+<a class="lv1" href="#c03">03｜判与落——五层落点与四个执行点</a>
+<a class="lv2" href="#c03-s1">§1 引子：没人用的规矩，有些是放错了地方</a>
+<a class="lv2" href="#c03-s2">§2 第一刀：能活多久</a>
+<a class="lv2" href="#c03-s3">§3 第二刀：谁会读</a>
+<a class="lv2" href="#c03-s4">§4 五层与三种错位</a>
+<a class="lv2" href="#c03-s5">§5 由谁执行：四个点位</a>
+<a class="lv2" href="#c03-s6">§6 能不能交给机器：两条轴</a>
+<a class="lv2" href="#c03-s7">§7 三问的顺序</a>
+<a class="lv2" href="#c03-s8">§8 结语：判错的代价是隐性的</a>
+<a class="lv2" href="#c03-h9">延伸阅读</a>
+<a class="lv1" href="#c04">04｜写——可重建性的最低条件</a>
+<a class="lv2" href="#c04-s1">§1 引子：读得懂，做不出</a>
+<a class="lv2" href="#c04-s2">§2 能被重建的最低条件</a>
+<a class="lv2" href="#c04-s3">§3 九问</a>
+<a class="lv2" href="#c04-s4">§4 最常缺的两问：来历与反例</a>
+<a class="lv2" href="#c04-s5">§5 名词锚定：让同一个词只有一个意思</a>
+<a class="lv2" href="#c04-s6">§6 写完之后的三轮减法</a>
+<a class="lv2" href="#c04-s7">§7 一条规矩的两次改写</a>
+<a class="lv2" href="#c04-s8">§8 结语：写清楚是一次交付</a>
+<a class="lv2" href="#c04-h9">延伸阅读</a>
+<a class="lv1" href="#c05">05｜检——判据的可失败性</a>
+<a class="lv2" href="#c05-s1">§1 引子：五十几条出处，没有一条被核过</a>
+<a class="lv2" href="#c05-s2">§2 红、假红、不红</a>
+<a class="lv2" href="#c05-s3">§3 硬档：能穷举的</a>
+<a class="lv2" href="#c05-s4">§4 软档：穷举不了的</a>
+<a class="lv2" href="#c05-s5">§5 存量不追：只守新增</a>
+<a class="lv2" href="#c05-s6">§6 检查自己也要被检查</a>
+<a class="lv2" href="#c05-s7">§7 什么时候不值得检</a>
+<a class="lv2" href="#c05-s8">§8 谁在判</a>
+<a class="lv2" href="#c05-s9">§9 结语：能红，才算数</a>
+<a class="lv2" href="#c05-h10">延伸阅读</a>
+<a class="lv1" href="#c06">06｜长——从产物反推结构</a>
+<a class="lv2" href="#c06-s1">§1 引子：新领域来了，先做什么</a>
+<a class="lv2" href="#c06-s2">§2 产物反推</a>
+<a class="lv2" href="#c06-s3">§3 七步</a>
+<a class="lv2" href="#c06-s4">§4 什么时候值得长一套</a>
+<a class="lv2" href="#c06-s5">§5 长歪的三种样子</a>
+<a class="lv2" href="#c06-s6">§6 从一套长出第二套</a>
+<a class="lv2" href="#c06-s7">§7 结语：先有产物，再有结构</a>
+<a class="lv2" href="#c06-h8">延伸阅读</a>
+<a class="lv1" href="#c07">07｜退——不依赖意愿的到期判定</a>
+<a class="lv2" href="#c07-s1">§1 引子：没有一条规矩被正式废除过</a>
+<a class="lv2" href="#c07-s2">§2 到期条件：不依赖意愿</a>
+<a class="lv2" href="#c07-s3">§3 三个触发</a>
+<a class="lv2" href="#c07-s4">§4 退的四档：改、并、降、删</a>
+<a class="lv2" href="#c07-s5">§5 边界：什么不能退</a>
+<a class="lv2" href="#c07-s6">§6 谁有权叫停</a>
+<a class="lv2" href="#c07-s7">§7 退的动作：四件事一起做</a>
+<a class="lv2" href="#c07-s8">§8 结语：退是维护的一部分</a>
+<a class="lv2" href="#c07-h9">延伸阅读</a>
+<a class="lv1" href="#c08">08｜裁——不变量与参数的切分</a>
+<a class="lv2" href="#c08-s1">§1 引子：换一套工具，为什么要重写</a>
+<a class="lv2" href="#c08-s2">§2 两层：不变量与参数</a>
+<a class="lv2" href="#c08-s3">§3 五个裁剪参数</a>
+<a class="lv2" href="#c08-s4">§4 换载体的五步</a>
+<a class="lv2" href="#c08-s5">§5 裁过头的两种</a>
+<a class="lv2" href="#c08-s6">§6 一条判断：能不能裁掉</a>
+<a class="lv2" href="#c08-s7">§7 结语：裁的是执行，不是原则</a>
+<a class="lv2" href="#c08-h8">延伸阅读</a>
+<a class="lv1" href="#c09">09｜渐进——阈值启动与够用判据</a>
+<a class="lv2" href="#c09-s1">§1 引子：建完没人用</a>
+<a class="lv2" href="#c09-s2">§2 启动阈值：三种来源</a>
+<a class="lv2" href="#c09-s3">§3 停在哪儿：够用的判据</a>
+<a class="lv2" href="#c09-s4">§4 阈值要留痕</a>
+<a class="lv2" href="#c09-s5">§5 节奏：一步一个闭环</a>
+<a class="lv2" href="#c09-s6">§6 过早与过晚</a>
+<a class="lv2" href="#c09-s7">§7 结语：渐进是让体系活着</a>
+<a class="lv2" href="#c09-h8">延伸阅读</a>
+<a class="lv1" href="#c10">10｜组织同构——AI 组织与人类组织的四处差异</a>
+<a class="lv2" href="#c10-s1">§1 引子：同一个毛病，两边速度不同</a>
+<a class="lv2" href="#c10-s2">§2 为什么可以这样看</a>
+<a class="lv2" href="#c10-s3">§3 角色：谁常驻、谁执行、谁校验</a>
+<a class="lv2" href="#c10-s4">§4 制度：条文与判据</a>
+<a class="lv2" href="#c10-s5">§5 审计：检查项</a>
+<a class="lv2" href="#c10-s6">§6 交接与退役</a>
+<a class="lv2" href="#c10-s7">§7 四处差异</a>
+<a class="lv2" href="#c10-s8">§8 在人类组织里怎么用</a>
+<a class="lv2" href="#c10-s9">§9 结语：看的是机制，不是口号</a>
+<a class="lv2" href="#c10-h10">延伸阅读</a>
+<a class="lv1" href="#c11">11｜三种产物——形态决定落点</a>
+<a class="lv2" href="#c11-s1">§1 引子：先落差异，再落方法</a>
+<a class="lv2" href="#c11-s2">§2 按版本演进：落点在版本</a>
+<a class="lv2" href="#c11-s3">§3 按批出结论：先能红，再谈全</a>
+<a class="lv2" href="#c11-s4">§4 按表对齐：判在口径</a>
+<a class="lv2" href="#c11-s5">§5 三种产物的共同点</a>
+<a class="lv2" href="#c11-s6">§6 每种产物最容易崩的一环</a>
+<a class="lv2" href="#c11-s7">§7 结语：先问产物，再问方法</a>
+<a class="lv2" href="#c11-h8">延伸阅读</a>
+<a class="lv1" href="#c12">12｜对照——机制在先，名字在后</a>
+<a class="lv2" href="#c12-s1">§1 引子：先有机制，再找名字</a>
+<a class="lv2" href="#c12-s2">§2 退：德鲁克的「有组织地放弃」</a>
+<a class="lv2" href="#c12-s3">§3 落：PMBOK 的「组织过程资产」</a>
+<a class="lv2" href="#c12-s4">§4 长：NPDP 的产品生命周期</a>
+<a class="lv2" href="#c12-s5">§5 检：Six Sigma 的控制图</a>
+<a class="lv2" href="#c12-s6">§6 渐进：CMMI 的成熟度等级</a>
+<a class="lv2" href="#c12-s7">§7 目标与度量：OKR、KPI</a>
+<a class="lv2" href="#c12-s8">§8 对照之后：本征的位置</a>
+<a class="lv2" href="#c12-s9">§9 结语：名字找得到，位置才站得住</a>
+<a class="lv2" href="#c12-h10">延伸阅读</a>
+<a class="lv1" href="#c13">13｜入表——数据质量的外部验收</a>
+<a class="lv2" href="#c13-s0">§0 引子：算得出的账</a>
+<a class="lv2" href="#c13-s1">§1 入表考的是服务，不是文档</a>
+<a class="lv2" href="#c13-s2">§2 质量的三种来历：做出来的、转出来的、补出来的</a>
+<a class="lv2" href="#c13-s3">§3 体系在业务里留下的是哪几种痕迹</a>
+<a class="lv2" href="#c13-s4">§4 体系管不到的那一半</a>
+<a class="lv2" href="#c13-s5">§5 反面：账会反过来塑造体系</a>
+<a class="lv2" href="#c13-s6">§6 四条边界</a>
+<a class="lv2" href="#c13-s7">§7 检测也是产出的一环</a>
+<a class="lv2" href="#c13-s8">§8 结语：标尺，不是目的</a>
+<a class="lv2" href="#c13-h10">延伸阅读</a>
+<a class="lv1" href="#c14">14｜速查卡——一页纸的六个动作</a>
+<a class="lv2" href="#c14-s0">§0 引子：什么时候翻这一页</a>
+<a class="lv2" href="#c14-s1">§1 六个动作</a>
+<a class="lv2" href="#c14-s2">§2 五层落点</a>
+<a class="lv2" href="#c14-s3">§3 三条红线 [2]</a>
+<a class="lv2" href="#c14-s4">§4 五问判定（放不放得进去）</a>
+<a class="lv2" href="#c14-s5">§5 到期与退役 [3]</a>
+<a class="lv2" href="#c14-s6">§6 三条自检</a>
+<a class="lv2" href="#c14-s7">§7 抗漂一问</a>
+<a class="lv2" href="#c14-s8">§8 结语：一页的用法</a>
+<a class="lv2" href="#c14-h10">延伸阅读</a></nav>
+  <div class="meta">15 篇　·　52,189 字（出版折算）<br>wUwproject　2026 年 11 月</div>
+</aside>
+<main>
+<article>
+<header class="bookhead">
+  <div class="kick">A BOOK ON CONTENT DECAY</div>
+  <h1>本征</h1>
+  <p class="s1">换掉载体也不变的那部分</p>
+  <p class="s2">判 · 落 · 写 · 检 · 长 · 退</p>
+  <p class="how">一篇入口（00）＋ 五篇打底（01–05）＋ 四篇延展（06–09）＋ 三篇投射（10–12）＋ 一篇验收（13）＋ 一页速查（14）。<br>
+  左侧目录可直接跳；右上角三个按钮管主题、字号、回顶。同一份文件打印出来就是 PDF 的正文源。</p>
+</header>
+<section class="chapter" id="c00">
+<!--
+SPDX-License-Identifier: CC-BY-SA-4.0
+Copyright (c) 2026 wUwproject
+Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+See https://creativecommons.org/licenses/by-sa/4.0/ for details.
+-->
+
+<h1 id="c00">00｜体系全貌——六个动作与两条横切</h1>
+<h2 id="c00-s0">§0 引子：它不解决什么</h2>
+<p>先把边界划清。</p>
+<ul>
+<li>它不替人做判断。它只保证：做出的判断，在本人忘了之后仍然有效。</li>
+<li>它不产生知识。它管的是知识的<strong>存放、传递、校验、报废</strong>，不管知识从哪来。</li>
+<li>它不追求完整。它追求<strong>在任何时刻都能被一个没参与的人接着走</strong>。</li>
+<li>它不保证产物被外部认账。它管前一半：产物的每一步能不能沿链指回一条原始记录；管不了后一半：确认与流入。后一半在 13。</li>
+</ul>
+<p>四条否定合起来，就是它的定位：<strong>一套关于「规则如何存活」的工程，不是一套关于「怎么想」的哲学。</strong></p>
+<p>它和「制度手册」「知识库」的区别也在这里：手册求全，知识库求多，这套东西求<strong>可交接</strong>。全和多都能堆出来，可交接不能——它要求每一句都能被一个陌生人接住。</p>
+<h3>怎么读：哪部分是骨架，哪部分是示例</h3>
+<p>书里那些具体形态——六个动作、五层落点、九问、七步、判据的四个位置——都取自<strong>一套已经运行过的体系</strong>。它们证明这条路走得通，不构成一条必须如此的规定。</p>
+<p>读的时候把三样东西分开：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th></th>
+<th>是什么</th>
+<th>怎么用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>骨架</strong></td>
+<td>删掉专有名词仍然成立的命题：不变量、判据的形态、失效的机制</td>
+<td>这是要带走的部分</td>
+</tr>
+<tr>
+<td><strong>筋</strong></td>
+<td>机制之间的牵连：为什么判要在写之前，为什么检查要能红</td>
+<td>这是骨架之所以长成这样的理由</td>
+</tr>
+<tr>
+<td><strong>示例</strong></td>
+<td>层数、条数、阈值、检查频率、某个值怎么记</td>
+<td><strong>随自己的场景填</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>两处的界线要划准：§1 的三条硬约束，以及篇 02 的四条不变量，属于骨架，不在示例之列——它们是关于世界怎么运转的断言，换个场景也成立。而「六个动作」这一划分本身是示例：动作之间的<strong>先后</strong>（判在写之前、检跟在写之后）是筋，分成六段还是五段、叫什么名字，是肉。</p>
+<p>举例：本书说常驻层要小，理由是一页读完还记得住的条目有限；小到几条，取决于手上是什么、谁在读。书里给的那个数是一个样本，不是标准。</p>
+<p>同一条机制，做数据的人和做版本的人填出来的东西不会一样，也不必一样——<strong>书负责说清「该在哪一格做决定」，填什么由做的人定。</strong> 凡是读到具体取值的段落，都可以当成一个填过的样本看。</p>
+<h2 id="c00-s1">§1 三条硬约束</h2>
+<p>这套方法建在三个不可协商的事实上。不承认这三条，后面六个动作全是多余的。</p>
+<p><strong>约束一：带宽有限。</strong>
+执行体的注意力是有限预算。人一次能同时守住的条目有限，机器一次能读进来的内容也有限。差别在数量级，不在性质（机制性推断，由约束一的失效形态推出，非实测）。任何要求「全部记住」的安排，多数会撞上一次超载。</p>
+<p><strong>约束二：副本会静默失效。</strong>
+同一句话存在两处，改了一处、忘了另一处，不会报错。它不吵、不红、不报警，只在用到的那天显形。它的代价拖到用到那天才付：<strong>错的时候没有声音。</strong></p>
+<p><strong>约束三：执行体会换。</strong>
+人会走、会忘、会改立场；机器会换版本、换供应方、丢上下文。任何「靠某个人记得」的安排，寿命等于这个人在岗的时间。</p>
+<p>三条约束各推出一个动作，一个都不能省：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>约束</th>
+<th>推出的动作</th>
+<th>不做的后果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>带宽有限</td>
+<td>判、落（分层）</td>
+<td>层数膨胀，最后谁都不看</td>
+</tr>
+<tr>
+<td>副本静默失效</td>
+<td>写（唯一正文）</td>
+<td>两处口径打架，且没人知道</td>
+</tr>
+<tr>
+<td>执行体会换</td>
+<td>检、长、退（可检、可长、可废）</td>
+<td>换一个人，全部重来</td>
+</tr>
+</tbody>
+</table></div>
+<p>（这组对应关系是机制性推断：从三条约束各自的失效形态推出，落地的依据是 §4 那三个场景的实际记录 [1]–[6]，不是实验验证的结果。）</p>
+<p>三条约束合起来是同一件事：<strong>它们都让状态在没有锚的地方随距离走远。</strong> 带宽有限，读不到开头定的约；副本失效，改不到另一处；执行体一换，记不住原来的口径。这件事有一个统一的名字——<strong>漂移</strong>：偏离随距离累积，单看每一次都合理，加起来才偏。四种距离（上下文、工期、次数、交接）与一条判据，在 02 §6。</p>
+<h2 id="c00-s2">§2 六个动作</h2>
+<!--FIG:BEGIN F00-ISO-->
+<figure class="fig" data-fig="F00-ISO">
+<svg viewBox="150 30 480 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="六动作等距工位，两条横切管线穿过工位">
+<polygon points="300.0,95.0 591.0,263.0 481.9,326.0 190.9,158.0" fill="var(--code)" stroke="var(--line)" stroke-width="1.2"/>
+<polyline points="272.7,117.0 409.1,195.8 552.8,278.8" fill="none" stroke="var(--gold)" stroke-width="3" stroke-linecap="round"/>
+<polyline points="232.7,140.2 369.1,218.9 512.8,301.8" fill="none" stroke="var(--muted)" stroke-width="2.5" stroke-dasharray="7 6" stroke-linecap="round"/>
+<text x="0" y="0" transform="matrix(36.3731,21.0000,-36.3731,21.0000,408.76,168.71)" font-size="0.3571" fill="var(--gold)" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif" text-anchor="middle" dominant-baseline="middle">裁剪</text>
+<text x="0" y="0" transform="matrix(36.3731,21.0000,-36.3731,21.0000,325.46,216.80)" font-size="0.3571" fill="var(--muted)" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif" text-anchor="middle" dominant-baseline="middle">渐进</text>
+<polygon points="241.8,137.8 278.2,158.8 278.2,135.7 241.8,114.7" fill="var(--panel)" stroke="var(--line)" stroke-width="1"/>
+<polygon points="301.5,145.4 278.2,158.8 278.2,135.7 301.5,122.3" fill="var(--td)" stroke="var(--line)" stroke-width="1"/>
+<polygon points="265.1,101.3 301.5,122.3 278.2,135.7 241.8,114.7" fill="var(--bg)" stroke="var(--gold)" stroke-width="1.4"/>
+<text x="0" y="0" transform="matrix(36.3731,21.0000,-36.3731,21.0000,272.36,118.10)" font-size="0.3571" fill="var(--fg)" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif" text-anchor="middle" dominant-baseline="middle">判</text>
+<polygon points="288.4,164.7 324.7,185.7 324.7,162.6 288.4,141.6" fill="var(--panel)" stroke="var(--line)" stroke-width="1"/>
+<polygon points="348.0,172.3 324.7,185.7 324.7,162.6 348.0,149.2" fill="var(--td)" stroke="var(--line)" stroke-width="1"/>
+<polygon points="311.6,128.2 348.0,149.2 324.7,162.6 288.4,141.6" fill="var(--bg)" stroke="var(--gold)" stroke-width="1.4"/>
+<text x="0" y="0" transform="matrix(36.3731,21.0000,-36.3731,21.0000,318.91,144.98)" font-size="0.3571" fill="var(--fg)" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif" text-anchor="middle" dominant-baseline="middle">落</text>
+<polygon points="334.9,191.6 371.3,212.6 371.3,189.5 334.9,168.5" fill="var(--panel)" stroke="var(--line)" stroke-width="1"/>
+<polygon points="394.6,199.2 371.3,212.6 371.3,189.5 394.6,176.1" fill="var(--td)" stroke="var(--line)" stroke-width="1"/>
+<polygon points="358.2,155.1 394.6,176.1 371.3,189.5 334.9,168.5" fill="var(--bg)" stroke="var(--gold)" stroke-width="1.4"/>
+<text x="0" y="0" transform="matrix(36.3731,21.0000,-36.3731,21.0000,365.47,171.86)" font-size="0.3571" fill="var(--fg)" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif" text-anchor="middle" dominant-baseline="middle">写</text>
+<polygon points="381.5,218.5 417.8,239.5 417.8,216.4 381.5,195.4" fill="var(--panel)" stroke="var(--line)" stroke-width="1"/>
+<polygon points="441.1,226.0 417.8,239.5 417.8,216.4 441.1,202.9" fill="var(--td)" stroke="var(--line)" stroke-width="1"/>
+<polygon points="404.8,181.9 441.1,202.9 417.8,216.4 381.5,195.4" fill="var(--bg)" stroke="var(--gold)" stroke-width="1.4"/>
+<text x="0" y="0" transform="matrix(36.3731,21.0000,-36.3731,21.0000,412.03,198.74)" font-size="0.3571" fill="var(--fg)" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif" text-anchor="middle" dominant-baseline="middle">检</text>
+<polygon points="428.0,245.4 464.4,266.4 464.4,243.3 428.0,222.3" fill="var(--panel)" stroke="var(--line)" stroke-width="1"/>
+<polygon points="487.7,252.9 464.4,266.4 464.4,243.3 487.7,229.8" fill="var(--td)" stroke="var(--line)" stroke-width="1"/>
+<polygon points="451.3,208.8 487.7,229.8 464.4,243.3 428.0,222.3" fill="var(--bg)" stroke="var(--gold)" stroke-width="1.4"/>
+<text x="0" y="0" transform="matrix(36.3731,21.0000,-36.3731,21.0000,458.59,225.62)" font-size="0.3571" fill="var(--fg)" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif" text-anchor="middle" dominant-baseline="middle">长</text>
+<polygon points="474.6,272.2 511.0,293.2 511.0,270.1 474.6,249.1" fill="var(--panel)" stroke="var(--line)" stroke-width="1"/>
+<polygon points="534.2,279.8 511.0,293.2 511.0,270.1 534.2,256.7" fill="var(--td)" stroke="var(--line)" stroke-width="1"/>
+<polygon points="497.9,235.7 534.2,256.7 511.0,270.1 474.6,249.1" fill="var(--bg)" stroke="var(--gold)" stroke-width="1.4"/>
+<text x="0" y="0" transform="matrix(36.3731,21.0000,-36.3731,21.0000,505.14,252.50)" font-size="0.3571" fill="var(--fg)" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif" text-anchor="middle" dominant-baseline="middle">退</text>
+</svg>
+<figcaption>图 1 · 六个动作是一条工位链，裁剪与渐进横切其上（图只画关系，判据与归属见正文）</figcaption>
+</figure>
+<!--FIG:END F00-ISO-->
+<p>先看全表，再看每一个。</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>动作</th>
+<th>一句话问句</th>
+<th>产出</th>
+<th>失败的典型长相</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>①</td>
+<td>判</td>
+<td>这条东西能活多久、谁会读？</td>
+<td>一句话的落点判定</td>
+<td>全堆在一层，标准退化成「重要不重要」</td>
+</tr>
+<tr>
+<td>②</td>
+<td>落</td>
+<td>不读别的，只读这页能不能正确行动？</td>
+<td>一页路由与红线</td>
+<td>常驻层写成缩微版全书</td>
+</tr>
+<tr>
+<td>③</td>
+<td>写</td>
+<td>没参与的人只读这篇，能不能做出同样的东西？</td>
+<td>一份可重建的规范</td>
+<td>读得懂，做不出</td>
+</tr>
+<tr>
+<td>④</td>
+<td>检</td>
+<td>这条判据自己红过吗？</td>
+<td>一组能失败的检查</td>
+<td>全是「应当」「注意」，一条也红不了</td>
+</tr>
+<tr>
+<td>⑤</td>
+<td>长</td>
+<td>用这一套，能不能长出下一套？</td>
+<td>一条从零到有的工序</td>
+<td>先建空结构，再找内容</td>
+</tr>
+<tr>
+<td>⑥</td>
+<td>退</td>
+<td>今天还会开始做它吗？</td>
+<td>一张到期清单</td>
+<td>只增不减</td>
+</tr>
+</tbody>
+</table></div>
+<h3>① 判：这条东西该不该留、该放哪一层</h3>
+<p><strong>分层依据不是「重要不重要」，是「能活多久 × 谁会读」。</strong></p>
+<p>「重要」是个会膨胀的词。今天重要的，明天更多；按重要分层，条目会一路挤向上层，层就废了。寿命和读者是硬的：一条规矩能用三年还是三个月，是能估的；谁会读它，是能点出来的。</p>
+<p>五层够用。判断时从上往下问，第一个「是」就停：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>层</th>
+<th>判据</th>
+<th>寿命</th>
+<th>读者</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L0 常驻</td>
+<td>不读任何别的东西也必须守</td>
+<td>按年</td>
+<td>每次开工的第一个读者</td>
+</tr>
+<tr>
+<td>L1 通用</td>
+<td>换个项目还成立</td>
+<td>跨项目</td>
+<td>做同类任务的人</td>
+</tr>
+<tr>
+<td>L2 项目</td>
+<td>只在这个项目里真</td>
+<td>随项目</td>
+<td>读这个项目的人</td>
+</tr>
+<tr>
+<td>L3 会话</td>
+<td>只在这一轮里有效</td>
+<td>一次会话</td>
+<td>复盘时的人</td>
+</tr>
+<tr>
+<td>L4 就地</td>
+<td>只对读这份材料的人有效</td>
+<td>随件</td>
+<td>拿着这份材料的人</td>
+</tr>
+</tbody>
+</table></div>
+<p>第五层容易漏。它管的是一轮里成立、下一轮就该重判的东西：这次为什么破例、今天为什么这么定。漏掉它的后果落在别处：<strong>临时判断被写进通用层</strong>——三个月后没人知道它当初只是一次例外，于是例外变成了常例。</p>
+<p>（这五层的划分与顺序是经验刻画：取自一套已运行体系的分层实践 [1]，其正文二十余篇、十几万字，常驻层压到几条以内；不是文献结论。分几层、几条，随场景定。）</p>
+<p><strong>判的顺序不能反</strong>：先问「它能不能活过这个项目」，再问「它重要不重要」。反过来，条目会一路被判成重要。</p>
+<p><strong>失败长相</strong>：条目一路堆进常驻层，层越来越厚，最后没人读完；或者相反，全往就地层扔，等于没有规矩。</p>
+<h3>② 落：常驻层放什么</h3>
+<p><strong>常驻层只放两样：去哪儿找，什么不许做。</strong> 前者是路由，后者是红线。其余一律按需取。</p>
+<p>判据很硬：<strong>不读任何别的东西，只读这一页，能不能正确行动？</strong> 能，就够了；不能，说明缺一条路由或一条红线；超了，说明把细节塞进了常驻层。</p>
+<p>两个量化约束，防止它慢慢变胖：条目数有上限——超过就该合并或下移；单条有长度上限——超过说明在讲道理，不是在下指令。（条目数上限的具体值与来历，见既有体系的骨架规范 [2]。）</p>
+<p><strong>失败长相</strong>：把常驻层写成缩微版全书。看起来很全，实际没人读完，等于零。</p>
+<h3>③ 写：写成别人能重建的</h3>
+<p>判据一句话：<strong>一个没参与的人，只读这一篇，能不能做出同样的东西？</strong> 做不出，就是没写清。</p>
+<p>一条能被重建的规范要回答九个问题，缺一个就会在别人手里走样 [3]：</p>
+<ol>
+<li>管什么、不管什么（边界）</li>
+<li>什么时候触发（条件）</li>
+<li>和其他规矩冲突时听谁的（优先级）</li>
+<li>谁执行（角色）</li>
+<li>做到什么程度算对（判据）</li>
+<li>阈值凭什么这么定（来历）</li>
+<li>什么情况不算（反例）</li>
+<li>错了怎么发现（检查）</li>
+<li>什么时候该废（到期条件）</li>
+</ol>
+<p>九问里常缺的是第 6 和第 7。缺「阈值来历」，下一个人不知道能不能改；缺「反例」，边界会被一路推宽。（九问的完整写法与分组见 04。）</p>
+<p><strong>失败长相</strong>：读得懂，做不出。文字流畅，但没有一个能照着做的动作。</p>
+<h3>④ 检：让规则能红</h3>
+<p><strong>每条纪律配一个能失败的检查。红不了的规定，等于没有规定。</strong>（两档分工与检查项的设计见 [4]。）</p>
+<p>判据：<strong>这条判据自己红过吗？</strong> 从来没红过的判据，只是装饰。</p>
+<p>两档，必须分开：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>档</th>
+<th>管什么</th>
+<th>谁判</th>
+<th>要求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>硬</td>
+<td>格式、计数、引用是否存在、字段是否齐全</td>
+<td>机器</td>
+<td>必须给出可执行的检查</td>
+</tr>
+<tr>
+<td>软</td>
+<td>说得对不对、读者是谁、判断是否合理</td>
+<td>人</td>
+<td>必须给出问句和口径，不许假装机器能判</td>
+</tr>
+</tbody>
+</table></div>
+<p>软档也要检，换的是形式：问句加口径。写「注意措辞」是废话；写「读这段的人，能不能在不问作者的情况下做出下一步」，才是判据。</p>
+<p><strong>失败长相</strong>：满篇「应当」「建议」「尽可能」，一条也红不了；或者反过来，把语义判断硬塞给机器，检出一堆假红，最后没人信。</p>
+<h3>⑤ 长：新领域从零长一套</h3>
+<p><strong>顺序要从产物倒推</strong>：先说清要交付什么，再倒推要经过哪几道工序，再给每道工序配一条判据 [6]。</p>
+<p>顺序不能倒。先建结构再找内容，建出来的是一堆空壳；空壳会被当成「已经准备好了」，然后一直空着。</p>
+<p>判据：<strong>用这一套，能不能长出下一套？</strong> 能，说明这套东西是生成性的；不能，说明它只是这个领域的专用说明书。</p>
+<p><strong>失败长相</strong>：目录建得比内容快。层级先于内容的，多是还没干活。</p>
+<h3>⑥ 退：到期就废</h3>
+<p><strong>问句是：如果不是已经在做，今天还会开始做它吗？</strong> 答案是不会，它就该退——哪怕它还在产生价值，哪怕当初投入很多。</p>
+<p>三个触发，任一条成立就该处理：</p>
+<ul>
+<li>它还有几年好日子，过了那几年就会过时——准备替换的时点在那之前，不是在那天</li>
+<li>留着的理由只有「已经投入过」——沉没成本不是理由</li>
+<li>它正在挤占新东西的位置——占着地方就是成本</li>
+</ul>
+<p>判据：<strong>有没有一个到期条件，且到期的判定不依赖当事人的意愿？</strong> 依赖意愿的到期条件，等于没有。</p>
+<p><strong>失败长相</strong>：只增不减。「暂时留着」的东西会一直留着，直到整个体系重得没人愿意维护，然后一次性推倒——前面的积累一起作废。</p>
+<h3>为什么是这个顺序</h3>
+<p>六个动作连成一条有方向的链：</p>
+<pre><code class="language-text">判 → 落 → 写 → 检        一次成型，后一环吃前一环的产物
+        ↓
+长 → 退                   持续演化，吃的是前四环的产物
+裁剪 / 渐进               横穿全部，随时介入
+</code></pre>
+<p><strong>判必须在最前</strong>：落点判错，后面写得再清楚也是写在错的地方，检得再严也是守错的地方。这一环错了，后面五环的努力全部作废，而且不会报错——浪费不显形。</p>
+<p><strong>落必须在写之前</strong>：先定「哪一页只放什么」，再动笔。反过来，写完再想放哪，容易出现同一句话两处都有，直接违反唯一正文。</p>
+<p><strong>检必须紧跟在写后面</strong>：写完立刻配判据。拖久了就配不出来——写的时候知道哪里心虚，隔一周只记得「当时写得挺顺」。</p>
+<p><strong>长和退在最后</strong>：它们吃的是前面四环的产物。手上没有判定表、没有判据、没有到期条件，就谈不上「长出新的一套」，也谈不上「该退哪一个」。</p>
+<h2 id="c00-s3">§3 两个横切：裁剪与渐进</h2>
+<!--FIG:BEGIN F00-TOPO-->
+<figure class="fig" data-fig="F00-TOPO">
+<svg viewBox="0 0 680 232" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="六动作主干与裁剪、渐进两条横贯带，每个动作都有触点">
+<defs><marker id="bz" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="var(--gold)"/></marker></defs>
+<rect x="46" y="44" width="588" height="140" rx="8" fill="none" stroke="var(--line)"/>
+<rect x="52" y="48" width="584" height="22" rx="6" fill="var(--gold)" fill-opacity=".08" stroke="var(--gold)" stroke-width="1.6"/>
+<rect x="52" y="160" width="584" height="22" rx="6" fill="var(--muted)" fill-opacity=".08" stroke="var(--muted)" stroke-width="1.6" stroke-dasharray="7 6"/>
+<text x="62.0" y="64.0" font-size="12" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">裁剪</text>
+<text x="62.0" y="176.0" font-size="12" fill="var(--muted)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">渐进</text>
+<circle cx="107" cy="70" r="3" fill="var(--gold)"/>
+<line x1="107" y1="70" x2="107" y2="88" stroke="var(--gold)" stroke-width="1.4" opacity=".75"/>
+<circle cx="107" cy="160" r="3" fill="var(--muted)"/>
+<line x1="107" y1="146" x2="107" y2="160" stroke="var(--muted)" stroke-width="1.4" stroke-dasharray="3 3" opacity=".75"/>
+<circle cx="203" cy="70" r="3" fill="var(--gold)"/>
+<line x1="203" y1="70" x2="203" y2="88" stroke="var(--gold)" stroke-width="1.4" opacity=".75"/>
+<circle cx="203" cy="160" r="3" fill="var(--muted)"/>
+<line x1="203" y1="146" x2="203" y2="160" stroke="var(--muted)" stroke-width="1.4" stroke-dasharray="3 3" opacity=".75"/>
+<circle cx="299" cy="70" r="3" fill="var(--gold)"/>
+<line x1="299" y1="70" x2="299" y2="88" stroke="var(--gold)" stroke-width="1.4" opacity=".75"/>
+<circle cx="299" cy="160" r="3" fill="var(--muted)"/>
+<line x1="299" y1="146" x2="299" y2="160" stroke="var(--muted)" stroke-width="1.4" stroke-dasharray="3 3" opacity=".75"/>
+<circle cx="395" cy="70" r="3" fill="var(--gold)"/>
+<line x1="395" y1="70" x2="395" y2="88" stroke="var(--gold)" stroke-width="1.4" opacity=".75"/>
+<circle cx="395" cy="160" r="3" fill="var(--muted)"/>
+<line x1="395" y1="146" x2="395" y2="160" stroke="var(--muted)" stroke-width="1.4" stroke-dasharray="3 3" opacity=".75"/>
+<circle cx="491" cy="70" r="3" fill="var(--gold)"/>
+<line x1="491" y1="70" x2="491" y2="88" stroke="var(--gold)" stroke-width="1.4" opacity=".75"/>
+<circle cx="491" cy="160" r="3" fill="var(--muted)"/>
+<line x1="491" y1="146" x2="491" y2="160" stroke="var(--muted)" stroke-width="1.4" stroke-dasharray="3 3" opacity=".75"/>
+<circle cx="587" cy="70" r="3" fill="var(--gold)"/>
+<line x1="587" y1="70" x2="587" y2="88" stroke="var(--gold)" stroke-width="1.4" opacity=".75"/>
+<circle cx="587" cy="160" r="3" fill="var(--muted)"/>
+<line x1="587" y1="146" x2="587" y2="160" stroke="var(--muted)" stroke-width="1.4" stroke-dasharray="3 3" opacity=".75"/>
+<rect x="66" y="88" width="82" height="58" rx="9" fill="var(--panel)" stroke="var(--line)" stroke-width="1.2"/>
+<text x="107.0" y="112.0" font-size="17" fill="var(--fg)" text-anchor="middle" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">判</text>
+<text x="107.0" y="134.0" font-size="11" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">活多久</text>
+<path d="M150 117 L160 117" stroke="var(--gold)" stroke-width="1.6" marker-end="url(#bz)"/>
+<rect x="162" y="88" width="82" height="58" rx="9" fill="var(--panel)" stroke="var(--line)" stroke-width="1.2"/>
+<text x="203.0" y="112.0" font-size="17" fill="var(--fg)" text-anchor="middle" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">落</text>
+<text x="203.0" y="134.0" font-size="11" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">一页路由</text>
+<path d="M246 117 L256 117" stroke="var(--gold)" stroke-width="1.6" marker-end="url(#bz)"/>
+<rect x="258" y="88" width="82" height="58" rx="9" fill="var(--panel)" stroke="var(--line)" stroke-width="1.2"/>
+<text x="299.0" y="112.0" font-size="17" fill="var(--fg)" text-anchor="middle" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">写</text>
+<text x="299.0" y="134.0" font-size="11" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">可重建</text>
+<path d="M342 117 L352 117" stroke="var(--gold)" stroke-width="1.6" marker-end="url(#bz)"/>
+<rect x="354" y="88" width="82" height="58" rx="9" fill="var(--panel)" stroke="var(--line)" stroke-width="1.2"/>
+<text x="395.0" y="112.0" font-size="17" fill="var(--fg)" text-anchor="middle" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">检</text>
+<text x="395.0" y="134.0" font-size="11" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">能红吗</text>
+<path d="M438 117 L448 117" stroke="var(--gold)" stroke-width="1.6" marker-end="url(#bz)"/>
+<rect x="450" y="88" width="82" height="58" rx="9" fill="var(--panel)" stroke="var(--line)" stroke-width="1.2"/>
+<text x="491.0" y="112.0" font-size="17" fill="var(--fg)" text-anchor="middle" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">长</text>
+<text x="491.0" y="134.0" font-size="11" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">长新套</text>
+<path d="M534 117 L544 117" stroke="var(--gold)" stroke-width="1.6" marker-end="url(#bz)"/>
+<rect x="546" y="88" width="82" height="58" rx="9" fill="var(--panel)" stroke="var(--line)" stroke-width="1.2"/>
+<text x="587.0" y="112.0" font-size="17" fill="var(--fg)" text-anchor="middle" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">退</text>
+<text x="587.0" y="134.0" font-size="11" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">到期退</text>
+<text x="340.0" y="214.0" font-size="12" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">六动作是主干，裁剪与渐进横切每一步</text>
+</svg>
+<figcaption>图 2 · 六动作主干与两条横切（图只画关系，判据与归属见正文）</figcaption>
+</figure>
+<!--FIG:END F00-TOPO-->
+<p>六个动作是主干，还有两条约束横着穿过每一个动作。</p>
+<p><strong>裁剪：每一环都分两层——不变量与参数 [5]。</strong>
+不变量是换掉载体也不变的部分；参数是随载体、随规模变的部分。换人、换工具、换平台时，只换参数，不动不变量。</p>
+<p>判据一句话：<strong>把专有名词逐条删掉，这条还成立吗？</strong> 成立的部分是不变量；剩下的就是参数，可以按现场改。</p>
+<p><strong>渐进：每一环都有启动阈值。</strong>
+不到规模不做；做了要留下能查的触发记录。</p>
+<p>判据：<strong>现在做这件事，是因为到了阈值，还是因为看起来该做？</strong> 这套书见到的多数情形是后者——一次性把各步全建起来，建完没人用，然后以「这套东西没用」收场。这套书见到的那几次，都这样收场。</p>
+<h2 id="c00-s4">§4 走一遍：从接手到交出去</h2>
+<p>抽象讲完，走一遍才有意义。假设接手一摊陌生的活，要把它管起来。</p>
+<p><strong>第一步，判。</strong> 把手上的东西分三类：不读也必须守的（几条红线）、换个项目还成立的（方法）、只在这里真的（参数）。产出是一张三层清单，每层不超过一页。</p>
+<p><strong>第二步，落。</strong> 把红线压到一页，只写「什么不许做、去哪儿找」。写完自检一次：只读这一页，新人能不能不犯大错？不能就补，超了就删。</p>
+<p><strong>第三步，写。</strong> 给每条红线补上九问，尤其补「阈值来历」和「什么情况不算」。这一步最花时间，也最值钱——后面的交接都靠它。</p>
+<p><strong>第四步，检。</strong> 能机器查的写成检查（字段齐不齐、编号存不存在、口径对不对得上）；不能的写成问句，指定谁问、多久问一次。</p>
+<p><strong>第五步，长。</strong> 第一个新场景进来时，不新建结构，先问「它属于哪一类」。落不下，才加一层；加一层要写下触发理由。</p>
+<p><strong>第六步，退。</strong> 给每条规矩写到期条件，并指定谁有权删。没有到期条件的规矩，不许进门。</p>
+<p><strong>走完之后应该得到四样东西</strong>：一页红线、一份判定表、一组检查、一张到期清单。四样，不多。如果走完得到十样，说明前五步都在堆东西，没在收敛。</p>
+<p><strong>两种走错的走法</strong>，往往比不走更糟：</p>
+<ul>
+<li><strong>只做前三步</strong>：判了、落了、写了，没检、没退。结果是漂亮的规范——没人验证过，也没人清理过。半年后它变成「大家都知道、但没人照做」的那类东西。</li>
+<li><strong>六步同时铺开</strong>：每步都开个头，每步都不到底。看着齐全，实际没有一样能用——因为没有一样走过完整的「写→检」闭环。</li>
+</ul>
+<p>判断标准只有一条：<strong>四样产出里，有没有一样是今天就能直接拿去用的？</strong> 没有，就是走错了。</p>
+<p><strong>一组对照</strong>，三个场景都取自这套体系自己的生产记录：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>形态</th>
+<th>做法</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>正例</td>
+<td>二十余篇单篇 → 二十余篇正文 → 若干篇总纲，三层逐级压缩，编号逐层对应</td>
+<td>十几万字压到一万多字，任一结论可逐级回溯到单篇</td>
+</tr>
+<tr>
+<td>反例</td>
+<td>单篇规范的检测项增了一项，只改了规范文件，存量二十余篇的脚注仍写旧项数</td>
+<td>两套口径并存两个多月，没有任何检查报错</td>
+</tr>
+<tr>
+<td>半例</td>
+<td>五层结构建好了，日常只用到两层：常驻与项目</td>
+<td>层数够用，中间三层空着——结构到位，路由没接</td>
+</tr>
+</tbody>
+</table></div>
+<p>正例说明「唯一正文 + 编号映射」能保住可追溯性；反例说明改了一处、没改另一处，系统不会自己报错；半例说明结构建起来不等于用起来——<strong>层在那儿，路由没接，等于只用了两层。</strong></p>
+<p>（三条为经验刻画，取自本系列生产记录，作一致性说明，不作独立证据。）</p>
+<h2 id="c00-s5">§5 这套东西自己的三条自检</h2>
+<p>它是拿来管规则的，所以第一件事是管住自己。三条：</p>
+<ol>
+<li><strong>同一句话，有没有两个完整版？</strong> 有，就删一个，另一处只留指向。</li>
+<li><strong>每条纪律，有没有能失败的检查？</strong> 没有，就补；补不出，就降级成人判并写明问句。</li>
+<li><strong>每条规矩，有没有到期条件？</strong> 没有，就不许进门。</li>
+</ol>
+<p>三条过不了，说明这套东西自己没守自己的规矩——那么其余各句也就失去了依据。<strong>这是它和经验之谈的分界。</strong>（用规范约束规范自身，是这套体系最早跑通的一件事 [7]。）</p>
+<p>（三条自检是经验刻画，取自这套体系自己的复核记录：同一句话两个完整版、判据写不出检查、规矩没有到期条件，三类问题各出现过不止一次。）</p>
+<h2 id="c00-s6">§6 它从哪里来，以及为什么能用在人身上</h2>
+<p>这套东西最早是在一个 AI 组织里长出来的。</p>
+<p>那个组织里的角色、条文、审计、交接、退役，全部写在明面上：谁常驻、谁执行、谁校验，一条一条写着；什么算错，有检查；什么该废，有触发条件。因为它没有「大家都懂」这一层，所以每一样都得写成明文。<strong>显式值钱的地方在这里：没有「大家都懂」那一层，换个人也不用重新解释。</strong></p>
+<p>人类组织里，同样的机制大多存在——分工、制度、审计、交接、退休——但它们隐在默契里：慢、散、不可观测。同一处失效，在那边当轮就卡住；在人这边，往往要等到有人问起才显形（本文推断：由「隐性机制没有检查项」推出，不构成对任何具体组织的判断）。</p>
+<p>所以用法是<strong>单向</strong>的：先看清那条机制在 AI 组织里怎么运作，再看它在人类组织里叫什么、差在哪、为什么在人这边更慢。反过来做——先摆一套管理学框架，再回 AI 组织找例子——套得上也是巧合（同名可指认，与机制同一不是一回事），套不上就被略过。</p>
+<p>不同的地方集中在四处：<strong>记忆机制、责任归属、激励、退出成本</strong>。这四处影响哪些能照搬、哪些必须改。第 10 篇专讲这个。</p>
+<h2 id="c00-s7">§7 后面各篇的分工</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>篇</th>
+<th>答什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nw">01</td>
+<td>为什么会烂：三种腐坏，以及膨胀为什么会被截断</td>
+</tr>
+<tr>
+<td class="nw">02</td>
+<td>四条不变量：这套东西为什么必须这么设计</td>
+</tr>
+<tr>
+<td class="nw">03</td>
+<td>判与落：放哪层、由谁执行、能不能交给机器</td>
+</tr>
+<tr>
+<td class="nw">04</td>
+<td>写：九问与判据，怎么写成别人能重建的</td>
+</tr>
+<tr>
+<td class="nw">05</td>
+<td>检：怎么让规则真的能红</td>
+</tr>
+<tr>
+<td class="nw">06</td>
+<td>长：新领域从零长一套的工序</td>
+</tr>
+<tr>
+<td class="nw">07</td>
+<td>退：到期就废，边界在哪，谁有权叫停</td>
+</tr>
+<tr>
+<td class="nw">08</td>
+<td>裁：什么能换、什么不能换</td>
+</tr>
+<tr>
+<td class="nw">09</td>
+<td>渐进：什么时候做、做到哪停</td>
+</tr>
+<tr>
+<td class="nw">10</td>
+<td>组织同构：AI 组织与人类组织的四处差异</td>
+</tr>
+<tr>
+<td class="nw">11</td>
+<td>三种产物：形态决定落点</td>
+</tr>
+<tr>
+<td class="nw">12</td>
+<td>对照：人类组织里已有的名字</td>
+</tr>
+<tr>
+<td class="nw">13</td>
+<td>入表：数据质量的外部验收</td>
+</tr>
+<tr>
+<td class="nw">14</td>
+<td>速查卡：一页纸的六个动作</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>读法</strong>：想立刻用，读 00 加 14；想知道为什么，读 01 与 02；正在动手，读 03 到 09；要跟人解释，读 10 到 12。</p>
+<h2 id="c00-s8">§8 结语：一条链，两把尺</h2>
+<p>六个动作是一条链，不是六件并列的事：<strong>判、落、写、检</strong> 一次成型，<strong>长、退</strong> 持续演化，<strong>裁剪、渐进</strong> 横穿全部。</p>
+<p>链上每个动作，都用同一把尺验收：<strong>一个没参与的人，能不能只靠它接住下一步。</strong> 判完的落点，别人能不能照着放；写完的规范，别人能不能照着做；检完的判据，别人能不能照着跑；退完的东西，后来的人知不知道它为什么被退。</p>
+<p>这把尺量不了「写得好不好」，只量「接不接得住」。前者靠人，后者靠结构。</p>
+<h3>引用与出处说明</h3>
+<blockquote>
+<p>本篇引用一类：项目实证 7 条。无外部文献、无系列自引。</p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>引用</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[1]</td>
+<td>三种腐坏、五层落点、四条不变量</td>
+<td>本项目内部规程（作者留档）（项目实证；登记 M-00-1）</td>
+</tr>
+<tr>
+<td>[2]</td>
+<td>骨架只做路由、域层阈值</td>
+<td>本项目内部规程（作者留档）（项目实证；登记 M-00-2）</td>
+</tr>
+<tr>
+<td>[3]</td>
+<td>九段式与六要素</td>
+<td>本项目内部规程（作者留档）（项目实证；登记 M-00-3）</td>
+</tr>
+<tr>
+<td>[4]</td>
+<td>机械校验两档、存量债处理</td>
+<td>本项目内部规程（作者留档）（项目实证；登记 M-00-4）</td>
+</tr>
+<tr>
+<td>[5]</td>
+<td>体系≠实现、五裁剪参数</td>
+<td>本项目内部规程（作者留档）（项目实证；登记 M-00-5）</td>
+</tr>
+<tr>
+<td>[6]</td>
+<td>七步装配线</td>
+<td>本项目内部规程（作者留档）（项目实证；登记 M-00-6）</td>
+</tr>
+<tr>
+<td>[7]</td>
+<td>递归自举、判断的让渡</td>
+<td>本项目内部记录（作者留档）（项目实证；登记 M-00-7）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>说明：本篇为总纲，命题全部是结构性的机制陈述，不含外部实测数字。出处用于追溯每条机制在既有实践中的落地位置，不构成对外部文献的引用。项目实证一律标登记号（指向作者留档的《映射表》，不随书发行）：每条有对应实例，抽象只抹载体与专名，不改真假；按经验刻画计，只承担本系列的观察陈述，不承担断言级取证。本篇点到其他篇的地方（「见 NN §X」这类指路），属篇间指路，不计入引用表。</p>
+</blockquote>
+<h2 id="c00-h10">延伸阅读</h2>
+<ul>
+<li><strong>01 为什么会烂</strong>：本篇 §1 的约束二由它展开成三种腐坏的具体形态。</li>
+<li><strong>14 速查卡</strong>：本篇六动作压缩为一页，供现场使用。</li>
+</ul>
+</section>
+<section class="chapter" id="c01">
+<!--
+SPDX-License-Identifier: CC-BY-SA-4.0
+Copyright (c) 2026 wUwproject
+Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+See https://creativecommons.org/licenses/by-sa/4.0/ for details.
+-->
+
+<h1 id="c01">01｜为什么会烂——三种不报警的腐坏</h1>
+<h2 id="c01-s1">§1 引子：写过、找不到、不敢信</h2>
+<p>接手一摊陌生的活，第一周往往会遇到三件小事。</p>
+<p>第一件：明明有人写过，翻了两小时没找到，最后重写了一遍。第二件：找到了三份，内容不一样，不知道哪份算数。第三件：一份很全的文档，从头读到尾，读到后面忘了前面，索性不读了。</p>
+<p>三件事看起来是三种毛病：记性差、版本乱、文档长。往深一层看，它们是同一个东西的三个切面——<strong>规则在传递过程中，以三种不同的方式失真，而且三种都不发出声音。</strong></p>
+<p>这就是本篇要说的：腐坏不是「用久了变旧」，是<strong>结构本身带的</strong>。写下第一句话的时候，腐坏就已经开始了。</p>
+<p>（这一节的场景是经验刻画，不是特定事件的记录。三种形态的判定标准见 §2 到 §4。）</p>
+<h2 id="c01-s2">§2 腐坏一：失忆不是忘了，是路径断了</h2>
+<p>失忆有两种，价值完全不同。</p>
+<p><strong>内容没了</strong>：删了、丢了、覆盖了。这种好办——知道丢了什么，重写就行。</p>
+<p><strong>路径没了</strong>：内容还在，但没人知道它在哪，或者不知道该找它。这种难办，因为<strong>当事人不知道自己丢了东西</strong>。</p>
+<p>在这套体系的记录里，多数「找不到」属于第二种。记录只增不减，检索能力却不变。加到某个量级之后，每一份都还在，但从「能找」变成「碰运气」（经验刻画 [3]）。</p>
+<p>一个具体的机制：<strong>索引比内容烂得快。</strong>（机制性推断：内容可以三年不动，指向它的路径换一次人就断一次；说的是两者的耐久差，不是说内容不会过时。） 内容写下来可以三年不动，指向它的那条路径——标题、目录、命名、口头交接——换一次人就断一次。索引断了，内容再多也等于不存在。</p>
+<p>判据只有一条：<strong>一个没参与的人，在有限步数内能不能定位到它？</strong> 说得出「在哪一类、叫什么、从哪进」，算找到；只能说「我记得在某处写过」，不算路径，算记忆。</p>
+<p>失忆的隐蔽处在这里：它不产生错误，只产生重复。重写一遍的那份，往往比原来那份更差——因为写的人不知道原来那份里有哪些坑已经踩过。</p>
+<h2 id="c01-s3">§3 腐坏二：膨胀不是变多，是同等重要</h2>
+<p>带宽是硬的。超过的那部分不进决策，直接丢。</p>
+<p>人的短时记忆一次能同时处理的单元在四个左右 [1]；模型的上下文窗口看起来很大，但放在中间位置的信息利用率低于首尾 [2]。数字不同，性质一样：<strong>一次能同时端住的东西有限。</strong></p>
+<p>膨胀有两种形态。一种是条目变多：十条变成八十条。另一种是单条变长：一句话变成一段话，一段话变成一节。</p>
+<p>最要命的是第三种，它不体现在字数上：<strong>「重要」这个词通胀了。</strong></p>
+<p>一开始只有三条重要，后来三十条都重要，最后每一条都不敢删。条目数没超，但优先级失效了——因为全部同级，等于没有级。这时候读者面对的是一份「什么都说了」的清单，实际能执行的是零。</p>
+<p>一个可以算的后果：超过带宽之后，新增内容挤掉的是原来那几条的位置——净增有限，甚至为负（本文复算：带宽固定时，新增一条就挤掉一条的位置）。</p>
+<p>判据同样是两条：<strong>常驻的那一层，条目数有没有上限？单条有没有长度上限？</strong> 两个上限都没有的清单，会一路长到没人读完。</p>
+<p>膨胀还有一个伪装：<strong>它看起来像勤奋。</strong> 加一条比删一条容易，写得全比写得准安全。于是每一轮修订都在加，没人敢减——直到整份东西重到没人愿意打开。</p>
+<h2 id="c01-s4">§4 腐坏三：漂移不是错，是没人报错</h2>
+<p>同一句话，存在两处。改了一处，忘了另一处。</p>
+<p>这是结构问题：<strong>副本之间没有一致性检查。</strong> 内容对不对，没人比对；两处不一样，系统不报错。等到用的时候才发现口径打架，而这时候往往已经在两个地方各按各的做了半年。</p>
+<p>漂移有三种：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>形态</th>
+<th>怎么发生</th>
+<th>发现时的样子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>版本漂移</td>
+<td>改了一处，另一处还是旧的</td>
+<td>两份都像真的，日期分不出先后</td>
+</tr>
+<tr>
+<td>口径漂移</td>
+<td>同一个词，两处定义不同</td>
+<td>讨论半天，其实在说两件事</td>
+</tr>
+<tr>
+<td>时效漂移</td>
+<td>一处写了到期条件，另一处没写</td>
+<td>一边已经作废，一边还在执行</td>
+</tr>
+</tbody>
+</table></div>
+<p>三种里面，口径漂移不好查。因为它不表现为「不一致」，表现为「都说得通」。两个人各拿一份，各自逻辑自洽，吵起来才发现词义不同。</p>
+<p>判据：<strong>同一句话，有没有两个完整版？</strong> 有，就是漂移的入口。注意是「完整版」——两处各写半句、互相指向，不算；两处都能独立读通，才算。</p>
+<p>副本数量越多，不一致的概率越高（本文推导：每多一份，就多一条要同步的边），而且<strong>除非有人把日期或作废标记写进去，副本不会自称旧的</strong>。这是它比前两种腐坏更难防的地方：失忆至少会在检索那一刻撞上「找不到」；漂移连这个都没有。</p>
+<h2 id="c01-s5">§5 三种腐坏的共同点：都不报警</h2>
+<p>把三种放在一起看，会发现一个共同结构。</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>腐坏</th>
+<th>失败时的信号</th>
+<th>当事人的感受</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>失忆</td>
+<td>无</td>
+<td>以为没有，其实有</td>
+</tr>
+<tr>
+<td>膨胀</td>
+<td>无</td>
+<td>以为读了，其实漏了</td>
+</tr>
+<tr>
+<td>漂移</td>
+<td>无</td>
+<td>以为一致，其实两版</td>
+</tr>
+</tbody>
+</table></div>
+<p>三种都是<strong>静默失败</strong>——这是本文推导：三种形态各自的失败信号一栏都是空的，而信号为空正是它们不能被「更认真」治好的原因。</p>
+<p>认真的人会写得更全——加速膨胀。认真的人会多留一份备份——加速漂移。认真的人会把东西记在脑子里——加速失忆（人一走就断）。</p>
+<p>认真的方向由结构决定；方向错了，认真只是把腐坏推得更快。</p>
+<p>所以后面这些做法，都不建立在「记住」「注意」「自觉」上。判据只有一条：<strong>这条规矩失效的时候，有没有东西会红？</strong> 红不了，它就只是一句愿望。</p>
+<p><strong>一组对照</strong>，取这套书自己的三处记录：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>形态</th>
+<th>现象</th>
+<th>属哪种腐坏</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>正例</td>
+<td>跨篇提另一篇时写篇号（09a、08b），不写「前文」</td>
+<td>路径可定位：换个人也能顺着编号找到</td>
+</tr>
+<tr>
+<td>反例</td>
+<td>一批引用表把出处写成书外的路径，读者手里没有那份东西</td>
+<td>失忆：内容在别处，路径指向书外</td>
+</tr>
+<tr>
+<td>半例</td>
+<td>一批摘要里并列七个对照名字，结语写「六个」</td>
+<td>漂移：名字在、数量没对齐，两处各自都读得通</td>
+</tr>
+</tbody>
+</table></div>
+<p>正例说明「编号即路径」；反例说明路径必须以读者手上的东西为准，指向书外的路径等于没有路径；半例说明漂移最会伪装——两处都自洽，只差一个数。</p>
+<p>（三条为经验刻画，取自本系列生产记录，作一致性说明，不作独立证据。）</p>
+<h2 id="c01-s6">§6 反直觉：越完整，烂得越快</h2>
+<p>到这里可以推出一个不太舒服的结论。</p>
+<p>「记得越全越好」是一个直觉，它在小规模下成立，过了某个量级就反转：</p>
+<ul>
+<li>越完整 → 条目越多 → 越过带宽 → 没人读完 → 实际可用内容趋于零（膨胀转失忆）</li>
+<li>越完整 → 备份越多 → 副本越多 → 不一致概率越高（膨胀转漂移）</li>
+</ul>
+<p>完整是腐坏的加速器。这一句可以按上面两条机制逐项复算：条目加一条、读物多一份、副本多一版，各自的腐坏速度都在上升。</p>
+<p>边界要说清：<strong>少记会直接制造失忆</strong>——该有的没有。这里主张的是<strong>分层</strong>：把「完整」放在不常用的低层，把「关键」压到常用的高层。完整留给检索，关键留给人。</p>
+<p>这一层区分是全书的地基：<strong>腐坏治不了，只能分配。</strong> 让每一层只承担它能承担的腐坏速度。</p>
+<h2 id="c01-s7">§7 结语：一条判据管三种腐坏</h2>
+<p>三种腐坏，一条判据：</p>
+<blockquote>
+<p><strong>一个没参与的人，在有限的时间与有限的步数内，能不能把这件事接住？</strong></p>
+</blockquote>
+<ul>
+<li>接不住，因为找不到——失忆</li>
+<li>接不住，因为太多——膨胀</li>
+<li>接不住，因为不知道信哪份——漂移</li>
+</ul>
+<p>三种失败形态，同一句问句。后面八篇讲的判、落、写、检、长、退，都是为了让这句问句的答案是「能」。</p>
+<h3>引用与出处说明</h3>
+<blockquote>
+<p>本篇引用分两类：认知科学文献 2 条、项目实证 1 条。</p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>引用</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[1]</td>
+<td>短时记忆容量约四个单元</td>
+<td>Cowan, N. (2001). The magical number 4 in short-term memory. <em>Behavioral and Brain Sciences</em>, 24(1), 87–114（联网核验）</td>
+</tr>
+<tr>
+<td>[2]</td>
+<td>长上下文中间位置利用率低于首尾</td>
+<td>Liu, N. F. et al. (2024). Lost in the Middle: How Language Models Use Long Contexts. <em>TACL</em>, 12, 157–173；arXiv:2307.03172（联网核验）</td>
+</tr>
+<tr>
+<td>[3]</td>
+<td>三类失效（失忆／膨胀／静默漂移）的分类</td>
+<td>本项目内部规程（作者留档）（项目实证；登记 M-01-1）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>说明：[1][2] 为外部文献结论，用于支撑「带宽有限」这一前提；数字与原文一致，未做换算。[3] 为既有实践里的分类，本篇只取「问题分几类」这一层，不取其对策。分几类、叫什么，随场景定。项目实证一律标登记号（指向作者留档的《映射表》，不随书发行）：每条有对应实例，抽象只抹载体与专名，不改真假；按经验刻画计，只承担本系列的观察陈述，不承担断言级取证。本篇点到其他篇的地方（「见 NN §X」这类指路），属篇间指路，不计入引用表。</p>
+</blockquote>
+<h2 id="c01-h8">延伸阅读</h2>
+<ul>
+<li><strong>00 体系全貌</strong>：本篇展开其 §1 的三条约束，特别是「副本会静默失效」。</li>
+<li><strong>02 四条不变量</strong>：本篇的三种腐坏对四条——漂移那一类拆成两问，分叉归一处正文，不报警归机械可检；本篇只诊断，不变量给的是设计上的约束。</li>
+<li><strong>07 退</strong>：§6「完整是腐坏的加速器」与「到期就废」是同一机制的两端。</li>
+</ul>
+</section>
+<section class="chapter" id="c02">
+<!--
+SPDX-License-Identifier: CC-BY-SA-4.0
+Copyright (c) 2026 wUwproject
+Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+See https://creativecommons.org/licenses/by-sa/4.0/ for details.
+-->
+
+<h1 id="c02">02｜四条不变量——最小完备的约束集</h1>
+<h2 id="c02-s1">§1 引子：为什么有的规矩活下来，有的三个月就死</h2>
+<p>同样一套规矩，有的几年后还在用，有的过一阵就没人提（经验刻画，取自本系列生产记录，非统计）。</p>
+<p>常见的解释是「执行力」「重视程度」「文化」。这三个词都对，但都不能拿来做事——它们描述结果，不给出路。</p>
+<p>换一个问法：<strong>一条规矩要活下来，需要哪几个条件同时成立？</strong></p>
+<p>拆开看，条件不多，但缺一不可：</p>
+<ul>
+<li>它只能有一个正本，否则改的时候不知道该改哪</li>
+<li>它得待在该待的地方，否则用的时候找不到</li>
+<li>它得能被检查，否则坏了没人知道</li>
+<li>它得能被一次读完，否则读不完等于没写</li>
+</ul>
+<p>四条，正好对应 01 的三种腐坏——静默漂移那一类拆成两问：分叉归一处正文，不报警归机械可检。这四条就是本篇要论证的不变量。</p>
+<p>（「不变量」在本篇的定义：换掉载体、换掉规模、换掉执行者之后，仍然必须成立的那部分。判据见 §6。）</p>
+<h2 id="c02-s2">§2 不变量一：一处正文，其余只许指向</h2>
+<p><strong>同一件事只能有一处完整正文。别处要提它，只许指向，不许复述。</strong></p>
+<p>理由是 01 的漂移：副本之间没有一致性检查。只要有两个完整版，就存在「改了一处忘了一处」的窗口，而这个窗口不会自己关闭——它等的是某天两个人拿着两份东西对不上。</p>
+<p>这条不变量常被当成整理癖。它管的是<strong>改动的传播</strong>：一处正文，改一次，各处引用跟着改；两处正文，改一次，另一处变成隐患，而且看不出来。</p>
+<p>三个常见的违反形态：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>形态</th>
+<th>长相</th>
+<th>为什么算违反</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>复制粘贴</td>
+<td>同一条规矩在两份文档里各有一版</td>
+<td>两个完整版</td>
+</tr>
+<tr>
+<td>摘要膨胀</td>
+<td>上层写了一份「精简版」，内容和下层一样全</td>
+<td>精简版成了第二个正文</td>
+</tr>
+<tr>
+<td>口头正本</td>
+<td>文档里写一份，实际以某人说的为准</td>
+<td>正本在文档外，改动不落地</td>
+</tr>
+</tbody>
+</table></div>
+<p>第三个不容易看出来。它不违反纸面，违反的是「唯一」这件事本身——正本若只在一个人的记忆里，这条规矩的寿命就等于他在岗的时间。</p>
+<p>判据：<strong>同一句话，有没有两个都能独立读通的版本？</strong> 有，就是两个正文。</p>
+<h2 id="c02-s3">§3 不变量二：分层落点——按寿命落，不按重要性</h2>
+<p><strong>一件东西写在哪一层，由它活多久、谁会读它决定，不由「这条多重要」决定。</strong></p>
+<p>理由是 01 的失忆：带宽有限，路径会断。按重要性分层，多半会把短期事实塞进长期层——「这个项目的端口是 18080」很重要，但它只活到这个项目结束；「失败两次就换方案」不常被念起，但它不会过期。重要性会骗人，寿命不会。</p>
+<p>分层只问两句：<strong>半年后它还在吗？半年后还有谁来读它？</strong> 两个答案一起定层。只看前一句，会把「一年后才有人读」的东西摊在当场，等真有人要读时已经找不着；只看后一句，会把「每次开工都要看、但只活三个月」的东西钉在上面，三个月后它还占着位置。</p>
+<p>违反形态是固定的：<strong>越觉得重要的，越往上层堆。</strong> 每一次「这条挺重要，提到上面去」都合理，加起来就是把短期事实送进了长期层。等它过期，上层留着一批已经不对的东西，而没人知道哪一条过期了。这不是写错，是<strong>该走的时候没走</strong>。</p>
+<p>所以分层要连带一个出口：到期怎么判、往哪儿去，在 07。</p>
+<p>判据：<strong>这条东西活多久？谁会来读它？</strong> 两个答案指向同一层，就是落对了；指向两层，说明本来有两条规矩，被写成了一条。</p>
+<p>（这一条的工序形态在 03 §3：五层落点、越层与混层各是什么长相。）</p>
+<h2 id="c02-s4">§4 不变量三：每条纪律配一个能失败的检查</h2>
+<p><strong>一条规矩要成立，必须有一个在它被违反时会红的东西。</strong></p>
+<p>理由是 01 的静默失败：三种腐坏都不报警。不报警的东西，只能靠人盯着；人盯不住，就只能靠检查。检查的意思是——<strong>有一条具体的、可重复执行的判定，在违规时给出失败。</strong></p>
+<p>这条常走样成两种极端。</p>
+<p>一种是把每条规矩都写成「应当」「注意」「尽量」。读起来都对，一条也红不了。</p>
+<p>另一种相反：把各类判断都塞给机器。语义对不对、读者是谁、这句话有没有价值——这些判不了，硬判会产出一堆假红，假红多了，真红也没人信。</p>
+<p>正确的形态是分档 [2]：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>档</th>
+<th>判什么</th>
+<th>谁判</th>
+<th>交付物</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>硬</td>
+<td>格式、计数、引用是否存在、字段是否齐全</td>
+<td>机器</td>
+<td>可执行的检查</td>
+</tr>
+<tr>
+<td>软</td>
+<td>说得对不对、读者是谁、判断是否合理</td>
+<td>人</td>
+<td>问句 + 口径 + 频率</td>
+</tr>
+</tbody>
+</table></div>
+<p>软档不是「不检」，是「换成问句检」。「注意措辞」是废话；「读这段的人，能不能在不问作者的情况下做出下一步」是判据。</p>
+<p>还有一个必要的补充：<strong>存量不追。</strong> 老内容里已经违反的，一次性登记、只守新增。否则第一次检查就红一片，检查本身会被关掉。</p>
+<p>判据：<strong>这条判据自己红过吗？</strong> 从没红过的判据，多半是写得太松；红个不停的判据，多半是写得太死。两种都要改。</p>
+<h2 id="c02-s5">§5 不变量四：渐进加载——常驻层只放路由</h2>
+<p><strong>最常用的那一层，只放「去哪儿找」。正文按需打开，不预先搬进来。</strong></p>
+<p>理由是 01 的膨胀：常驻预算始终有限——上下文窗口、注入长度、人的注意力，三者都有限，而且都不会因为需要就变大。把正文塞进常驻层，等于用有限预算换无限内容。结果多半是截断，而<strong>截断是静默的</strong>：被截掉的部分，没有人会知道它存在过。</p>
+<p>这条不变量有个反直觉的地方：<strong>它要求常驻层主动放弃完整性。</strong> 一份「什么都写了」的常驻层，读者读不完就放弃，实际效果等于没写。一份「只写了去哪儿找」的常驻层，读者读完还剩余力，去找的时候也有明确入口。</p>
+<p>违反形态也很固定：常驻层越写越厚。每一次「这条挺重要，加进去吧」都合理，加起来就超载。这个过程没有坏人，只有一次次合理的小决定。</p>
+<p>所以它需要一个硬约束，不能靠自觉：<strong>条目数有上限，单条有长度上限。</strong> 到了上限，要么合并，要么下移，要么删——三条路都比「再加一条」难，这正是上限的意义。</p>
+<p>判据：<strong>把这一层单独拿出来读，里面有没有需要解释、举例、标出处的东西？</strong> 有，就是越界——那是正文，不是路由。</p>
+<p>（既有体系里这一条就叫「渐进加载」，它只管存量：什么能进常驻层 [1]。本书把它往增量推了一步——结构要不要新建，同样要过一道门槛。这一步是延伸，不是原意；增量那一半的工序在 09，本篇不展开。）</p>
+<h2 id="c02-s6">§6 漂移：不变量管的是哪一件事</h2>
+<p>四条分开看，接的是三种腐坏的不同侧面。合起来看，它们管的是同一件事：<strong>状态在时间里偏离原点。</strong></p>
+<p>给它一个名字：<strong>漂移</strong>——系统的状态偏离锚，且偏离量随距离增大。</p>
+<p>「距离」有四种，形态不同，机制相同：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>距离</th>
+<th>量的是什么</th>
+<th>长相</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>上下文</td>
+<td>一份材料、一次会话的长度</td>
+<td>开头定死的口径，写到中段换了说法；前三节划的边界，第四节起自己越过去</td>
+</tr>
+<tr>
+<td>工期</td>
+<td>一件事持续的时间</td>
+<td>立项时的判据、术语、优先级，半年后各人各记一版</td>
+</tr>
+<tr>
+<td>次数</td>
+<td>同一动作重复的遍数</td>
+<td>每一版只改一点，改到第十版，没人对过第一版</td>
+</tr>
+<tr>
+<td>交接</td>
+<td>经手的人与层数</td>
+<td>每传一层补一句解释，补到第三层，规矩变成另一条</td>
+</tr>
+</tbody>
+</table></div>
+<p>四种距离下，机制是同一个：<strong>每一环都以上一环的输出为输入，没有任何一环回到原位。</strong></p>
+<p>这就是漂移和错误的分别。错误是一次性的，改掉就没了；漂移是累积的，每一次单独看都合理，加起来才偏。也正因如此，它不表现为「不一致」——两个人各拿一份，各自逻辑自洽，吵起来才发现词义不同。（本文推导：由 01 的三种腐坏与四条的对应关系归并得出；四类距离的划分是本文的，不是既有体系的分类。）</p>
+<p><strong>判据只有一句：这次执行，参照的是锚，还是上一版产物？</strong></p>
+<p>参照锚，偏差不累积；参照上一版，偏差逐次叠加。这条判据也解释了四条为什么必须是不变量：</p>
+<ul>
+<li>一处正文：锚只能有一个。两个正本，等于两个锚，各自漂</li>
+<li>分层落点：锚要放在用的人够得着的层。放错层，等于没有</li>
+<li>机械可检：偏离要能变成红。变不成红，漂了也没人知道</li>
+<li>渐进加载：常驻层只放锚本身，不放锚的说明书。说明书塞进来，锚先被挤掉</li>
+</ul>
+<p><strong>由此得出一条边界：漂移能治，但不能根治。</strong> 能治的是累积型——有锚，且愿意每次回到锚；治不了的是锚本身错了，或扰动的来源在体系之外。前一种要换锚，不该去修执行；把「换锚」说成「执行不力」，下一轮还在错的锚上做一致性。</p>
+<p>（四类距离、这条判据与这条边界，是本文给四条不变量下的定义；属本文推导，不含经验统计。治法的工程形态在 05 §5 与 09 §5；组织形态在 10。）</p>
+<h2 id="c02-s7">§7 四条为什么是四条：最小完备</h2>
+<p>四条不是凑出来的清单，每一条都接住 01 里的一类失败，而且缺一条就有一种失败无人接管 [1]。</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>不变量</th>
+<th>接住哪种失败</th>
+<th>缺了会怎样</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一处正文</td>
+<td>漂移（副本分叉）</td>
+<td>两版并存，改动不传播</td>
+</tr>
+<tr>
+<td>分层落点</td>
+<td>失忆</td>
+<td>找不到：该用的那条不在够得着的地方</td>
+</tr>
+<tr>
+<td>机械可检</td>
+<td>静默失败</td>
+<td>坏了没人知道，只能靠人盯</td>
+</tr>
+<tr>
+<td>渐进加载</td>
+<td>膨胀</td>
+<td>读不完：常驻层越写越厚，读完就放弃</td>
+</tr>
+</tbody>
+</table></div>
+<p>反过来问：能不能再加一条？加得出来的，多半是这四条的展开，不是新的约束。比如「命名要统一」——它是「一处正文」的一部分；「文档要及时更新」——它是「机械可检」的一部分（不更新会红）。</p>
+<p><strong>判据：把专有名词逐条删掉，这条还成立吗？</strong> 成立，是不变量；不成立，是某个载体的实现细节。这条判据同时用来筛新增条款：新加一条之前，先删名词试一遍。</p>
+<p>（四条的最小完备性是本文推导：三种腐坏对四条——静默漂移拆成两问，分叉归一处正文、不报警归机械可检；失忆归分层落点，膨胀归渐进加载。四问各有归属，加不出第五问。「加不出第五条」另由 §8 的五个参数逐类试删核对；结论是：加得出来的，多为这四条的展开。）</p>
+<p><strong>一组对照</strong>：同一个毛病，正例、反例、半例各是什么长相。</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>形态</th>
+<th>现象</th>
+<th>说明什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>正例</td>
+<td>五层的判据与读者半径只在 00 §2 写全，03 只留「寿命」一列</td>
+<td>一处正文：改判据只动 00，03 那张表不会跟着漂</td>
+</tr>
+<tr>
+<td>反例</td>
+<td>同一套规范里，一个概念在两处写成两种层数，两处各自读得通</td>
+<td>两个口径各自成立，同一概念两版并存</td>
+</tr>
+<tr>
+<td>半例</td>
+<td>一轮检查的脚注登记「全项全 PASS」，其中一项实际一次没跑</td>
+<td>有登记、无执行：检查配了，从没红过</td>
+</tr>
+</tbody>
+</table></div>
+<p>正例是三者里不用返工的那一个；反例的问题不在某一句写错，在<strong>没有一处说了算</strong>；半例最难查，因为表单上每一项都填了。</p>
+<p>（三条为经验刻画，取自本系列生产记录，作一致性说明，不作独立证据；四条的划分同样按经验刻画计，取自既有体系的总纲 [1]。）</p>
+<h2 id="c02-s8">§8 什么不是不变量</h2>
+<p>分不清不变量和参数，会把「换工具」变成「推翻重来」。参数有五个，可以按现场改（与 08 的五参数是同一套）：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>例子</th>
+<th>换的时候动什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>规模</td>
+<td>分几层、几个域、条目上限是多少</td>
+<td>只换数字，不动判据</td>
+</tr>
+<tr>
+<td>载体</td>
+<td>写成文档、写进系统、写进检查脚本</td>
+<td>只换承载方式，不动条款</td>
+</tr>
+<tr>
+<td>严格度</td>
+<td>硬性阻断，还是只看提醒</td>
+<td>只换判据强度，不动判据内容</td>
+</tr>
+<tr>
+<td>频率</td>
+<td>每次、每周、每季</td>
+<td>只换周期，不动检查项</td>
+</tr>
+<tr>
+<td>角色</td>
+<td>谁写、谁检、谁退役</td>
+<td>只换分工，不动授权关系</td>
+</tr>
+</tbody>
+</table></div>
+<p>层的名字、文件的命名规则、用哪个工具，都是载体的子项，不另算一类。</p>
+<p>判断方法还是那一句：<strong>把专有名词删掉，还成立的是不变量，剩下的是参数。</strong> 换平台时只动参数，是这个方法能跨载体使用的前提[3]。</p>
+<h2 id="c02-s9">§9 结语：不变量是删不掉的那部分</h2>
+<p>四条不变量，一条一句：</p>
+<ul>
+<li>一处正文，其余只许指向</li>
+<li>按寿命落层，不按重要性</li>
+<li>每条纪律配一个能失败的检查</li>
+<li>常驻层只放路由，正文按需取</li>
+</ul>
+<p>它们的共同点是：<strong>删掉任何一条，前面讲的三种腐坏就会从其中一种漏进来。</strong> 这就是「不变量」的意思——删不掉，与重要不重要无关。</p>
+<p>换个说法：四条各是一根锚。锚在，漂移能治；锚丢了，剩下的只有执行认真不认真。</p>
+<p>后面七篇，讲的是这四条怎么落到具体工序上。工序可以变，这四条不变。</p>
+<h3>引用与出处说明</h3>
+<blockquote>
+<p>本篇引用一类：项目实证 3 条。无外部文献、无系列自引。项目实证不可外部复核，按经验刻画计，只承担本系列的观察陈述，不承担断言级取证。</p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>引用</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[1]</td>
+<td>四条不变量（一处正文／分层落点／机械可检／渐进加载）</td>
+<td>本项目内部规程（作者留档；类型：体系总纲与不变量清单）（项目实证；登记 M-02-1）</td>
+</tr>
+<tr>
+<td>[2]</td>
+<td>判据两档与存量 baseline</td>
+<td>本项目内部规程（作者留档；类型：机械校验规则与存量基线）（项目实证；登记 M-02-2）</td>
+</tr>
+<tr>
+<td>[3]</td>
+<td>体系≠实现、换平台只换参数</td>
+<td>本项目内部规程（作者留档；类型：体系与实现的分界、参数清单）（项目实证；登记 M-02-3）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>说明：[1] 为本篇四条的直接来源，本篇只做必要性论证，未复述其条文。[2] 支撑 §4 的两档划分与存量处理。[3] 支撑 §7 的参数清单；「把某一层实现的偶然特征当成体系本身」这一命题与本书同向，§5 给出判据。本篇点到其他篇的地方（「见 NN §X」这类指路），属篇间指路，不计入引用表。</p>
+</blockquote>
+<h2 id="c02-h10">延伸阅读</h2>
+<ul>
+<li><strong>01 为什么会烂</strong>：本篇每一条不变量都由它的一种腐坏反推而来。</li>
+<li><strong>03 判与落</strong>：不变量二落地为具体工序。</li>
+<li><strong>09 渐进</strong>：不变量四往增量推的那一半——结构什么时候建、建到哪停。</li>
+</ul>
+</section>
+<section class="chapter" id="c03">
+<!--
+SPDX-License-Identifier: CC-BY-SA-4.0
+Copyright (c) 2026 wUwproject
+Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+See https://creativecommons.org/licenses/by-sa/4.0/ for details.
+-->
+
+<h1 id="c03">03｜判与落——五层落点与四个执行点</h1>
+<h2 id="c03-s1">§1 引子：没人用的规矩，有些是放错了地方</h2>
+<p>同样一条规矩，写在三个地方，命运完全不同。</p>
+<p>写进每月开一次会才看的那份材料里——过一阵就没人记得有这条。写进每天开工前必看的那一页里——它活了。写进某个工具的参数里——它不用被记住，自动生效。</p>
+<p>内容一个字没改，只是位置不同。所以「这条规矩为什么不执行」这个问题，常常要往前推一步：<strong>它当初被放在哪里，为什么放在那里。</strong></p>
+<p>「判」回答放哪层，「落」回答具体放哪个位置、由谁来执行。两件事连着做，中间不能插别的。</p>
+<h2 id="c03-s2">§2 第一刀：能活多久</h2>
+<p>判层的第一问不是「重要不重要」，是<strong>「它还能用多久」</strong>。</p>
+<p>重要性是个会通胀的标签：今天三条重要，下个月三十条重要，按它分层，条目会一路挤向上层，层就废了。寿命是可估的：一条规矩能用三年、一年、一个项目、还是一份文件，多数情况下当场就能给个量级（经验刻画）。</p>
+<p>寿命分成五档，对应五层：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>层</th>
+<th>寿命</th>
+<th>典型内容</th>
+<th>常见误放</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L0 常驻</td>
+<td>按年</td>
+<td>红线、入口、口径</td>
+<td>把流程细节也塞进来</td>
+</tr>
+<tr>
+<td>L1 通用</td>
+<td>跨项目</td>
+<td>方法、判据、模板</td>
+<td>把一次性的决定写成通则</td>
+</tr>
+<tr>
+<td>L2 项目</td>
+<td>随项目</td>
+<td>接口、版本、清单</td>
+<td>把通用方法抄成项目专用版</td>
+</tr>
+<tr>
+<td>L3 会话</td>
+<td>一次会话</td>
+<td>这次的破例、今天的判断</td>
+<td>把一次例外写成通则</td>
+</tr>
+<tr>
+<td>L4 就地</td>
+<td>随件</td>
+<td>这一份的说明、这一批的例外</td>
+<td>把例外写成新规矩</td>
+</tr>
+</tbody>
+</table></div>
+<p>这张表只回答「能活多久」这一问；每一层的判据与读者半径，正文在 00 §2，本篇不复述。</p>
+<p>第三层与第四层常被合成一层，合成之后，「这次为什么破例」混进了「这一类怎么做」。三个月后回看，破例的理由没人记得，只剩下一条来历不明的规矩。</p>
+<p>（五层划分是经验刻画，取自既有体系的落点判定篇 [1]；两刀的先后由本文 §3 末的冲突裁决给出，属本文推导。）</p>
+<p>第一刀切完，多数条目已经能落位。剩下两类会卡住：<strong>跨两档的</strong> 和 <strong>说不清寿命的</strong>。</p>
+<p>在寿命这一刀内部跨两档的，这套体系取的是往上放，不往下放。理由：上层条目少，放错了容易发现；下层条目多，放错了没人看得到。这套体系宁可让上层稍微厚一点（L0 除外，常驻层有条目上限），也不要让一条长期有效的规矩沉在就地层里。</p>
+<p>说不清寿命的，按最短的那个估计。估计错了会怎样？估短了，它会被上移一次——上移是个显式动作，有人会问为什么；估长了，它会一直待在上面，没人问。</p>
+<h2 id="c03-s3">§3 第二刀：谁会读</h2>
+<p>第二问是读者半径：<strong>这条东西，谁在什么场景下会主动来找它？</strong></p>
+<p>四种半径：</p>
+<ul>
+<li><strong>每个人，每次开工</strong>：落在常驻层。判据是它必须出现在入口，不靠检索</li>
+<li><strong>做这类事的人，需要时</strong>：这是通用层或项目层。它靠检索，但必须能被检索到</li>
+<li><strong>复盘的人，事后</strong>：这是会话层。它记的是这一轮为什么这么定，过期不追</li>
+<li><strong>处理这一份的人，当下</strong>：这是就地层。它跟着文件走，不单独存在</li>
+</ul>
+<p>读者半径决定「放在哪里能被找到」，寿命决定「能在那里待多久」。两刀交叉，落点基本唯一。</p>
+<p>两刀给出不同答案时（寿命说 A 层、读者说 B 层），<strong>以读者半径为准</strong>。理由很实际：寿命估长，只是早晚要搬一次——但要有人问起才发现；读者估错，是从第一天起就没人找到它。</p>
+<p>一个常见的误判：把「我觉得重要」当成「别人会来找」。判据是——<strong>上一次有人主动问起它，是什么时候？</strong> 想不起来，说明它不在任何人的检索路径上。</p>
+<h2 id="c03-s4">§4 五层与三种错位</h2>
+<!--FIG:BEGIN F03-LAYERS-->
+<figure class="fig" data-fig="F03-LAYERS">
+<svg viewBox="0 0 680 358" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="五层落点塔与错层、越层、混层三种错位">
+<polygon points="66,30 398,30 382,84 82,84" fill="var(--gold)" stroke="var(--line)" stroke-width="1.2"/>
+<text x="96.0" y="53.0" font-size="12" fill="var(--bg)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">L0</text>
+<text x="156.0" y="53.0" font-size="13" fill="var(--bg)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">常驻</text>
+<text x="156.0" y="73.0" font-size="9" fill="var(--bg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">按年 · 每次开工的第一个读者</text>
+<polygon points="75,92 389,92 373,146 91,146" fill="var(--panel)" stroke="var(--line)" stroke-width="1.2"/>
+<text x="105.0" y="115.0" font-size="12" fill="var(--fg)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">L1</text>
+<text x="165.0" y="115.0" font-size="13" fill="var(--fg)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">通用</text>
+<text x="165.0" y="135.0" font-size="9" fill="var(--muted)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">跨项目 · 做同类任务的人</text>
+<polygon points="84,154 380,154 364,208 100,208" fill="var(--panel)" stroke="var(--line)" stroke-width="1.2"/>
+<text x="114.0" y="177.0" font-size="12" fill="var(--fg)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">L2</text>
+<text x="174.0" y="177.0" font-size="13" fill="var(--fg)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">项目</text>
+<text x="174.0" y="197.0" font-size="9" fill="var(--muted)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">随项目 · 读这个项目的人</text>
+<polygon points="93,216 371,216 355,270 109,270" fill="var(--panel)" stroke="var(--line)" stroke-width="1.2"/>
+<text x="123.0" y="239.0" font-size="12" fill="var(--fg)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">L3</text>
+<text x="183.0" y="239.0" font-size="13" fill="var(--fg)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">会话</text>
+<text x="183.0" y="259.0" font-size="9" fill="var(--muted)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">一次会话 · 复盘时的人</text>
+<polygon points="102,278 362,278 346,332 118,332" fill="var(--panel)" stroke="var(--line)" stroke-width="1.2"/>
+<text x="132.0" y="301.0" font-size="12" fill="var(--fg)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">L4</text>
+<text x="192.0" y="301.0" font-size="13" fill="var(--fg)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">就地</text>
+<text x="192.0" y="321.0" font-size="9" fill="var(--muted)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">随件 · 拿着这份材料的人</text>
+<path d="M420 62 C470 62 470 76 520 76" fill="none" stroke="var(--gold)" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="534.0" y="68.0" font-size="14" fill="var(--fg)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">错层</text>
+<text x="534.0" y="87.0" font-size="10" fill="var(--muted)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">该在 L2，写在 L0</text>
+<path d="M420 184 C470 184 470 198 520 198" fill="none" stroke="var(--gold)" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="534.0" y="190.0" font-size="14" fill="var(--fg)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">越层</text>
+<text x="534.0" y="209.0" font-size="10" fill="var(--muted)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">跳过一级直接落</text>
+<path d="M420 300 C470 300 470 314 520 314" fill="none" stroke="var(--gold)" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="534.0" y="306.0" font-size="14" fill="var(--fg)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">混层</text>
+<text x="534.0" y="325.0" font-size="10" fill="var(--muted)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">一条跨两级</text>
+</svg>
+<figcaption>图 3 · 五层落点与错层、越层、混层（图只画关系，判据与归属见正文）</figcaption>
+</figure>
+<!--FIG:END F03-LAYERS-->
+<p>层分好了，错位有三种，症状各不相同。</p>
+<p><strong>错层</strong>：内容对，层不对。（各层的容量上限与判据见骨架规范 [2]。）一条通用方法被写进项目文档，换项目时它跟着消失；一条项目专用参数被抬进通用层，下一个项目照着用，出事。</p>
+<p><strong>越层</strong>：上层的规矩直接引用下层的细节。常驻层里写「详见项目文档第三节」——读者到了第三节，发现那里也在引用别处。链条一长，等于没有。</p>
+<p><strong>混层</strong>：一层里装两种寿命的东西。最常见的是常驻层里既有红线又有流程说明：红线要常驻，流程说明要按需取，混在一起的结果是常驻层变厚，红线被稀释。</p>
+<p>三种错位里，混层不好发现，因为它看起来「内容都对」。判据：<strong>把这一层按寿命重新排一遍，有没有明显不同的两堆？</strong> 有，就该拆。</p>
+<p>错位的代价不是「不整齐」，是<strong>改动传不到该到的地方</strong>：改了通用层，项目层那份旧版还在；改了常驻层，就地层里的人根本不知道。</p>
+<p><strong>一组对照</strong>，三个场景取自这套体系自己的层位记录：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>形态</th>
+<th>做法</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>正例</td>
+<td>「引用只挂编号」放常驻层，「编号怎么排」放通用层，「这一篇引了哪几条」放项目层</td>
+<td>三种寿命分三层放，改一层不牵动另两层</td>
+</tr>
+<tr>
+<td>反例</td>
+<td>一条铁律写「写入前先汇报」，「什么算写入」的界定放在另一层</td>
+<td>越层：只读这一层的人判不出边界，得再翻一层才能行动</td>
+</tr>
+<tr>
+<td>半例</td>
+<td>一条格式检查写进代码，检查项却抄自通用层规范，两边各自改</td>
+<td>点位对了、来源错了：检查在跑，查的是旧口径</td>
+</tr>
+</tbody>
+</table></div>
+<p>正例的关键不在分了三层，在<strong>每层只回答一个问题</strong>；反例的病根是常驻层承担了它读不到的判断；半例不容易发现，因为脚本一直在跑，输出一直是绿的。</p>
+<p>（三条为经验刻画，取自本系列生产记录，作一致性说明，不作独立证据。）</p>
+<h2 id="c03-s5">§5 由谁执行：四个点位</h2>
+<p>落完层，还要定一件事：这条规矩靠什么执行。</p>
+<p>四个点位，约束力从强到弱 [3]。（源头列的是四类承载方式，按出现的先后排；本书按约束力重排，并把末端两档换成「明文」「口头」，属本文整理。）</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>点位</th>
+<th>怎么执行</th>
+<th>强度</th>
+<th>代价</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>配置</td>
+<td>写进系统参数，不满足就不启动</td>
+<td>最强</td>
+<td>改起来最慢</td>
+</tr>
+<tr>
+<td>代码</td>
+<td>写进检查或流程，违反就报错</td>
+<td>强</td>
+<td>要维护</td>
+</tr>
+<tr>
+<td>明文</td>
+<td>写进常驻层，靠人读</td>
+<td>中</td>
+<td>靠自觉，会衰减</td>
+</tr>
+<tr>
+<td>口头</td>
+<td>靠交接时说一句</td>
+<td>最弱</td>
+<td>换人就断</td>
+</tr>
+</tbody>
+</table></div>
+<p>判断规则：<strong>能进配置的，不进代码；能进代码的，不停在明文；只能靠口头说清的，这套体系不算它已落点；要不要算，由团队按失效代价自定。</strong></p>
+<p>这条规则常被反过来用：因为改配置麻烦，就把本该硬性的东西写成「请大家注意」。短期省事，长期是让这条规矩慢慢失效——它没有执行者，只有一个提醒者。</p>
+<p>反过来也有一种错：把还在变的东西写死进配置。判据是<strong>它一年内会不会改</strong>。会改的，放代码或明文；不会改的，才进配置。</p>
+<h2 id="c03-s6">§6 能不能交给机器：两条轴</h2>
+<p>第三个问题常被跳过：这条规矩，机器能不能判？</p>
+<p>答案是分轴的，不是整体的：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>轴</th>
+<th>特征</th>
+<th>能不能收束</th>
+<th>归属</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>格式轴</td>
+<td>有限取值、可枚举、有明确边界</td>
+<td>能</td>
+<td>机器</td>
+</tr>
+<tr>
+<td>内容轴</td>
+<td>开放取值、依赖语境、无固定边界</td>
+<td>不能</td>
+<td>人</td>
+</tr>
+</tbody>
+</table></div>
+<p>「格式对不对」在格式轴上，可以穷举，交给机器。「说得对不对」在内容轴上，没有穷举的尽头，只能人判[4]。</p>
+<p>（格式轴与内容轴的二分是机制性推断：依据既有体系对格式轴与内容轴的论证 [4]，本篇把它外推到执行点位的选择上。）</p>
+<p>这条区分不是技术细节，它决定一条规矩该写成什么样：</p>
+<ul>
+<li>落在格式轴的，写成可执行的检查——字段齐不齐、编号存不存在、口径对不对得上</li>
+<li>落在内容轴的，写成问句加口径——谁问、问什么、多久问一次</li>
+</ul>
+<p>把内容轴硬塞给机器，会产出假红；假红多了，真红也没人信（机制性推断：判据的信用来自它红得准）。把格式轴留给人，会产出漏检；人看多了就开始扫。</p>
+<p>判据：<strong>这条规矩的反例，能不能事先列完？</strong> 能列完，格式轴；列不完，内容轴。</p>
+<h2 id="c03-s7">§7 三问的顺序</h2>
+<p>判与落，一共三问，顺序固定：</p>
+<pre><code class="language-text">① 放哪层     ← 寿命 × 读者半径
+② 由谁执行   ← 能不能硬性、会不会常改
+③ 能不能机器判 ← 格式轴还是内容轴
+</code></pre>
+<p>顺序不能倒。先定执行点位再定层，会出现「因为要写进配置，所以把它当成通用的」这种倒推；先定机器判再定层，会出现「因为能检查，所以把它放进常驻层」——检查项变多，常驻层变厚，正好违反不变量四。</p>
+<p>三问都答完，落点才算定。答不出第三问的，按内容轴处理，先给人判，别硬塞。</p>
+<h2 id="c03-s8">§8 结语：判错的代价是隐性的</h2>
+<p>判与落做错，不会当场报错——这句话限「没有检查覆盖」的情形；一旦硬塞进机器，假红就会当场报出来。</p>
+<p>一条规矩放错层，症状不响亮：没有人会说「这条放错了」，只会说「这条好像没什么用」。等到有人想起来问，往往已经过了半年，中间的执行全靠各人自己理解。</p>
+<p>所以这一环的判据只能前置：<strong>放之前，先答三个问题；答不出，就别放。</strong> 放错一次，消耗的是别人对这套分层的信任——下一次他就不按它找了。</p>
+<h3>引用与出处说明</h3>
+<blockquote>
+<p>本篇引用一类：项目实证 4 条。无外部文献、无系列自引。</p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>引用</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[1]</td>
+<td>五层落点与漏斗顺序</td>
+<td>本项目内部规程（作者留档）（项目实证；登记 M-03-1）</td>
+</tr>
+<tr>
+<td>[2]</td>
+<td>骨架只放路由与红线、条目上限</td>
+<td>本项目内部规程（作者留档）（项目实证；登记 M-03-2）</td>
+</tr>
+<tr>
+<td>[3]</td>
+<td>四个点位及强度序列（配置＞代码＞明文＞口头）；源头的四类与排序都不同，属本书整理</td>
+<td>本项目内部记录（作者留档）（项目实证；登记 M-03-3）</td>
+</tr>
+<tr>
+<td>[4]</td>
+<td>格式轴可收束、内容轴不可穷举</td>
+<td>本项目内部记录（作者留档）（项目实证；登记 M-03-4）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>说明：[1][2] 为本篇分层与漏斗的来源，本篇重写了判据表述，未复述其条文。[3] 源头给的是四类承载方式与它们出现的先后；本书按约束力重排，把末端两档换成「明文」「口头」，另加一条判断规则——切成几类、以什么为界、谁强谁弱，都是本书取的，不是来源的规定。[4] 支撑 §6 的格式轴与内容轴二分，本篇只取这个二分，未引其论证。项目实证一律标登记号（指向作者留档的《映射表》，不随书发行）：每条有对应实例，抽象只抹载体与专名，不改真假，承担断言级取证。本篇点到其他篇的地方（「见 NN §X」这类指路），属篇间指路，不计入引用表。</p>
+</blockquote>
+<h2 id="c03-h9">延伸阅读</h2>
+<ul>
+<li><strong>02 四条不变量</strong>：本篇是不变量二（分层落点）的落地工序——先问寿命，再问读者，两刀定层。</li>
+<li><strong>04 写</strong>：判完落点，接着是写成别人能重建的样子。</li>
+<li><strong>09 渐进</strong>：层数什么时候该加，阈值在那一篇。</li>
+</ul>
+</section>
+<section class="chapter" id="c04">
+<!--
+SPDX-License-Identifier: CC-BY-SA-4.0
+Copyright (c) 2026 wUwproject
+Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+See https://creativecommons.org/licenses/by-sa/4.0/ for details.
+-->
+
+<h1 id="c04">04｜写——可重建性的最低条件</h1>
+<h2 id="c04-s1">§1 引子：读得懂，做不出</h2>
+<p>有一类文档，读的时候很顺，读完不知道下一步做什么。</p>
+<p>它通常有三个特征（经验刻画）：句子通顺、逻辑连贯、没有一个能照着做的动作。作者写完觉得说清楚了，读者看完觉得懂了，真到动手的时候，两个人做出来的东西不一样。</p>
+<p>问题在这份文档回答的是「我理解了」；它没回答「你怎么做」。</p>
+<p>判据很硬：<strong>一个没参与的人，只读这一篇，能不能做出同样的东西？</strong> 过程已定而做不出，就是没写清。这个判据不评价好坏，只判断能不能交接。</p>
+<h2 id="c04-s2">§2 能被重建的最低条件</h2>
+<p>「重建」的意思是：换一个人，按这份文档走一遍，产出在关键处一致。</p>
+<p>关键处一致，需要三样东西齐备：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>要素</th>
+<th>回答什么</th>
+<th>缺了会怎样</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>边界</td>
+<td>管什么、不管什么</td>
+<td>范围一路被推宽</td>
+</tr>
+<tr>
+<td>判据</td>
+<td>做到什么程度算对</td>
+<td>各人标准不同</td>
+</tr>
+<tr>
+<td>失效</td>
+<td>错了怎么发现、什么时候该废</td>
+<td>错了没人知道，过期了还在用</td>
+</tr>
+</tbody>
+</table></div>
+<p>三样里，边界常被跳过，因为它看起来像废话。实际能防住「越做越多」的就是它：一份不写边界的规范，会在每次讨论里扩张一点，一年后它管的事比原来宽出一大截。</p>
+<p>（三要素是经验刻画，取自既有体系的正文规范 [1]：其九段式里边界、判据、失效各占固定位置，缺位即视为没写完。）</p>
+<p>还有一件常被漏掉的事：<strong>可重建的前提是过程确定。</strong></p>
+<p>文档写得再清楚，只要产出过程里留着「看情况」的环节——手工调一下、按当天的手感选个数、某一步靠人眼判断——换一个人走一遍，结果就不一样，而且不一样的地方他自己看不出来。可重建在这里断掉，断在文档之外。</p>
+<p>解法不是把文档写得更细，是<strong>把不确定的那一段挪到离线</strong>：能在事前算定的，一次算定、存成表；在线只做查表和播放 [3]。这样「看情况」被压缩到离线那一次，在线部分变成确定的。</p>
+<p>（这条是机制性推断，取自这套体系的两类产物实践：一类要求逐帧可复现，一类要求批量结果可重算。两类最后都落到同一个手法上——把不确定性前移固化，而不是靠写得更细去约束执行。）</p>
+<h2 id="c04-s3">§3 九问</h2>
+<p>一条能被重建的规范，要回答九个问题。按用途分三组。</p>
+<p><strong>第一组：范围</strong></p>
+<ol>
+<li>管什么、不管什么</li>
+<li>什么时候触发</li>
+<li>和其他规矩冲突时听谁的</li>
+</ol>
+<p><strong>第二组：执行</strong></p>
+<ol start="4">
+<li>谁执行</li>
+<li>做到什么程度算对（判据）</li>
+<li>阈值凭什么这么定（来历）</li>
+</ol>
+<p><strong>第三组：失效</strong></p>
+<ol start="7">
+<li>什么情况不算（反例）</li>
+<li>错了怎么发现（检查）</li>
+<li>什么时候该废（到期条件）</li>
+</ol>
+<p>九问不必按顺序写在纸上，但必须都有答案。缺第一组，范围失控；缺第二组，各做各的；缺第三组，坏了没人知道。</p>
+<p>九问不是清单式填空。一条只有两行的规矩，九问的答案可能藏在上下文里；一条要交接给十个人的规范，九问最好逐条写出来。形式可以变，问不能缺。</p>
+<h2 id="c04-s4">§4 最常缺的两问：来历与反例</h2>
+<p>九问里，第 6 和第 7 缺得最多（经验刻画：取自本系列经手的稿子，非统计）。</p>
+<p><strong>阈值来历。</strong> 写「条目不超过二十条」，不写为什么是二十。后果是：下一个人遇到第二十一条，不知道能不能破例——破了，规矩失效；不破，可能真的需要。于是他来问作者，作者也忘了当初为什么是二十。</p>
+<p>补来历只要一句：<strong>这个数字是从哪来的，破了会怎样。</strong> 「二十条是读完一页的量，超过就要翻页，翻页之后读的人会跳过」——有了这句，第二十一条该不该加，判断就有依据。</p>
+<p><strong>反例。</strong> 写「每个结论都要有出处」，不写什么情况不算。后果是边界被一路推宽：会议纪要要不要出处？口头决定要不要出处？最后要么全部加，要么全部不加。</p>
+<p>补反例也只要一句：<strong>什么情况不算，为什么。</strong> 「现场决策、事后补记这类，不要求在当场给出处，但要在约定时限内补登」——边界立刻清楚。</p>
+<p>（这套体系给的是四十八小时；换一个节奏更快的组织，可能是当天。时限是参数，要的是「有时限」这件事。）</p>
+<p>两问的共同点：它们不增加规矩，只增加<strong>可判断性</strong>。写的人多花五分钟，读的人少问十次。</p>
+<h2 id="c04-s5">§5 名词锚定：让同一个词只有一个意思</h2>
+<p>规范写不清，多半是词的问题。</p>
+<p>同一个词，在三个段落里指三样东西，读者只能猜。猜错了不报错，做出来才发现不对。</p>
+<p>解法是给关键名词做锚定，四件事 [2]：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>锚</th>
+<th>做什么</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>解释</td>
+<td>一句话说它是什么</td>
+<td>「落点：这条规矩该待的层」</td>
+</tr>
+<tr>
+<td>细化</td>
+<td>说它包含哪几项</td>
+<td>「落点分五层：常驻、通用、项目、会话、就地」</td>
+</tr>
+<tr>
+<td>举例</td>
+<td>给一个具体的</td>
+<td>「把接口清单放进项目层，是落点判定」</td>
+</tr>
+<tr>
+<td>反例</td>
+<td>给一个不算的</td>
+<td>「把会议结论放进常驻层，不算落点，算记录」</td>
+</tr>
+</tbody>
+</table></div>
+<p>四件事不必都写。判断标准是：<strong>这个词如果被误解，会不会导致做错？</strong> 会，就锚；不会，就别锚——锚多了，正文被定义淹没。</p>
+<p>锚定的位置也有讲究：第一次出现的地方锚，别处只引用。散在各处各锚一次，就是 02 说的「两个正文」。</p>
+<p>锚定还有一层与长度有关：<strong>同一份稿子越长，后段越容易滑出前段定死的词义。</strong> 这跟记性关系不大，是距离的事（机制性推断：由「解释只参照上一段」这一机制推出）——词义每过一段就被重新解释一次，解释只参照上一段，不参照锚，几十段之后已经换了意思。所以长稿要回读锚，而不是顺着上一段往下写（漂移的四种距离见 02 §6）。</p>
+<h2 id="c04-s6">§6 写完之后的三轮减法</h2>
+<p>初稿总是偏长。减法分三轮，顺序不能换。</p>
+<p><strong>第一轮，删形容词。</strong> 「非常重要」「务必严格」「尽量完善」——这些词不改变动作，只表达态度。删掉之后如果句子还成立，它们本来就是多余的。</p>
+<p><strong>第二轮，删重复。</strong> 同一件事在两段里各说一遍，留一处。这一轮最需要克制：两处措辞不同，看起来像在互相补充，实际是同一个意思。</p>
+<p><strong>第三轮，删不影响行动的句子。</strong> 判据：<strong>删掉这句，读者做出来的东西会不会变？</strong> 不会变，删。会变，留。</p>
+<p>第三轮不好做，因为被删的句子常常写得挺顺（经验刻画）——它们是作者的思考过程，读起来有道理，但对执行没有影响。这类句子该去的地方是别处，不是规范正文。</p>
+<p>三轮下来，篇幅通常会明显缩短，信息不减。减不下去的，往往是内容本身没想清，靠文字在撑。</p>
+<p>三轮减法管「删什么」，还有一个更前置的问题：<strong>什么值得写进去。</strong></p>
+<p>判据：<strong>这段内容，读者从别处拿不到吗？</strong> 拿得到，就不该占这一行——他缺的是方向和来历，不是复述。</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>该写</th>
+<th>不该写</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>为什么这么排、阈值从哪来、踩过什么、什么做法试过不行</td>
+<td>通用的操作说明、工具自带的参数、会过期的实时值</td>
+</tr>
+</tbody>
+</table></div>
+<p>后一类的问题不在错，在于会过期。抄来的参数，工具一升级就成了错的；而「当初为什么这么定」不会过期——它记的是当时的约束，约束变了，读者自己就能改。</p>
+<p>（这条判据是经验刻画：取自这套体系的写作实践——它的写作规范把「该写什么」收在「读者拿不到的东西」上，原话不在此转引；原始分寸针对的是一段示例，本篇把这个范围提到了整篇。范围扩展是本书的，不是来源的。）</p>
+<p><strong>一组对照</strong>，三个场景取自这套书自己的稿面：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>形态</th>
+<th>做法</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>正例</td>
+<td>单篇模板把九问落到固定节位：边界在摘要、判据在正文、失效在脚注</td>
+<td>换个人按模板续写，产出在关键处一致</td>
+</tr>
+<tr>
+<td>反例</td>
+<td>某一版成稿里，九问中的第 9 问（到期条件）整组缺失</td>
+<td>规矩没有失效信号，「已通过」可以一直挂着</td>
+</tr>
+<tr>
+<td>半例</td>
+<td>本书 00 篇要求「常驻层有条目上限」，没给上限值与来历</td>
+<td>读的人知道要设上限，不知道该设几，于是不设</td>
+</tr>
+</tbody>
+</table></div>
+<p>正例靠的是节位固定，不靠作者记性好；反例的病根不在文笔，在少问了第 9 问；半例正是第 6 问（阈值来历）缺失的长相——<strong>规矩立在那里，下一个人不敢动它，也不会用它。</strong></p>
+<p>（三条为经验刻画，取自本系列生产记录，作一致性说明，不作独立证据。）</p>
+<h2 id="c04-s7">§7 一条规矩的两次改写</h2>
+<p>看一个具体的过程。原始版本：</p>
+<blockquote>
+<p>检查要认真做，发现问题及时上报，确保质量。</p>
+</blockquote>
+<p>三句话，零个可执行动作。「认真」没有标准，「及时」没有时限，「确保质量」没有判据。这是一条愿望。</p>
+<p>第一轮改写，补九问里的执行组：</p>
+<blockquote>
+<p>每次交付前，由执行人按清单逐项自查；发现不符合项的，当日在交付记录里登记；登记后由复核人确认，未确认的不交付。</p>
+</blockquote>
+<p>有了角色、触发、动作，但还缺两问：清单包含什么、什么算不符合。</p>
+<p>第二轮改写，补边界与反例：</p>
+<blockquote>
+<p>每次交付前，执行人按清单自查，清单包含格式、编号、引用三类共十二项；发现不符合的，当日在交付记录登记；复核人确认后交付。清单之外的问题不阻断交付，另行登记。清单每季度复核一次，连续两季无不符合的条目移出清单。</p>
+</blockquote>
+<p>到这里，一个没参与的人拿着它，能做出和别人一样的事：知道查什么、什么时候查、谁确认、什么情况放行、清单本身什么时候该改。</p>
+<p>两次改写的差别落在每一句是否对应一个动作或一个判据上。</p>
+<h2 id="c04-s8">§8 结语：写清楚是一次交付</h2>
+<p>写作常被当成表达，其实它是交付：<strong>把一件事从一个人的脑子里，交到另一个人的手上。</strong></p>
+<p>交付的判据不是「读起来顺」，是「接得住」。接不住，写得再漂亮也是没写完。</p>
+<p>所以写完之后的最后一问：<strong>换一个人，只读这一篇，能不能做出同样的东西？</strong> 能，这篇就写完了；不能，先看缺口在不在文档内——在，补九问里缺的那一个；不在，补九问也没用。</p>
+<h3>引用与出处说明</h3>
+<blockquote>
+<p>本篇引用一类：项目实证 3 条。无外部文献、无系列自引。</p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>引用</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[1]</td>
+<td>九段式与六要素（本篇改写为九问）</td>
+<td>本项目内部规程（作者留档）（项目实证；登记 M-04-1）</td>
+</tr>
+<tr>
+<td>[2]</td>
+<td>名词锚定（解释／细化／举例／反例）</td>
+<td>本项目内部记录（作者留档）（项目实证；登记 M-04-2）</td>
+</tr>
+<tr>
+<td>[3]</td>
+<td>不确定性的离线固化；源头的对应条目是「细碎处理交给确定性系统」</td>
+<td>本项目内部记录（作者留档）（项目实证；登记 M-04-3；本篇只取手法，不复述其实现）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>说明：[1] 为本篇九问的来源，本篇按问答形式重排，条目含义未变；「阈值来历」与「阴性对照」是其中本来就有的两项。[2] 支撑术语锚定的写法，本篇沿用，仅将示例换为本书语境。[3] 支撑 §2 的确定性一段；源自具体工程记录，本篇只取「离线固化」这一手法。「把不确定的挪到离线」是把源头那条往下推了一步——源头讲的是「细碎处理交给确定性系统」，本篇讲的是「事前算定、在线只查」，属延伸，不是原话。项目实证一律标登记号（指向作者留档的《映射表》，不随书发行）：每条有对应实例，抽象只抹载体与专名，不改真假；按经验刻画计，只承担本系列的观察陈述，不承担断言级取证。本篇点到其他篇的地方（「见 NN §X」这类指路），属篇间指路，不计入引用表。</p>
+</blockquote>
+<h2 id="c04-h9">延伸阅读</h2>
+<ul>
+<li><strong>03 判与落</strong>：写之前先定层与执行点位；层错了，写得再好也用不上。</li>
+<li><strong>05 检</strong>：写完立刻配判据，是一对动作。</li>
+<li><strong>08 裁</strong>：同一份规范换载体时，哪些句子能留、哪些要重写。</li>
+</ul>
+</section>
+<section class="chapter" id="c05">
+<!--
+SPDX-License-Identifier: CC-BY-SA-4.0
+Copyright (c) 2026 wUwproject
+Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+See https://creativecommons.org/licenses/by-sa/4.0/ for details.
+-->
+
+<h1 id="c05">05｜检——判据的可失败性</h1>
+<h2 id="c05-s1">§1 引子：五十几条出处，没有一条被核过</h2>
+<p>这套书的十几篇稿子，每篇末尾都有一张引用表，合计五十几条出处。稿子写完，格式检查跑了，十几项全部通过。</p>
+<p>但有个问题没人问过：那些出处，有没有人真的核过？</p>
+<p>没有。四检的第一检就是真实性，条文写得很清楚：每条引用必须能回溯到实体。它在这批稿子上一次也没跑过——不是跑完没通过，是从来没跑。第一次体检时，真实性一栏是空的。</p>
+<p>规矩还在，判据不在。这就是「检」要解决的事：让坏了这件事，有一个能被看见的时刻。一条从没被违反过的规矩，和一条从没被检查过的规矩，表面上一样安静——区别只在出事那天。</p>
+<p>这类规矩有个共同特征：<strong>它坏了的时候，多数情况下没人察觉。</strong> 文档照旧，流程照旧，直到某天用到一条不存在的引用，才发现问题在半年前就埋下了。</p>
+<h2 id="c05-s2">§2 红、假红、不红</h2>
+<p>判据的价值主要靠一种体现：<strong>它在该红的时候红。</strong></p>
+<p>三种状态要分开：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>状态</th>
+<th>表现</th>
+<th>说明什么</th>
+<th>怎么改</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>该红就红</td>
+<td>违规时失败，合规时通过</td>
+<td>判据有效</td>
+<td>保持</td>
+</tr>
+<tr>
+<td>假红</td>
+<td>合规也失败</td>
+<td>判据写死了</td>
+<td>放宽口径，或降级人判</td>
+</tr>
+<tr>
+<td>「从不红」</td>
+<td>违规也通过</td>
+<td>判据写松了，或根本没跑</td>
+<td>收紧，或直接删掉</td>
+</tr>
+</tbody>
+</table></div>
+<p>三种里，「从不红」看起来最没事——零红的检查不会引起任何追问。而它可能从来没检查过该检查的东西。</p>
+<p>判据：<strong>这条检查，上一次红是什么时候，红的是不是真问题？</strong> 答不出，它就在第三种状态。</p>
+<p>第三种状态还有一层，常被漏掉：<strong>检查跑了，判据也严，但判的不是那件事。</strong></p>
+<p>三条成因，按排查顺序摆：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>成因</th>
+<th>表现</th>
+<th>先查什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>环境没换</td>
+<td>跑的是旧文件、旧缓存、另一份配置</td>
+<td>让检查打印它实际读的路径</td>
+</tr>
+<tr>
+<td>判据锚错位</td>
+<td>判据命中的特征在别处也出现，或命中的面比预期宽</td>
+<td>先确认它在违规样本上真的会红</td>
+</tr>
+<tr>
+<td>状态没生效</td>
+<td>改了 A 处，实际生效的是 B 处</td>
+<td>每一态配一句前置断言；两态结果相同，先当异常查</td>
+</tr>
+</tbody>
+</table></div>
+<p>本项目三次都栽在倒序上，所以这里按固定顺序排：先查环境，再查判据锚，最后才怀疑被检对象。反过来，代价是拿改对了的东西去迁就一条错的检查。</p>
+<p>（三条成因是机制性推断，取自这套体系的检查记录：三次「全绿但确实坏了」的事故，一次读错了环境，一次是判据锚在别处也命中，一次是改了没生效。原始记录是具体工具的操作，本篇只取成因分类。）</p>
+<p>还有一层归因：<strong>红了之后，怎么知道红的是那个原因。</strong></p>
+<p>一条检查失败，往往有好几个原因同时在场——旧缓存、上一次的残留、另一处配置、真的违规。几样一起改再复跑，绿了也不知道是哪一样起了作用，下次照样会犯。</p>
+<p>受控的做法很笨：一次只改一个变量，其余钉死。跳过这一步，代价是把「巧合」写成「机制」——而且写进结论之后，读起来看不出破绽。</p>
+<p>（三态划分与这两条判据是经验刻画，取自既有体系的机械校验实践 [1]；本篇补的「红率／误报率」两个指标是机制性推断，来源未涉及。）</p>
+<h2 id="c05-s3">§3 硬档：能穷举的</h2>
+<p>硬档管的是格式、计数、存在性、完整性。它们的共同点是<strong>反例能事先列完</strong>。</p>
+<p>典型检查项：</p>
+<ul>
+<li>必填字段是否齐全</li>
+<li>编号是否连续、是否重复</li>
+<li>引用的目标是否存在</li>
+<li>同一句话是否在两处出现完整版</li>
+<li>条目数是否超过上限</li>
+</ul>
+<p>这几项用机器跑，成本低、结果稳定、不依赖心情 [3]。它们的产出是一条条明确的失败，而不是「建议再看看」。</p>
+<p>硬档有个前提容易被忽略：<strong>检查的输入得是结构化的。</strong> 一句自然语言里的「引用是否真实」，机器没法直接判；换成一条一条的编号，就能判。所以硬档常常不是「写一个检查」，而是「先把东西整理成能检查的形状」。</p>
+<p>整理形状这件事本身有价值：它逼着写的人把含糊的地方说清。写不出编号的引用，往往是作者自己也没确认过它存在。</p>
+<h2 id="c05-s4">§4 软档：穷举不了的</h2>
+<p>软档管的是语义：说得对不对、读者是谁、这个判断合不合理、这段有没有价值。这些没有穷举的尽头，交给机器只会产出假红（机制性推断：机器判不了「这个判断合不合理」，只能判字面）。</p>
+<p>软档不是不检，是换一种检法：<strong>问句、口径、频率。</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>要素</th>
+<th>作用</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>问句</td>
+<td>把判断变成可以回答的问题</td>
+<td>「读这段的人，能不能在不问作者的情况下做出下一步」</td>
+</tr>
+<tr>
+<td>口径</td>
+<td>谁答、答到什么程度算过</td>
+<td>「由未参与撰写的人答，答不出具体下一步即为不过」</td>
+</tr>
+<tr>
+<td>频率</td>
+<td>多久问一次</td>
+<td>「每次交付前，抽三处」</td>
+</tr>
+</tbody>
+</table></div>
+<p>三样缺一样，软档就会退化成「大家看看」：没有问句，不知道看什么；没有口径，各人标准不同；没有频率，总排在最后。</p>
+<p>软档的成本比硬档高，所以要挑地方用：<strong>只对影响最大的那几处设软检</strong>，别铺开。铺开的结果是每次都过一遍，过到第三次就开始走过场。</p>
+<h2 id="c05-s5">§5 存量不追：只守新增</h2>
+<p>第一次上检查，几乎都会遇到同一件事：存量内容红一片。</p>
+<p>老文档里的引用早失效了，老条目早超上限了，老格式本来就不统一。全修一遍，成本高到没人愿意动；不修，检查会一直是红的，红久了就被忽略。</p>
+<p>解法是承认存量，只守新增：</p>
+<ol>
+<li>第一次全量跑一遍，把当前的失败登记成基线</li>
+<li>基线内的失败不阻断，只计数</li>
+<li>新增内容必须全过；存量修一条，基线减一条</li>
+</ol>
+<p>这套做法有个前提：<strong>基线要能看见在减少。</strong> 如果基线登记完就没人动，它会在两年后变成「历史遗留」的另一种说法，检查也就名存实亡。</p>
+<p>基线的意义不是豁免，是<strong>把一次修不完的事，变成可以分批修的事</strong>。</p>
+<p>基线还有第二个用处：<strong>它是漂移的尺子。</strong> 同一批样本隔一段时间重跑，红了多少，就是这段时间漂了多少。没有基线，漂移只能靠回忆——而回忆本身也在漂。（漂移的四种距离与治法见 02 §6。）</p>
+<p>基线管存量，还有两条管增量：</p>
+<p><strong>判例只增不减。</strong> 一条检查被删，很少是因为"不需要了"，多半是因为"它挡着我过"。删不是不可以，但要留痕——谁删的、为什么删、那一段以后谁守。不留痕的删减，是覆盖率的静默下降，而且降得没人看得见。</p>
+<p><strong>每次翻车只交一次学费。</strong> 出了事，修完不算完，要把出事的那一幕变成一条判例，下版才不会再犯。修而不锁，等于把同一个坑原封不动留给下一个人——他还要再交一次。</p>
+<p>这两条都不难做，难在它们没有截止时间：没有哪天必须做，所以一直可以拖。</p>
+<h2 id="c05-s6">§6 检查自己也要被检查</h2>
+<p>判据也会坏。坏的方式有两种，方向相反。</p>
+<p><strong>红得太多。</strong> 每条内容都报错，说明口径太死，或者检查项本身写错了。红率长期偏高，组织会开始绕过检查——先改内容迁就检查，再后来干脆不跑。</p>
+<p><strong>从来不红。</strong> 要么检查没跑，要么检查项太松。触发次数够多而长期零红，该拉去复查：那不是一个好消息。</p>
+<p>两个指标能盖住这两头：<strong>红率</strong>（一段时间内的失败比例）和<strong>误报率</strong>（人工复核后确认不是真问题的比例）。红率突然翻倍，多半是新加了一条过严的检查；误报率上升，说明判据和现实脱节了（机制性推断）。</p>
+<p>还有一层：<strong>检查本身要能跑</strong> [2]。 脚本报错、路径失效、依赖缺失，都会让检查静默变成零红。所以检查要有一个「自检」——故意喂一条违规样本，看它红不红。这一步常被省掉，省掉之后，检查坏没坏没人知道。</p>
+<p>这个动作值得说准一点：<strong>只验证「该成功时成功」的探针，分不清「功能正常」与「探针不论功能好坏都返回成功」。</strong> 后一种情况下，功能已经坏了，探针照样返回成功。要让绿灯有意义，必须有一个能红的样本作对照——手上有一个合规样本时，顺手造一个违规样本，确认它会红。这个动作叫阴性对照 [4]。</p>
+<p>阈值标定同理：先跑一组已知会生效的基线，基线不成立，后面的结论一起作废——那种情况下该做的是停手，不是把结论标个备注继续往下走。</p>
+<p>还有一条最隐蔽的：<strong>测的必须是要交付的那一份</strong> [4]。</p>
+<p>规范一旦有两份副本——源文件与导出物、工作目录与发布目录、这一版与上一版——检查很可能跑在副本上。副本是旧的，全绿就是假的，而且假得看不出破绽：路径对、命令对、输出对，只有对象错了。这条恰好是「一处正文」在检查层的翻版——有两份，就有一份会骗过检查。</p>
+<p>判据很土但有效：让检查在启动时打印它实际读了哪个路径，与交付物的路径比一比。不同，就别看结果。</p>
+<p><strong>一组对照</strong>，三个场景取自这套书自己的检查记录：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>形态</th>
+<th>做法</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>正例</td>
+<td>把标题格式写成检查项，十几篇全被抓出不合模板</td>
+<td>改完复跑为绿：判据红过，红的是真问题，修完能变绿</td>
+</tr>
+<tr>
+<td>反例</td>
+<td>脚注逐篇写着「五项全 PASS」，五项一次没跑</td>
+<td>不是红不了，是根本没判：登记替代了执行</td>
+</tr>
+<tr>
+<td>半例</td>
+<td>十三项机械检查全过，其中没有一项查论证</td>
+<td>绿灯亮着，被检的东西没进门：红在格式上，红不到内容</td>
+</tr>
+</tbody>
+</table></div>
+<p>正例是判据该有的样子：有违规样本、有失败输出、修完能复绿。反例的毛病不在松，在于<strong>没有判定动作</strong>——登记表代替了检查。半例容易被误当合格，因为灯是绿的，没人问绿灯管的是哪一段。</p>
+<p>（三条为经验刻画：取自本系列的检查记录，作一致性说明，不作独立证据。）</p>
+<h2 id="c05-s7">§7 什么时候不值得检</h2>
+<p>检有成本，不是越多越好。</p>
+<p>三种情况不值得设检查：</p>
+<ul>
+<li><strong>常年不触发的规矩</strong>。这套体系取的门槛是一年不到三次：设了检查，跑的次数比违规的次数还多，维护成本高于收益（门槛随场景定）</li>
+<li><strong>正在快速变动的规则</strong>。判据跟着改，改的速度赶不上变化，最后判据比规则还旧</li>
+<li><strong>后果很轻、发现很容易的</strong>。错了当场就能看出来，不需要额外设一道检查</li>
+</ul>
+<p>判断标准：<strong>这条规矩违反一次的代价，是否高于维护这条检查的成本？</strong> 低于，就先靠人看；高于，才值得做成检查。</p>
+<p>这不是给偷懒找理由。检查占的是注意力预算，把它花在代价最高的几条上，比铺满一地更有效。</p>
+<p>反过来，检查要能当门禁用，还得有一个说得清的成员集：<strong>哪几条算全量，全量绿了才算过。</strong> 说不清成员集的门禁，等于没有门禁——谁都能说"我跑过了"，而这句话没法审计。全量清单可以短，但要能穷举完，不能以"等等"收尾。</p>
+<p>成本还有另一种省法：<strong>分层，而不是全量。</strong></p>
+<p>把检查按「守哪一类失败」分层，每层要能说出只有它抓得住的那类失败；说不出来的，就该并进别的层，或者删掉。层与层不互相替代——两个检查项看着像重复，但只要各自守着一类对方守不住的失败，它们就不能合并。</p>
+<p>判据一句话：<strong>删掉这一项，哪一类失败会漏？</strong> 答得出，留着；答不出，它是重复的。</p>
+<p>层分好之后，跑法也跟着变：按这次改了什么决定跑哪几层，不必每次都全量。</p>
+<p>这和上面说的「全量」不冲突，两件事分属定义与执行：<strong>全量是定义</strong>——哪几条合起来算一次完整检查，这一层不变；<strong>选跑是执行</strong>——这次改动只碰到其中几层，就先跑那几层。定义管的是「算不算跑过」，执行管的是「这次跑多少」。</p>
+<p>但前一层不过，不进后一层——后一层的判定以前一层的输出为前提，前面没绿，后面的绿没有意义。</p>
+<p>（分层与按改动选跑是机制性推断，取自这套体系的检查实践 [4]：其检查分成若干层，每层写明守什么，并配一张「改了什么 → 必跑哪几层」的对照。本篇只取两条——每层守一类失败、前层不过不进后层，不复述其分层数量与命名。）</p>
+<h2 id="c05-s8">§8 谁在判</h2>
+<!--FIG:BEGIN F05-MATRIX-->
+<figure class="fig" data-fig="F05-MATRIX">
+<svg viewBox="0 0 680 336" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="三档判定与四种检测手段的可见度—成本矩阵">
+<rect x="8" y="12" width="664" height="312" rx="10" fill="var(--td)" stroke="var(--line)"/>
+<rect x="134" y="22" width="128" height="36" rx="5" fill="var(--panel)" stroke="var(--line)"/>
+<text x="198.0" y="45.0" font-size="11" fill="var(--fg)" text-anchor="middle" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">结构脚本</text>
+<rect x="266" y="22" width="128" height="36" rx="5" fill="var(--panel)" stroke="var(--line)"/>
+<text x="330.0" y="45.0" font-size="11" fill="var(--fg)" text-anchor="middle" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">同上下文判定</text>
+<rect x="398" y="22" width="128" height="36" rx="5" fill="var(--panel)" stroke="var(--line)"/>
+<text x="462.0" y="45.0" font-size="11" fill="var(--fg)" text-anchor="middle" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">隔离单判</text>
+<rect x="530" y="22" width="128" height="36" rx="5" fill="var(--panel)" stroke="var(--line)"/>
+<text x="594.0" y="45.0" font-size="11" fill="var(--fg)" text-anchor="middle" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">隔离双判</text>
+<text x="20.0" y="106.0" font-size="12" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">看得见</text>
+<rect x="134" y="66" width="128" height="70" rx="5" fill="var(--bg)" stroke="var(--line)"/>
+<text x="198.0" y="88.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">形态：编号闭合、章数、</text>
+<text x="198.0" y="106.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">引用配对</text>
+<rect x="266" y="66" width="128" height="70" rx="5" fill="var(--bg)" stroke="var(--line)"/>
+<text x="330.0" y="88.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">字面缺陷：错字、明显对</text>
+<text x="330.0" y="106.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">偶、裸断言</text>
+<rect x="398" y="66" width="128" height="70" rx="5" fill="var(--bg)" stroke="var(--line)"/>
+<text x="462.0" y="88.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">关系类缺陷：引用与论点</text>
+<text x="462.0" y="106.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">、跨篇互斥、强度匹配</text>
+<rect x="530" y="66" width="128" height="70" rx="5" fill="var(--bg)" stroke="var(--line)"/>
+<text x="594.0" y="88.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">上述 ＋ 判断本身可不</text>
+<text x="594.0" y="106.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">可复现</text>
+<text x="20.0" y="184.0" font-size="12" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">看不见</text>
+<rect x="134" y="144" width="128" height="70" rx="5" fill="var(--bg)" stroke="var(--line)"/>
+<text x="198.0" y="166.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">语义：支撑成立不成立、</text>
+<text x="198.0" y="184.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">命题互不互斥</text>
+<rect x="266" y="144" width="128" height="70" rx="5" fill="var(--bg)" stroke="var(--line)"/>
+<text x="330.0" y="166.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">一切需要独立性的判断</text>
+<rect x="398" y="144" width="128" height="70" rx="5" fill="var(--bg)" stroke="var(--line)"/>
+<text x="462.0" y="166.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">单次的随机漏判</text>
+<rect x="530" y="144" width="128" height="70" rx="5" fill="var(--bg)" stroke="var(--line)"/>
+<text x="594.0" y="166.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">两次同错（同判据、同盲</text>
+<text x="594.0" y="184.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">区）</text>
+<text x="20.0" y="262.0" font-size="12" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">成本</text>
+<rect x="134" y="222" width="128" height="70" rx="5" fill="var(--bg)" stroke="var(--line)"/>
+<text x="198.0" y="244.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">秒级，零边际</text>
+<rect x="266" y="222" width="128" height="70" rx="5" fill="var(--bg)" stroke="var(--line)"/>
+<text x="330.0" y="244.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">中</text>
+<rect x="398" y="222" width="128" height="70" rx="5" fill="var(--bg)" stroke="var(--line)"/>
+<text x="462.0" y="244.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">高</text>
+<rect x="530" y="222" width="128" height="70" rx="5" fill="var(--bg)" stroke="var(--line)"/>
+<text x="594.0" y="244.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">两倍</text>
+<text x="340.0" y="311.0" font-size="14" fill="var(--gold)" text-anchor="middle" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">有效性 ＝ 看得见 × 担得起</text>
+</svg>
+<figcaption>图 4 · 三档判定与四种手段的可见度—成本矩阵（图只画关系，判据与归属见正文）</figcaption>
+</figure>
+<!--FIG:END F05-MATRIX-->
+<p>前面几节讲的是判据本身的成色，§7 算的是「设不设」这笔账。还剩一件事没问：<strong>这条判据，是谁拿着它在判。</strong></p>
+<p>这件事看着不属于检查，其实决定检查的全部价值。同一条判据换一个人判，结论可以完全不同——差别不来自判据，来自判的人知不知道这件事是怎么做出来的。</p>
+<p><strong>判定者手上的信息，决定他能判到哪一层。</strong></p>
+<p>刚写完就在同一个会话里判，判的是「我为什么这么写」。执笔的那一方替自己的文本辩护并不费力：多数句子都拿得出理由，理由还都听得通。判据一个字不改，只把稿子交给一个不知道写作意图、不知道改过几轮、不知道上一次结论的人，判的就变成「这段站不站得住」。<strong>换的不是判据，是判定者的信息范围。</strong></p>
+<p>这套做法要花两笔钱，都得先算清：</p>
+<ul>
+<li>隔离判定约等于把这篇当陌生稿重读一遍；</li>
+<li>全绿还要再判一次——<strong>全绿和「检查没生效」外观完全相同</strong>，看一次不能登记。</li>
+</ul>
+<p>第二笔钱常被省掉，省掉的方式很自然：「上次已经过了」。而两轮判定不一致，恰恰是判据锚错位的信号，不是「碰巧多看了一眼」。</p>
+<p>三档能登记什么，写死在这里：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>档</th>
+<th>做法</th>
+<th>能登记吗</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>边写边判</td>
+<td>同一会话里写完就判</td>
+<td>不能，只作自查</td>
+</tr>
+<tr>
+<td>隔离单判</td>
+<td>另起一次无写作上下文的判定，只给原文与判据</td>
+<td>能，常规篇目</td>
+</tr>
+<tr>
+<td>隔离双判</td>
+<td>两次互相不知结论的隔离判定</td>
+<td>能，两次都绿才登记；不一致以 FAIL 为准</td>
+</tr>
+</tbody>
+</table></div>
+<p>由此得一条判据，与 §2 的三态同构：</p>
+<p><strong>检测的有效性，等于手段看得见多少，乘以成本担不担得起。</strong>（本文推导：由 §7 的成本分层与隔离判定的独立性要求推出。）</p>
+<p>两个因子相乘，不是相加：<strong>看得见但没人跑，等于看不见；跑得起但看不见，等于白跑。</strong></p>
+<p>这也解释了为什么低成本检测的结论几乎总是合格。成本低到能长期执行的手段，只能是逐项打勾那一类；而它看不见的那类缺陷——这条引用是否真支撑论点、两条命题是否互斥——常藏在绿字后面。</p>
+<p>每一种手段都要能填完四列。<strong>缺「成本」一列的制度不可信，它没算过自己会不会被跳过。</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>手段</th>
+<th>看得见</th>
+<th>看不见</th>
+<th>单篇成本</th>
+<th>失效方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>结构脚本</td>
+<td>形态：编号闭合、章数、引用配对</td>
+<td>语义：支撑成立不成立、命题互不互斥</td>
+<td>秒级，零边际</td>
+<td>全绿而无意义</td>
+</tr>
+<tr>
+<td>同上下文判定</td>
+<td>字面缺陷：错字、明显对偶、裸断言</td>
+<td>一切需要独立性的判断</td>
+<td>中</td>
+<td>判成「我为什么这么写」，结论恒为通过</td>
+</tr>
+<tr>
+<td>隔离单判</td>
+<td>关系类缺陷：引用与论点、跨篇互斥、强度匹配</td>
+<td>单次的随机漏判</td>
+<td>高</td>
+<td>判据锚错位时整批判错方向</td>
+</tr>
+<tr>
+<td>隔离双判</td>
+<td>上述 ＋ 判断本身可不可复现</td>
+<td>两次同错（同判据、同盲区）</td>
+<td>两倍</td>
+<td>成本高到想省，省在第二次</td>
+</tr>
+</tbody>
+</table></div>
+<p>这张表有一处反直觉：<strong>最贵那一档付的钱，买的是「结论可被外人复核」。</strong> 判据可以一个字不改，改的只是谁在判、他手上有什么。</p>
+<p>还有一条边界要说清：<strong>脚本只筛不判。</strong> 判据是——把篇目交给一个没读过它的脚本，它能不能回答「这条引用若为反例，论点会塌吗」。答不出，它就没有判定资格。脚本能查编号闭不闭合，查不了这句话该不该写。</p>
+<h2 id="c05-s9">§9 结语：能红，才算数</h2>
+<p>一条规矩成立与否，不看它写得多好，看它违反的时候有没有东西变红。</p>
+<p>红不了的规定，只能靠人记；人记不住，就靠运气。检的作用是把「靠运气」换成「靠机制」——代价是要维护，收益是坏了能被发现。</p>
+<p>所以每写完一条规矩，紧接着问一句：<strong>它坏了，怎么知道？</strong> 答不出，这条规矩就还只是个愿望。</p>
+<h3>引用与出处说明</h3>
+<blockquote>
+<p>本篇引用一类：项目实证 4 条。无外部文献、无系列自引。项目实证不可外部复核，按经验刻画计，只承担本系列的观察陈述，不承担断言级取证。</p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>引用</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[1]</td>
+<td>判据两档、检查项分类、存量基线</td>
+<td>本项目内部规程与检查台账（作者留档；类型：机械校验规则、存量基线与失效率记录）（项目实证；登记 M-05-1）</td>
+</tr>
+<tr>
+<td>[2]</td>
+<td>递归自举：方法论约束自己</td>
+<td>本项目内部记录（作者留档；类型：规范自身条款与检查清单）（项目实证；登记 M-05-2）</td>
+</tr>
+<tr>
+<td>[3]</td>
+<td>确定性特权：细碎处理交给代码</td>
+<td>本项目内部记录（作者留档；类型：脚本与人工判定分工的施工记录）（项目实证；登记 M-05-3）</td>
+</tr>
+<tr>
+<td>[4]</td>
+<td>假通过的三类成因、阴性对照、判例守恒、分层与按改动选跑</td>
+<td>本项目内部记录（作者留档；类型：检查事故复盘与分级跑法）（项目实证；登记 M-05-4）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>说明：[1] 为本篇硬档与软档划分的直接来源，本篇补充了红率与误报率两个运维指标，来源未涉及。[2] 支撑 §6「检查自己也要被检查」；相邻实践里早有「规范也要约束自身」的说法，本篇把它落到检查项上。[3] 支撑 §3「能穷举的交给机器」；本篇只取「确定性可穷举」这一结论，不及其实现。[4] 支撑 §2 的三类成因与 §6 的阴性对照、同源判据；源自具体工程记录，本篇只取成因分类与判据形态，不取其工具与分级。三类成因切成三类还是两类，随场景定。本篇点到其他篇的地方（「见 NN §X」这类指路），属篇间指路，不计入引用表。</p>
+</blockquote>
+<h2 id="c05-h10">延伸阅读</h2>
+<ul>
+<li><strong>04 写</strong>：写完立刻配判据，两件事是一对。</li>
+<li><strong>07 退</strong>：判据也有寿命，长期不跑的要退。</li>
+<li><strong>09 渐进</strong>：先给哪几条配检查，阈值在那一篇。</li>
+</ul>
+</section>
+<section class="chapter" id="c06">
+<!--
+SPDX-License-Identifier: CC-BY-SA-4.0
+Copyright (c) 2026 wUwproject
+Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+See https://creativecommons.org/licenses/by-sa/4.0/ for details.
+-->
+
+<h1 id="c06">06｜长——从产物反推结构</h1>
+<h2 id="c06-s1">§1 引子：新领域来了，先做什么</h2>
+<p>一个新领域进来，常见两种反应。</p>
+<p>一种是先搭结构：建目录、分章节、定模板。搭完看起来很像样，然后发现没有内容可放——因为还没开始干活，不知道要交付什么。</p>
+<p>另一种是先干活：接一个具体任务，边做边记。做完一单，经验留在参与者的脑子里，第二单换人，从头再来。</p>
+<p>两种都错在同一个地方：<strong>顺序。</strong> 结构应该在产物之后，经验应该在结构之前落地。</p>
+<p>正确的顺序是反的：<strong>先问交付什么，再倒推怎么做，最后才定结构。</strong></p>
+<h2 id="c06-s2">§2 产物反推</h2>
+<p>反推只有三步：</p>
+<pre><code class="language-text">交付物是什么  →  要经过哪几道工序  →  每道工序怎么判对错
+</code></pre>
+<p>先定交付物，因为它是能校验的那一样。工序和判据都可以争论，交付物不行——它要么交出来了，要么没有。</p>
+<p>一个具体的例子。假设要在一个新领域建立「每月一次的数据核对」：</p>
+<ul>
+<li>交付物：一份核对记录，含差异清单与处理结论</li>
+<li>工序：取数 → 比对 → 差异归类 → 处理 → 复核</li>
+<li>判据：取数有口径说明；比对有唯一键；差异有归类；处理有责任人；复核有签字</li>
+</ul>
+<p>三步走完，结构就出来了：它需要一张口径表、一份差异分类、一个责任人清单。这些结构是从交付物长出来的，不是先想好的。</p>
+<p>反过来做——先定「我们要有五个模块」，再往里填——填的时候会发现第三个模块和第五个重复，第一个模块没人用。结构没有依据，执行再用力也是白搭。</p>
+<p>（反推三步与七步的顺序是经验刻画：取自既有体系的新领域立项实践 [1]，本篇按本书语境重排；步骤数与名称是本书取的，不是来源的规定。）</p>
+<h2 id="c06-s3">§3 七步</h2>
+<p>从零长一套，七步：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>步</th>
+<th>做什么</th>
+<th>产出</th>
+<th>卡住时的信号</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nw">1</td>
+<td>定交付物</td>
+<td>一句话说清交什么</td>
+<td>说不清谁收、收了干什么</td>
+</tr>
+<tr>
+<td class="nw">2</td>
+<td>拆工序</td>
+<td>五到七道（本书取的量级，随场景定），每道有动词</td>
+<td>超过十道，说明还没拆对</td>
+</tr>
+<tr>
+<td class="nw">3</td>
+<td>定判据</td>
+<td>每道工序一条「怎么算对」</td>
+<td>判据里出现「认真」「尽量」</td>
+</tr>
+<tr>
+<td class="nw">4</td>
+<td>找反例</td>
+<td>每道工序一条「什么不算」</td>
+<td>举不出反例，说明边界没想清</td>
+</tr>
+<tr>
+<td class="nw">5</td>
+<td>配执行</td>
+<td>每道工序定人、定点位</td>
+<td>落到「大家配合」就是没定</td>
+</tr>
+<tr>
+<td class="nw">6</td>
+<td>设阈值</td>
+<td>什么规模才启用这套</td>
+<td>说不出数字，按最小规模试</td>
+</tr>
+<tr>
+<td class="nw">7</td>
+<td>留退路</td>
+<td>什么情况停用、谁来决定</td>
+<td>没有停用条件，就会一直挂着</td>
+</tr>
+</tbody>
+</table></div>
+<p>七步里，第 4 步常被跳过（经验刻画，取自本系列立项记录）。跳过之后，工序会在执行中一路扩张——每一件「差不多算」的事都被纳进来，半年后这套东西管的事比原计划宽出一截。</p>
+<p>（第 5 步的人机分工：人定工序，机器执行确定部分 [2][3]。）</p>
+<p>第 7 步常被推迟。「以后再说停用」的结果是没有停用，这套东西和后面长出来的新东西并存，两边口径开始打架。</p>
+<p><strong>一组对照</strong>，三个场景取自这套书自己的立项记录：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>形态</th>
+<th>做法</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>正例</td>
+<td>先定交付物（一册可读的书），倒推工序（选题→单篇→成书→出片），再定结构（篇目录、模板、检查）</td>
+<td>目录从交付物长出来，篇篇有明确位置</td>
+</tr>
+<tr>
+<td>反例</td>
+<td>先把文件名全部建好，再往里填内容</td>
+<td>一批填出了骨架却凑不出实证：壳有了，产物没到</td>
+</tr>
+<tr>
+<td>半例</td>
+<td>七步走到第 5 步，检查脚本配好了，谁跑、多久跑一次没定</td>
+<td>脚本在，执行没落地：有工具，没有执行者</td>
+</tr>
+</tbody>
+</table></div>
+<p>正例的关键在第一步能被验证——「一册可读的书」交得出来或交不出来，没法争；反例的病根在结构先于产物，壳一多就没人敢删；在本系列的立项记录里，半例是最常见的停法：<strong>前四步都做了，第五步留了个「大家用起来」，等于没做。</strong></p>
+<p>（三条为经验刻画，取自本系列生产记录，作一致性说明，不作独立证据。）</p>
+<h2 id="c06-s4">§4 什么时候值得长一套</h2>
+<p>不是每个新领域都值得建体系。三个条件同时成立才值得：</p>
+<ul>
+<li><strong>重复</strong>：同类任务一年出现十次以上（本书取的阈值，随场景定）</li>
+<li><strong>交接</strong>：做事的人会换，或者要交给别人做</li>
+<li><strong>代价</strong>：做错的代价高于建这套东西的成本</li>
+</ul>
+<p>三个条件里，第二个常被高估（经验刻画）。一个人做、不换人、不外传的活，建体系是给自己加负担——这类经验记在自己笔记里就够。</p>
+<p>反过来，三个都成立却不建，代价是每次换人都从头教一遍，而且教出来的版本各不相同。</p>
+<p>判据：<strong>这套东西建完，第一次交接会在多久之后发生？</strong> 这套体系取的分界是一年内没有交接就先别建，等有交接需求再建（分界随场景定）。到那时这类事已经做过十几遍，本书的经验是写起来快一些。</p>
+<h2 id="c06-s5">§5 长歪的三种样子</h2>
+<p><strong>先建结构。</strong> 目录、模板、编号规则都定好了，内容还没开始。这种结构在第一次实操时就会被推翻一大半——因为实际要交的东西和设想的不一样。</p>
+<p><strong>照搬旧套。</strong> 上一个领域的结构直接复制，改个名字就用。领域之间的差异往往在工序上，不在结构上：结构看着一样，工序对不上，判据全废。</p>
+<p><strong>一次做全。</strong> 七步一起铺开，每步都开个头。结果是每步都停在半成品，没有一样能交付。正确做法是走完一道工序再走下一道，第一道工序能独立交付了，再动第二道。</p>
+<p>三种长歪的共同点：<strong>都在没有产物的前提下做结构决定。</strong> 结构是产物的函数，产物没定，结构每改一次都要等一次实操来推翻。</p>
+<p>三种也是漂移的一种，距离量的是工期：从立项到交付隔得越久，最初那个「要交什么」越容易被结构动作盖住——建目录、定编号、配模板，每一样都比「先跑一遍」更像在干活。改法不在更用力地执行，在每一步回到产物（02 §6）。</p>
+<h2 id="c06-s6">§6 从一套长出第二套</h2>
+<p>一套长成之后，第二套会快很多，原因是结构可以复用，但<strong>只能复用骨架，不能复用条文</strong>。</p>
+<p>可复用的：</p>
+<ul>
+<li>七步的顺序</li>
+<li>判据的写法（怎么算对、什么不算）</li>
+<li>层的划分方式</li>
+<li>检查项的形态</li>
+</ul>
+<p>不可复用的：</p>
+<ul>
+<li>具体阈值（十次还是五次，看领域频率）</li>
+<li>具体工序（取数、比对这类动作，各领域不同）</li>
+<li>具体反例（每个领域的边界不一样）</li>
+</ul>
+<p>判断方法还是那句：<strong>把专有名词删掉，还成立的是骨架，剩下的是条文。</strong></p>
+<p>复用骨架、重写条文，第二套会省掉一部分摸索的力气。反过来，条文照搬，第二套多半会在第一次实操时崩掉，然后被判定为「这套方法不适用」——其实不适用的只是条文。</p>
+<p>还有一件事，只有时间长了才显出来：<strong>变更是要记账的。</strong></p>
+<p>一套体系跑起来之后，改动不会停。每次改动至少要留下两份账：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>一份给谁</th>
+<th>写什么</th>
+<th>缺了会怎样</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>受影响的人</td>
+<td>改了什么、他要做什么</td>
+<td>他按旧的做，改等于没改</td>
+</tr>
+<tr>
+<td>自己</td>
+<td>这次凭什么敢改——新增了什么判据</td>
+<td>几个月后这条判据成了孤立的规矩，没人知道它为什么在</td>
+</tr>
+</tbody>
+</table></div>
+<p>后一份常被省（经验刻画），因为它不面向任何人。但它正是判据的来历：没有它，一条规矩在时间里的每次改动都是一次小小的失忆，攒够了，整套东西就没人能解释。</p>
+<p>两份账不一定要分两个文件。写在一起、分段即可——面向人的在前，内部台账在后，互不干扰。</p>
+<p>（这条是机制性推断，取自这套体系的发布记录：每次发布都要求写明「用户要做什么」与「这次新增了什么判据」，后者是内部台账。原始体例有自己的字段与顺序，本篇只取「两份账」这一条。）</p>
+<h2 id="c06-s7">§7 结语：先有产物，再有结构</h2>
+<p>新领域从零长一套，本书取的顺序是这一条：交付物 → 工序 → 判据 → 反例 → 执行 → 阈值 → 退路。</p>
+<p>这个顺序的根本理由是：<strong>结构必须由产物证明，不能由设想证明。</strong> 先建的结构没有产物支撑，它证明不了自己对不对，只能等实操来推翻。</p>
+<p>所以判断一套东西该不该建，先问一句：<strong>它要交付的那件东西，现在能不能说清？</strong> 说不清，七步一步都走不动。</p>
+<h3>引用与出处说明</h3>
+<blockquote>
+<p>本篇引用一类：项目实证 3 条。无外部文献、无系列自引。</p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>引用</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[1]</td>
+<td>七步装配线与产物反推</td>
+<td>本项目内部规程（作者留档）（项目实证；登记 M-06-1）</td>
+</tr>
+<tr>
+<td>[2]</td>
+<td>编排范式：人定流程、机器填空</td>
+<td>本项目内部记录（作者留档）（项目实证；登记 M-06-2）</td>
+</tr>
+<tr>
+<td>[3]</td>
+<td>链驱动：工序串成链再由链驱动执行</td>
+<td>本项目内部记录（作者留档）（项目实证；登记 M-06-3）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>说明：[1] 为本篇七步的来源，本篇按交付物视角重排，并把「找反例」「设阈值」「留退路」单列成步——单列是本书的重组（经验刻画），不是来源的结论；切几步、以什么为界，随场景定。[2][3] 支撑 §3 第 5 步「配执行」的人机分工；本篇只取「人定工序、机器执行确定部分」这一结论，不展开其编排细节。项目实证一律标登记号（指向作者留档的《映射表》，不随书发行）：每条有对应实例，抽象只抹载体与专名，不改真假；按经验刻画计，只承担本系列的观察陈述，不承担断言级取证。本篇点到其他篇的地方（「见 NN §X」这类指路），属篇间指路，不计入引用表。</p>
+</blockquote>
+<h2 id="c06-h8">延伸阅读</h2>
+<ul>
+<li><strong>03 判与落</strong>：新长出来的每一条，都要过一遍落点判定。</li>
+<li><strong>07 退</strong>：第 7 步「留退路」在那一篇展开。</li>
+<li><strong>09 渐进</strong>：第 6 步「设阈值」的判据在那一篇。</li>
+</ul>
+</section>
+<section class="chapter" id="c07">
+<!--
+SPDX-License-Identifier: CC-BY-SA-4.0
+Copyright (c) 2026 wUwproject
+Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+See https://creativecommons.org/licenses/by-sa/4.0/ for details.
+-->
+
+<h1 id="c07">07｜退——不依赖意愿的到期判定</h1>
+<h2 id="c07-s1">§1 引子：没有一条规矩被正式废除过</h2>
+<p>一个跑了三年的体系，翻开看，条目比第一年多了一倍。</p>
+<p>问一句：这三年里，有没有哪一条被正式废除过？多数时候答不上来——不是没有该废的，是没有人废过。</p>
+<p>废除这件事，难在三个地方：</p>
+<ul>
+<li>不知道哪条该废（没有到期条件）</li>
+<li>知道该废，但不敢废（怕删掉有用的）</li>
+<li>敢废，但没权力废（要谁批）</li>
+</ul>
+<p>三个难点对应三件事：<strong>条件、分级、授权。</strong> 本篇讲这三件。</p>
+<h2 id="c07-s2">§2 到期条件：不依赖意愿</h2>
+<p>一条规矩要能退，先得有一个到期条件。条件的形式可以很简单：</p>
+<ul>
+<li>时间：六个月后复审一次</li>
+<li>事件：对应的项目结项、系统下线</li>
+<li>计数：连续两次检查没有命中</li>
+<li>替代：出现了覆盖它的新规矩</li>
+</ul>
+<p>四种里，<strong>事件型最可靠</strong>，因为它不依赖人去记得。项目结项是个明确的时点，系统下线是个明确的状态；时间和计数都需要有人定期去看。</p>
+<p>（四种条件与「事件型最可靠」是机制性推断：依据是各类条件成立时是否需要第三方定期巡检，本文 §2 末的判据即由此推出。）</p>
+<p>最不可靠的是「看情况」。「等以后觉得不需要了就删」——这句话的实际含义是一直不删，因为没有人会在某天突然觉得不需要。</p>
+<p>判据：<strong>这个到期条件，能不能由第三方判定？</strong> 能，条件成立；只有当事人自己知道「差不多了」，条件不成立。</p>
+<h2 id="c07-s3">§3 三个触发</h2>
+<p>到期条件之外，还有三种情况，出现任何一种就该处理。</p>
+<p><strong>第一，它的好日子快到头了。</strong> 一条规矩现在还管用，但能看出三年后会过时——现在就该准备替换方案，而不是等到那天。等到那天再动，往往是在最忙的时候动最不该动的东西。</p>
+<p><strong>第二，留着的理由只剩「已经投入过」。</strong> 这条规矩当初花了两个月才立起来，现在明显没人用。留着它的理由只有沉没成本。沉没成本不是理由：已经花掉的时间不会因为留着它就回来。</p>
+<p><strong>第三，它正在挤占新东西的位置。</strong> 一个位置被旧规矩占着，新规矩就进不来。占位本身就是成本——它不只是「多一条」，而是「少一条」。</p>
+<p>这三条不是新发明。德鲁克在 1964 年就把「有组织地放弃」作为一条独立原则提出，并给了三个判断标准；它与本篇三条在形态上相近，这是本文的比对（属本文推导），不主张原意即此 [1]（章页本篇未逐条核到，故不引原文）。差别在于对象：他讲的是产品、服务、市场；本篇把它下沉到「规则与内容」这一层——因为规则也会占位、也会只剩沉没成本、也会有好日子到头的时点。</p>
+<h2 id="c07-s4">§4 退的四档：改、并、降、删</h2>
+<!--FIG:BEGIN F07-STATE-->
+<figure class="fig" data-fig="F07-STATE">
+<svg viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="退役四档并列静态图，PDF 中可直接读全">
+<text x="22.0" y="26.0" font-size="12" fill="var(--muted)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">退的四档：四档并列，从上往下试</text>
+<rect x="22" y="42" width="152" height="188" rx="9" fill="var(--panel)" stroke="var(--line)" stroke-width="1.2"/>
+<rect x="22" y="42" width="152" height="4" fill="var(--gold)"/>
+<text x="36.0" y="72.0" font-size="20" fill="var(--fg)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">改</text>
+<text x="36.0" y="102.0" font-size="10" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">做什么</text>
+<text x="36.0" y="121.0" font-size="9" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">保留条目，改判据或阈值</text>
+<text x="36.0" y="148.0" font-size="10" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">适用</text>
+<text x="36.0" y="167.0" font-size="9" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">方向对、参数错</text>
+<text x="36.0" y="194.0" font-size="10" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">代价</text>
+<text x="36.0" y="213.0" font-size="9" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">最低</text>
+<rect x="186" y="42" width="152" height="188" rx="9" fill="var(--panel)" stroke="var(--line)" stroke-width="1.2"/>
+<rect x="186" y="42" width="152" height="4" fill="var(--gold)"/>
+<text x="200.0" y="72.0" font-size="20" fill="var(--fg)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">并</text>
+<text x="200.0" y="102.0" font-size="10" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">做什么</text>
+<text x="200.0" y="121.0" font-size="9" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">并入另一条，保留一处正文</text>
+<text x="200.0" y="148.0" font-size="10" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">适用</text>
+<text x="200.0" y="167.0" font-size="9" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">两条讲的是同一件事</text>
+<text x="200.0" y="194.0" font-size="10" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">代价</text>
+<text x="200.0" y="213.0" font-size="9" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">低</text>
+<rect x="350" y="42" width="152" height="188" rx="9" fill="var(--panel)" stroke="var(--line)" stroke-width="1.2"/>
+<rect x="350" y="42" width="152" height="4" fill="var(--gold)"/>
+<text x="364.0" y="72.0" font-size="20" fill="var(--fg)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">降</text>
+<text x="364.0" y="102.0" font-size="10" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">做什么</text>
+<text x="364.0" y="121.0" font-size="9" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">从上层移到下层</text>
+<text x="364.0" y="148.0" font-size="10" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">适用</text>
+<text x="364.0" y="167.0" font-size="9" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">还对，但不再常用</text>
+<text x="364.0" y="194.0" font-size="10" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">代价</text>
+<text x="364.0" y="213.0" font-size="9" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">中</text>
+<rect x="514" y="42" width="152" height="188" rx="9" fill="var(--panel)" stroke="var(--line)" stroke-width="1.2"/>
+<rect x="514" y="42" width="152" height="4" fill="var(--gold)"/>
+<text x="528.0" y="72.0" font-size="20" fill="var(--fg)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">删</text>
+<text x="528.0" y="102.0" font-size="10" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">做什么</text>
+<text x="528.0" y="121.0" font-size="9" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">整条移除</text>
+<text x="528.0" y="148.0" font-size="10" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">适用</text>
+<text x="528.0" y="167.0" font-size="9" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">已失效、已被替代</text>
+<text x="528.0" y="194.0" font-size="10" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">代价</text>
+<text x="528.0" y="213.0" font-size="9" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">高，需留档</text>
+<text x="22.0" y="252.0" font-size="11" fill="var(--muted)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">能改就不并，能并就不降，能降就不删；删不可逆，需留档。</text>
+</svg>
+<figcaption>图 5 · 退役四档并列，四档做什么、适用与代价一图看全（图只画关系，判据与归属见正文）</figcaption>
+</figure>
+<!--FIG:END F07-STATE-->
+<p>「退」不等于「删」。四档处置，成本从低到高：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>档</th>
+<th>做什么</th>
+<th>适用</th>
+<th>代价</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>改</td>
+<td>保留条目，改判据或阈值</td>
+<td>方向对、参数错</td>
+<td>最低</td>
+</tr>
+<tr>
+<td>并</td>
+<td>并入另一条，保留一处正文</td>
+<td>两条讲的是同一件事</td>
+<td>低</td>
+</tr>
+<tr>
+<td>降</td>
+<td>从上层移到下层</td>
+<td>还对，但不再常用</td>
+<td>中</td>
+</tr>
+<tr>
+<td>删</td>
+<td>整条移除</td>
+<td>已失效、已被替代</td>
+<td>高，需留档</td>
+</tr>
+</tbody>
+</table></div>
+<p>顺序是从上往下试：能改就不并，能并就不降，能降就不删。删是最后一档，因为它不可逆——至少在当时看起来不可逆。</p>
+<p>这套体系里用得最多的是「降」（经验刻画）。大量条目不是错了，是不再常用；把它们从常驻层移到项目层或就地层，比删掉更安全，也解决了占位问题。</p>
+<p>判据：<strong>这一条是「错了」还是「不常用了」？</strong> 错了，改或删；不常用了，降。</p>
+<h2 id="c07-s5">§5 边界：什么不能退</h2>
+<p>有三种东西，到期也不能删：</p>
+<ul>
+<li><strong>法定义务</strong>：法规要求留存的文件与记录，有明确的保管期限与处置程序[2]</li>
+<li><strong>审计留痕</strong>：决策依据、审批记录，删掉之后无法回溯</li>
+<li><strong>安全红线</strong>：与人身、资金、资质相关的约束，过时也要先有替代</li>
+</ul>
+<p>三类的共同点：<strong>它们存在的理由都在「有事时用得上」——多数是查得到，安全那一类是防得住。</strong> 用「没人看」来判断该不该删，会把它们一起删掉。</p>
+<p>所以退的第一步不是删，是分类：<strong>这条东西是「用来做事的」还是「用来证明的」？</strong> 用来做事的，按上面的四档退；用来证明的，走留存期限，不走这套。</p>
+<p>这条边界划不清，退就会变成一次冒险——删了几条真没用的，顺手删掉一条该留的，然后再也没人敢退。</p>
+<h2 id="c07-s6">§6 谁有权叫停</h2>
+<p>条件和分级都清楚，还是退不动。原因在授权。</p>
+<p>一条规矩往往有两个主人：写它的人，和用它的人。写的人不愿意承认自己写的东西过时；用的人不敢说「这条没用了」，因为那是别人立的。</p>
+<p>于是形成一种稳定状态：<strong>多数人知道该退，动手的很少。</strong></p>
+<p>解法是把「叫停权」显式化 [3]：</p>
+<ul>
+<li>每条规矩指定一个<strong>退役负责人</strong>，与撰写人分离</li>
+<li>退役负责人有权发起退役，不需要撰写人同意</li>
+<li>涉及法定留存与安全红线的，退役需上一级确认</li>
+</ul>
+<p>这条设计的要点是<strong>分离</strong>：写的人负责它成立，另一个人负责它退场。同一个人兼两职，退场总排在自己证明自己错了之后。</p>
+<p>判据：<strong>这条规矩要退，需不需要它的作者点头？</strong> 需要，就是没有授权。</p>
+<h2 id="c07-s7">§7 退的动作：四件事一起做</h2>
+<p>决定退之后，有四件事要一起完成，缺一件就会留尾巴：</p>
+<ol>
+<li><strong>留档</strong>：为什么退、依据是什么、什么时候退的，记一行</li>
+<li><strong>通知</strong>：用它的人要知道它不在了，否则会继续按旧的做</li>
+<li><strong>摘引用</strong>：指向它的地方，要么改指向，要么删掉，否则出现悬空引用</li>
+<li><strong>同步检查</strong>：为它设的检查项一起删，否则检查长期零红，误导人以为这块没问题</li>
+</ol>
+<p>第四件常被忘。规矩删了，检查还在跑；跑出来的总是「通过」，看起来一切正常，实际检查的对象已经不存在。</p>
+<p>四件事做完，才算退干净。只做第一件，是「记录上退了，实际还在」。</p>
+<p>四件都在内部完成。还有一处不在内部：<strong>已经发出去的东西。</strong></p>
+<p>产物一旦离开内部——印出去的图、别人存下的旧版、已经对外承诺过的接口——它就有了一个改不动的副本。内部的引用能改指向，外部的改不了，只能发新的一版去覆盖，而且覆盖得慢。</p>
+<p>于是外部副本要额外做一件事：<strong>让它自己带身份。</strong> 内部引用不需要自报家门，它总在同一个地方；外部副本不知道自己是哪一版，上游一更新，它就静默地变成了错的——看着还能用，实际指向的已经不是当初那份。</p>
+<p>这就是「一处正文」的边界：它管内部，两个正本会漂移，解法是只留一个；外部管不到，只能换一种解法——让每个副本自己说清它是谁。内部靠唯一，外部靠标识。</p>
+<p>（这条是机制性推断，取自这套体系的分发实践：分发物料上带版本标识，理由就是「发出去收不回来」。原始做法是一张物料对应一个渠道、标识里带版本；本篇只取这一条——外部副本改不动，只能自报身份。）</p>
+<p><strong>一组对照</strong>，三个场景取自这套书自己的处置记录：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>形态</th>
+<th>做法</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>正例</td>
+<td>分层依据由「重要不重要」改为「能活多久 × 谁会读」，层名与条目照旧保留</td>
+<td>改档：方向对、判据换掉，其余不动</td>
+</tr>
+<tr>
+<td>反例</td>
+<td>新稿写成后，旧稿原样留在书里，没有作废标记</td>
+<td>两套并存：读者不知道该按哪套</td>
+</tr>
+<tr>
+<td>半例</td>
+<td>一条规矩删了，为它设的检查项还在跑，跑出来总是通过</td>
+<td>检查对象已不存在：绿灯照旧，没人问它在查什么</td>
+</tr>
+</tbody>
+</table></div>
+<p>正例说明四档里最省事的是「改」；反例是最常被跳过的一步——<strong>新东西写出来，不等于旧东西退掉了</strong>；半例对应上面第 4 件事，删规矩不删检查，绿灯会一直亮着。</p>
+<p>（三条为经验刻画，取自本系列生产记录，作一致性说明，不作独立证据。）</p>
+<h2 id="c07-s8">§8 结语：退是维护的一部分</h2>
+<p>退不是否定，是维护。一套只增不减的体系，会在第三年变得没人愿意打开：内容没错，只是太重。</p>
+<p>所以退要和长一起设计：<strong>长的时候就想好怎么退。</strong> 没有退路的东西不建，没有到期条件的规矩不进常驻层。</p>
+<p>最后一问：<strong>今天还会开始做它吗？</strong> 答案是不会，它就该退——哪怕它还在产生价值。（这一问由退役负责人依使用记录回答，不作到期条件。）</p>
+<h3>引用与出处说明</h3>
+<blockquote>
+<p>本篇引用分三类：外部文献 1 条、法规 1 条、项目实证 1 条。</p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>引用</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[1]</td>
+<td>有组织地放弃：三条判断标准</td>
+<td>Drucker, P. F. (1964). <em>Managing for Results</em>. Harper &amp; Row（联网核验）；后续重申见 <em>Management: Tasks, Responsibilities, Practices</em> (1973)、<em>Innovation and Entrepreneurship</em> (1985)、<em>Management Challenges for the 21st Century</em> (1999, p. 74)（三条标准在 1999 版 p. 74 有完整表述）</td>
+</tr>
+<tr>
+<td>[2]</td>
+<td>文件材料归档范围与保管期限（永久／30 年／10 年）</td>
+<td>《企业文件材料归档范围和档案保管期限规定》，国家档案局令第 10 号，2013 年施行（联网核验）</td>
+</tr>
+<tr>
+<td>[3]</td>
+<td>画圈即划界权垄断</td>
+<td>本项目内部记录（作者留档）（项目实证；登记 M-07-1）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>说明：[1] 用于支撑 §3 的三条触发；本篇将其对象由产品／市场下沉到规则与内容，属范围扩展，不是原义转述。[2] 用于支撑 §5 的法定留存边界；该规定给出三档期限与处置程序，本篇只取「存在法定期限」这一事实，不引具体条目。[3] 支撑 §6 的授权设计；「边界由谁划定」这一问与本书同向，本篇把它落到退役负责人这个角色上。项目实证一律标登记号（指向作者留档的《映射表》，不随书发行）：每条有对应实例，抽象只抹载体与专名，不改真假；按经验刻画计，只承担本系列的观察陈述，不承担断言级取证。本篇点到其他篇的地方（「见 NN §X」这类指路），属篇间指路，不计入引用表。</p>
+</blockquote>
+<h2 id="c07-h9">延伸阅读</h2>
+<ul>
+<li><strong>01 为什么会烂</strong>：§6「完整是腐坏的加速器」与本篇是同一机制的两端。</li>
+<li><strong>06 长</strong>：第 7 步「留退路」在本篇展开。</li>
+<li><strong>12 对照</strong>：德鲁克、产品生命周期与档案学的对照，在那一篇系统做。</li>
+</ul>
+</section>
+<section class="chapter" id="c08">
+<!--
+SPDX-License-Identifier: CC-BY-SA-4.0
+Copyright (c) 2026 wUwproject
+Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+See https://creativecommons.org/licenses/by-sa/4.0/ for details.
+-->
+
+<h1 id="c08">08｜裁——不变量与参数的切分</h1>
+<h2 id="c08-s1">§1 引子：换一套工具，为什么要重写</h2>
+<p>同一个组织，从一种协作方式换到另一种，规矩要重写一遍。</p>
+<p>重写的时候，常把有用的东西一起丢了（经验刻画：本系列换载体的记录）：原来那条「一处正文」没了，因为新工具支持多处同步；原来那条「常驻层只放红线」没了，因为新工具能全文检索。</p>
+<p>换了之后会遇到同一类问题：多处同步的并不真同步，全文检索找不到该找的。于是再把丢掉的东西捡回来。</p>
+<p>问题不在换工具，在<strong>没有分清哪些是跟着工具走的，哪些是不跟着工具走的</strong>。</p>
+<h2 id="c08-s2">§2 两层：不变量与参数</h2>
+<p>任何一条规矩，拆开都是两层：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>层</th>
+<th>特征</th>
+<th>换载体时</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>不变量</td>
+<td>换掉工具、规模、执行者仍然成立</td>
+<td>不动</td>
+</tr>
+<tr>
+<td>参数</td>
+<td>随工具、规模、现场变化</td>
+<td>重设</td>
+</tr>
+</tbody>
+</table></div>
+<p>判据还是那一句：<strong>把专有名词逐条删掉，这条还成立吗？</strong> 成立的部分是不变量，剩下的就是参数。</p>
+<p>举例：「常驻层的条目不超过二十条，写在一页纸内」——删掉「二十条」「一页纸」，剩下「常驻层要有条目上限」，这是不变量；二十和一页纸是参数。</p>
+<p>参数不是随便定的，它有来历 [2]：二十条来自「一页读完」这个约束——那是源体系在纸面上取的数。换到屏幕阅读，一屏能放的条数就少得多，参数要改，来历不变。</p>
+<p>（两层之分与五参数是经验刻画，取自既有体系的裁剪篇 [1]；「来历不变、参数可变」这一条是本文推导，见 §4 第三步。）</p>
+<h2 id="c08-s3">§3 五个裁剪参数</h2>
+<p>按现场调整，主要动五样：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>问什么</th>
+<th>调大</th>
+<th>调小</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>规模</td>
+<td>多少条目、几层、几域</td>
+<td>覆盖广，维护重</td>
+<td>轻，但容易漏</td>
+</tr>
+<tr>
+<td>载体</td>
+<td>纸、文档、系统、检查脚本</td>
+<td>约束强，改动慢</td>
+<td>灵活，靠自觉</td>
+</tr>
+<tr>
+<td>严格度</td>
+<td>硬性阻断还是提醒</td>
+<td>出错少，摩擦大</td>
+<td>顺畅，靠人补</td>
+</tr>
+<tr>
+<td>频率</td>
+<td>每次、每周、每季</td>
+<td>发现早，成本高</td>
+<td>省事，滞后</td>
+</tr>
+<tr>
+<td>角色</td>
+<td>谁写、谁检、谁退役</td>
+<td>分权，协调多</td>
+<td>快，容易自证</td>
+</tr>
+</tbody>
+</table></div>
+<p>五个参数里，<strong>严格度和频率常被调错方向</strong>。</p>
+<p>出错代价高的地方，严格度要调高、频率要调高；出错代价低的地方，两样都该调低，否则摩擦会让人绕开整套东西。反过来调——低代价的地方设硬阻断，高代价的地方靠提醒——是一种常见的错配。</p>
+<p>判断方法：<strong>这个环节出错，多久能发现，代价多大？</strong> 发现慢、代价大，严格度和频率都往上；发现快、代价小，往下。</p>
+<h2 id="c08-s4">§4 换载体的五步</h2>
+<p>换工具时，按五步走，不要跳：</p>
+<ol>
+<li><strong>列不变量</strong>：把现有规矩里删掉名词还成立的部分，单独列出来</li>
+<li><strong>列参数</strong>：把依赖当前载体的部分列出来，标注原始来历</li>
+<li><strong>重设参数</strong>：按新载体的约束重设，保留来历</li>
+<li><strong>试跑一条</strong>：挑一条最常用的规矩，在新载体上完整跑一遍</li>
+<li><strong>补差异</strong>：试跑中暴露的缺口，才补；没暴露的不补</li>
+</ol>
+<p>第三步常做错：只改数字，不保留来历。二十条改成了十条，没人记得为什么，下一次调整就变成拍脑袋。</p>
+<p>第四步的作用是<strong>限制改动范围</strong>。一次全换，出了问题不知道是哪一步引起的；先跑一条，问题范围可控。</p>
+<p>第五步是克制 [3]：新载体往往能支持更多花样，看到就想加。加的每一条都是新负担，没在试跑里暴露出来的需求，多半是想象出来的。</p>
+<p><strong>一组对照</strong>，三个场景取自这套书自己的换载体记录：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>形态</th>
+<th>做法</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>正例</td>
+<td>单篇检查从人工核对换成脚本跑：检查项与判据照旧，只改了执行方式</td>
+<td>不变量（能红）没动，参数（谁执行、多久一次）重设</td>
+</tr>
+<tr>
+<td>反例</td>
+<td>因为新工具支持全文检索，就裁掉「常驻层要短」这一条</td>
+<td>裁到不变量上：检索解决「找得到」，不解决「读得完」</td>
+</tr>
+<tr>
+<td>半例</td>
+<td>参数调了，来历没跟着改：上限从二十条降到十条，没人记得为什么</td>
+<td>数字换了、依据丢了，下一次只能拍脑袋</td>
+</tr>
+</tbody>
+</table></div>
+<p>正例说明换载体只换「怎么执行」；反例的误判在于把检索能力当成了注意力的替代；半例最隐蔽——参数改得对，来历一丢，下一个人既不敢改也不敢守。</p>
+<p>（三条为经验刻画，取自本系列生产记录，作一致性说明，不作独立证据。）</p>
+<h2 id="c08-s5">§5 裁过头的两种</h2>
+<p><strong>裁掉不变量。</strong> 换工具时把「一处正文」裁了，理由是「新工具能同步」。同步管的是副本更新的延迟；两个正文各写一版，同步得再好也不知道信哪个。</p>
+<p><strong>什么都不裁。</strong> 新场景规模只有原来的十分之一，仍然沿用全套流程：五道复核、三次签字、每周例会。执行成本高于收益时，人就开始绕过去，绕过之后这套东西名存实亡。</p>
+<p>两种错各有一个病根：前者是把不变量当参数一起照搬，后者是把参数当不变量锁死。<strong>共同点是换载体时没重新对一遍——哪几条是不变量，哪几个是参数。</strong></p>
+<p>判据：<strong>这次调整，动的是「怎么执行」还是「要不要成立」？</strong> 动执行，是裁剪；动成立，是改不变量——改不变量要单独论证，不能夹在换工具里顺手做。</p>
+<h2 id="c08-s6">§6 一条判断：能不能裁掉</h2>
+<p>面对一条想裁的规矩，问三句：</p>
+<ol>
+<li>删掉它，02 的四条不变量里有没有一条失守？</li>
+<li>失守之后，01 的三种腐坏里会不会有一种漏进来？</li>
+<li>漏进来之后，多久能被发现？</li>
+</ol>
+<p>三句都过——不变量没失守、腐坏没漏进来、或者漏进来也能很快发现——这条可以裁。</p>
+<p>有一句不过，就不能裁，只能改参数：把频率调低、把严格度调松、把载体换轻，但规矩本身留着。</p>
+<p>这套判断的价值在于<strong>它给出的是一个次序，不是一个结论</strong>：先试改参数，改不动再考虑裁。多数「这条没用」的规矩，其实是参数配错了场景。</p>
+<h2 id="c08-s7">§7 结语：裁的是执行，不是原则</h2>
+<p>裁剪的目的，是让同一套东西在不同规模、不同载体上都能跑起来，而不是每次都重新发明一套。</p>
+<p>所以裁的时候要守住一条线：<strong>执行可以变，原则不变。</strong> 变的是二十条还是十条、纸还是屏幕、每次还是每季；不变的是「一处正文、分层、能红、渐进」。</p>
+<p>这条边界有下限，不是所有东西都能裁 [4]。一旦模糊，换工具就会滑成换方法；滑到收不住，就整包重来一次。</p>
+<h3>引用与出处说明</h3>
+<blockquote>
+<p>本篇引用一类：项目实证 4 条。无外部文献、无系列自引。</p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>引用</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[1]</td>
+<td>体系≠实现、五个裁剪参数、换载体五步</td>
+<td>本项目内部规程（作者留档）（项目实证；登记 M-08-1）</td>
+</tr>
+<tr>
+<td>[2]</td>
+<td>精密度优先于正确度：可校准优于最正确</td>
+<td>本项目内部记录（作者留档）（项目实证；登记 M-08-2）</td>
+</tr>
+<tr>
+<td>[3]</td>
+<td>噪声级与结构级：别在参数上过度用力</td>
+<td>本项目内部记录（作者留档）（项目实证；登记 M-08-3）</td>
+</tr>
+<tr>
+<td>[4]</td>
+<td>语言天花板：有些东西裁不掉</td>
+<td>本项目内部记录（作者留档）（项目实证；登记 M-08-4）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>说明：[1] 为本篇五参数与五步的来源，本篇按本书语境重命名并归并；参数个数与步骤数是本书取的，不是来源的规定。[2] 支撑 §3「参数有来历、来历不变」；本篇取「可校准优于一次到位」这一结论。[3] 支撑 §4 第五步「没暴露的不补」。[4] 支撑 §7 的边界；本篇只借「有不可裁的部分」这一判断。项目实证一律标登记号（指向作者留档的《映射表》，不随书发行）：每条有对应实例，抽象只抹载体与专名，不改真假；按经验刻画计，只承担本系列的观察陈述，不承担断言级取证。本篇点到其他篇的地方（「见 NN §X」这类指路），属篇间指路，不计入引用表。</p>
+</blockquote>
+<h2 id="c08-h8">延伸阅读</h2>
+<ul>
+<li><strong>02 四条不变量</strong>：本篇反复引用的那条线，定义在那一篇。</li>
+<li><strong>03 判与落</strong>：执行点位是参数里最常动的一项。</li>
+<li><strong>12 对照</strong>：管理学体系里的「情境调整」，与本篇的裁剪相近（本文判断，属本文推导）。</li>
+</ul>
+</section>
+<section class="chapter" id="c09">
+<!--
+SPDX-License-Identifier: CC-BY-SA-4.0
+Copyright (c) 2026 wUwproject
+Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+See https://creativecommons.org/licenses/by-sa/4.0/ for details.
+-->
+
+<h1 id="c09">09｜渐进——阈值启动与够用判据</h1>
+<h2 id="c09-s1">§1 引子：建完没人用</h2>
+<p>一套体系建起来，用了两周，然后安静了。</p>
+<p>复盘的时候，原因多半落在「用不上」：条目太多，日常根本碰不到；流程太重，一年走不了几次；检查太密，没人愿意跑。</p>
+<p>本项目复盘里，这不是建设质量的问题。问题出在规模与需求不匹配：十个条目就够用的场景，建了一百条；一年三次的场景，设了每周检查。</p>
+<p>渐进的要义不是「慢」，是<strong>每一步都对着一个已经出现的需求</strong>。</p>
+<h2 id="c09-s2">§2 启动阈值：三种来源</h2>
+<p>什么时候该建、该加、该拆，阈值有三个来源。</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>来源</th>
+<th>判断</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>重复</td>
+<td>同类问题出现过几次</td>
+<td>同一个错犯了第三次，才值得写成规矩</td>
+</tr>
+<tr>
+<td>交接</td>
+<td>这件事要交给几个人</td>
+<td>第二个人要接手，才值得写成文档</td>
+</tr>
+<tr>
+<td>代价</td>
+<td>出错的代价有多大</td>
+<td>出错会导致返工的，阈值降低</td>
+</tr>
+</tbody>
+</table></div>
+<p>三个来源里，重复好量化 [3]，代价难判。代价的判断容易偏高——每个环节的人都觉得自己的环节最不能出错。所以代价阈值要有一个外部参照：<strong>这个错过去一年发生过吗？发生后损失了多久？</strong> 用实际发生的次数和时长，比用想象的风险靠谱。</p>
+<p>阈值定了要写下来：<strong>几条、几个人、多大代价。</strong> 写下来的作用不是约束别人，是让下一次调整有依据——不写，三个月后没人记得当初为什么定这个数。</p>
+<p>（三类来源是机制性推断：由既有体系的阈值实践 [1][2] 归纳而成。既有做法给的是具体阈值，本节把它压成重复／交接／代价三类来源——切几类、叫什么，随场景定。）</p>
+<h2 id="c09-s3">§3 停在哪儿：够用的判据</h2>
+<p>「做到哪停」比「什么时候开始」更难。</p>
+<p>一个可用的判据：<strong>这一步的产出，现在有人用吗？</strong></p>
+<ul>
+<li>写了十条规矩，有三条在日常被引用——够用，停</li>
+<li>设了五个领域，实际只在两个领域里取用——多了，并</li>
+<li>设了八个检查，跑起来只红过两个——留两个，其余观察</li>
+</ul>
+<p>「有人用」不是「有人说好」。评价容易虚高——说好不花成本；使用痕迹不会：被引用过几次、被打开过几次、被问起过几次，这些是可数的。</p>
+<p>另一个判据来自反方向：<strong>这一步不做，会不会立刻出问题？</strong> 不会，就先不做。这个判据比「做了有没有好处」更有效，因为「有好处」几乎总成立——多数东西多一点都显得有好处，但每多一点都在占预算。</p>
+<h2 id="c09-s4">§4 阈值要留痕</h2>
+<p>阈值不只要写下来，还要留下「触发过」的记录。</p>
+<p>一条阈值写着「同类问题出现三次就立规矩」。三个月后，真出现了第三次，谁来判断？如果没有记录，这件事就取决于有没有人记得。</p>
+<p>留痕的形式很简单：<strong>触发事件、触发时间、当时的判断。</strong> 一行字，够用。</p>
+<p>留痕有两个作用：</p>
+<ul>
+<li>事后能回答「当初为什么加这一条」——这是 04 说的「阈值来历」</li>
+<li>事前能防止「凭感觉加」——要加，先找出三次记录；找不出，说明还没到阈值</li>
+</ul>
+<p>第二作用更值钱。本系列见到的过早建设，多是因为「感觉已经很多了」。感觉不可查，记录可查。</p>
+<p><strong>一组对照</strong>，三个场景取自这套书自己的推进记录：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>形态</th>
+<th>做法</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>正例</td>
+<td>新增一篇的门槛是「换个项目还成立吗」，不成立的不进正文</td>
+<td>正文停在二十余篇：收的是能搬走的，不是所有的</td>
+</tr>
+<tr>
+<td>反例</td>
+<td>一次性把各步全建起来：判定表、九问、检查、到期清单同时铺开</td>
+<td>四样都开了头，没有一样走过「写→检」闭环</td>
+</tr>
+<tr>
+<td>半例</td>
+<td>阈值写了数字，没留触发记录：三个月后没人记得当初为什么是三次</td>
+<td>阈值还在，依据没了，下一个想改的人只能凭感觉</td>
+</tr>
+</tbody>
+</table></div>
+<p>正例的关键在门槛是「能不能搬走」，不是「写得好不好」；反例的病根在同时开四摊，摊摊不到底；半例对应本节开头的留痕要求——<strong>记录不是给检查的人看的，是给下一个想改的人看的。</strong></p>
+<p>（三条为经验刻画，取自本系列生产记录，作一致性说明，不作独立证据。）</p>
+<p>还有一件事要提前定：<strong>输入缺了怎么办。</strong></p>
+<p>推进到某一步，常常发现前提不全——上一层的产物没做完、关键信息没人记得、该有的记录找不到。这时候现场发挥，结果是每个人补得都不一样，而且补出来的东西看着跟真的一样。</p>
+<p>提前定一张退路表，比现场判断可靠。这套体系里它是三列的：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>缺什么</th>
+<th>怎么办</th>
+<th>补出来之后算什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>上游产物没交</td>
+<td>停在原地，标「未完成」</td>
+<td>不进下一步</td>
+</tr>
+<tr>
+<td>某个值查不到</td>
+<td>留空，标「无来源」</td>
+<td>不参与推导</td>
+</tr>
+<tr>
+<td>只拿到一个阈值，不知道是硬限还是参考</td>
+<td>先判它属于哪一类</td>
+<td>判错会让整列反掉</td>
+</tr>
+</tbody>
+</table></div>
+<p>三行的共同规矩只有一条：<strong>缺的东西留空并标注，不用推测填。</strong> 推测填进去的值没有来历；而一个没有来历的值，在下一次核对时会被当成事实——这是难纠的一种错，因为它长得跟真的一样。</p>
+<p>（这条是机制性推断，取自这套体系的加工实践：其操作规范里有一张「缺什么 → 怎么做 → 代价」的表，并明确禁止按同批推断。原始表的行数与本篇无关，本篇只取「缺件留空、不推测」这一条。）</p>
+<h2 id="c09-s5">§5 节奏：一步一个闭环</h2>
+<p>渐进的单位不是「一步」，是「一个闭环」 [4]。</p>
+<p>一个闭环包含四件事：<strong>判了、写了、检了、用了一次。</strong> 四件齐了，这一步才算走完，才轮到下一步。</p>
+<p>只判不写，是想法；只写不检，是草稿；只检不用，是摆设。三种都常见，共同点是：看起来推进了，实际没有产出。</p>
+<p>一个闭环走完，会带来两个东西：一个能用的产出，一条关于「这个规模合不合适」的信息。第二个东西决定下一步的阈值要不要调——很多阈值是在第一个闭环之后才校准的。</p>
+<p>所以节奏上，这套体系取的是「宁可慢一个闭环，也不要同时开三个」——三个半成品加起来，能给的信息量仍少于一个成品——它们的共同部分没有一处被验证完。同时开几个，随场景定。</p>
+<p>还有一笔账与节奏有关：<strong>同一件事做得越多次，越容易偏离第一次的做法。</strong> 每一轮只微调一点，单看都合理；二十轮之后，与第一轮已经不是同一条规矩。这是次数距离上的漂移——治法与工期漂移相同：每一轮回到阈值原文与判据原文对一次，不跟上一轮比（02 §6）。</p>
+<h2 id="c09-s6">§6 过早与过晚</h2>
+<p>两种失败，方向相反。</p>
+<p><strong>过早</strong>：规模没到就建。症状是建完没人用，或者用了两次就停。代价不只是白干，还有后遗症——下一次再提「要不要建一套」，会有人说「上次建了也没用」。</p>
+<p><strong>过晚</strong>：规模早过了还在靠人扛。症状是同一个人请假，这条线就断；或者同一个错反复犯，每次都靠临时补救。代价是隐性的人力消耗，不出事的时候看不见。</p>
+<p>两种失败的判据是同一个：<strong>现在的做法，还能撑多久？</strong> 这套体系取的分界是：撑不过三个月，该建；能撑一年以上，先别建（分界随场景定）。</p>
+<p>中间地带（本书取三到十二个月）不好判，这时候看第二个信号：<strong>有没有第二个人要接手。</strong> 有，提前建；没有，等到撑不住再说。</p>
+<h2 id="c09-s7">§7 结语：渐进是让体系活着</h2>
+<p>一次性建全的体系，是在纸面上成立的体系。它没有经过任何一个真实闭环，所以不知道自己哪里不合适。</p>
+<p>渐进的体系，每走一步都带着一次真实使用。它的每一条规矩，都有一个「为什么现在有它」的记录。</p>
+<p>最后一问：<strong>这一步做完，下一步的阈值会不会变？</strong> 会变，说明这一步真的推进了；不会变，说明这一步还在原地（够用而停是合法终态；还在扩张时，才看阈值变不变）。</p>
+<h3>引用与出处说明</h3>
+<blockquote>
+<p>本篇引用一类：项目实证 4 条。无外部文献、无系列自引。</p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>引用</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[1]</td>
+<td>分域的启用门槛：份数到规模才分域；域数有上限，域比条目还多等于没分组</td>
+<td>本项目内部规程（作者留档）（项目实证；登记 M-09-1；具体数值属裁剪参数，不入书）</td>
+</tr>
+<tr>
+<td>[2]</td>
+<td>五裁剪参数中的规模与频率</td>
+<td>本项目内部规程（作者留档）（项目实证；登记 M-09-2）</td>
+</tr>
+<tr>
+<td>[3]</td>
+<td>最小尝试次数、容错宽度与注意力窗口</td>
+<td>本项目内部记录（作者留档）（项目实证；登记 M-09-3）</td>
+</tr>
+<tr>
+<td>[4]</td>
+<td>槽位是减法：先给最小结构</td>
+<td>本项目内部记录（作者留档）（项目实证；登记 M-09-4）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>说明：[1] 为本篇「阈值由规模触发」的直接来源；来源给的是具体数值，本篇将其抽象为三类阈值来源，数值本身随场景定。[2] 支撑 §3「够用即停」。[3] 支撑 §2 的重复阈值；本篇只取「最小尝试」这一思路。[4] 支撑 §5「一步一个闭环」；本篇借其「先最小、后丰满」的顺序。项目实证一律标登记号（指向作者留档的《映射表》，不随书发行）：每条有对应实例，抽象只抹载体与专名，不改真假；按经验刻画计，只承担本系列的观察陈述，不承担断言级取证。本篇点到其他篇的地方（「见 NN §X」这类指路），属篇间指路，不计入引用表。</p>
+</blockquote>
+<h2 id="c09-h8">延伸阅读</h2>
+<ul>
+<li><strong>06 长</strong>：第 6 步「设阈值」在本篇展开。</li>
+<li><strong>08 裁</strong>：阈值定错时，用裁剪调回来。</li>
+<li><strong>14 速查卡</strong>：阈值判断压缩成三行，现场用。</li>
+</ul>
+</section>
+<section class="chapter" id="c10">
+<!--
+SPDX-License-Identifier: CC-BY-SA-4.0
+Copyright (c) 2026 wUwproject
+Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+See https://creativecommons.org/licenses/by-sa/4.0/ for details.
+-->
+
+<h1 id="c10">10｜组织同构——AI 组织与人类组织的四处差异</h1>
+<h2 id="c10-s1">§1 引子：同一个毛病，两边速度不同</h2>
+<p>同一种管理失效——规矩没写清——在两边的表现完全不同。</p>
+<p>在人这边：靠「大家都懂」糊过去（经验刻画），出事之后再追责，追到最后是「沟通不到位」。在 AI 组织那边：不写就真的不知道，下一轮立刻做错，错得明明白白。</p>
+<p>同一种失效，一边要几年才显形（经验刻画），一边当轮就卡住。<strong>这个速度差是本篇的切入口：把慢变量放进快环境里看。</strong></p>
+<p>需要说明的是，这不是比喻。AI 组织里的角色分工、成文制度、审计、交接、退役，是实际存在并且实际运行的[1]；人这边的对应物也实际存在，只是没有写成条文。两边是同一种机制，不是两种类比。</p>
+<h2 id="c10-s2">§2 为什么可以这样看</h2>
+<p>因为<strong>显式程度不同</strong>。</p>
+<p>AI 组织没有「大家都懂」这个选项。它不写，就真的不知道；它不设检查，就真的不会发现；它不定退役条件，过期内容就会一直污染检索。所以它被迫把每一样都写出来。</p>
+<p>人被逼到同样程度，也会写出同样的东西——事故调查报告、交接清单、岗位说明书，都是被逼出来的显式化。区别在于：人多数时候不被逼（经验刻画），于是机制留在默契里，直到出事。</p>
+<p>于是观察方法成立：<strong>看那边怎么写，问这边有没有。</strong> 那边写了角色，这边问「谁负责这件事，写下来了吗」；那边设了检查，这边问「这件事错了，谁会发现」。</p>
+<p>（「显式程度不同」是机制性推断：依据是 AI 组织的实存形态 [1] 与「不写就不知道」这一机制，不涉及对人这边的能力评价。）</p>
+<h2 id="c10-s3">§3 角色：谁常驻、谁执行、谁校验</h2>
+<!--FIG:BEGIN F10-RELATION-->
+<figure class="fig" data-fig="F10-RELATION">
+<svg viewBox="0 0 680 410" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI 组织与人类组织五机制对照及四处差异">
+<rect x="16" y="14" width="300" height="372" rx="10" fill="var(--td)" stroke="var(--line)"/>
+<rect x="364" y="14" width="300" height="372" rx="10" fill="var(--td)" stroke="var(--line)"/>
+<text x="166.0" y="42.0" font-size="16" fill="var(--gold)" text-anchor="middle" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">AI 组织</text>
+<text x="514.0" y="42.0" font-size="16" fill="var(--gold)" text-anchor="middle" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">人类组织</text>
+<rect x="32" y="70" width="268" height="48" rx="7" fill="var(--panel)" stroke="var(--line)"/>
+<rect x="380" y="70" width="268" height="48" rx="7" fill="var(--panel)" stroke="var(--line)"/>
+<text x="46.0" y="90.0" font-size="12" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">角色</text>
+<text x="46.0" y="108.0" font-size="10" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">常驻／执行／校验分开</text>
+<text x="394.0" y="90.0" font-size="12" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">角色</text>
+<text x="394.0" y="108.0" font-size="10" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">岗位红线／一线／复核</text>
+<path d="M300 94 C330 94 350 94 380 94" fill="none" stroke="var(--line)" stroke-width="1.6" stroke-dasharray="4 4"/>
+<rect x="32" y="130" width="268" height="48" rx="7" fill="var(--panel)" stroke="var(--line)"/>
+<rect x="380" y="130" width="268" height="48" rx="7" fill="var(--panel)" stroke="var(--line)"/>
+<text x="46.0" y="150.0" font-size="12" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">制度</text>
+<text x="46.0" y="168.0" font-size="10" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">条文 ＋ 判据</text>
+<text x="394.0" y="150.0" font-size="12" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">制度</text>
+<text x="394.0" y="168.0" font-size="10" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">条文齐全，判据稀薄</text>
+<path d="M300 154 C330 154 350 154 380 154" fill="none" stroke="var(--line)" stroke-width="1.6" stroke-dasharray="4 4"/>
+<path d="M340 154 l6 -7 l6 7 l-6 7 z" fill="var(--gold)"/>
+<rect x="32" y="190" width="268" height="48" rx="7" fill="var(--panel)" stroke="var(--line)"/>
+<rect x="380" y="190" width="268" height="48" rx="7" fill="var(--panel)" stroke="var(--line)"/>
+<text x="46.0" y="210.0" font-size="12" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">审计</text>
+<text x="46.0" y="228.0" font-size="10" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">检查项独立于执行</text>
+<text x="394.0" y="210.0" font-size="12" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">审计</text>
+<text x="394.0" y="228.0" font-size="10" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">复核、审计、质检</text>
+<path d="M300 214 C330 214 350 214 380 214" fill="none" stroke="var(--line)" stroke-width="1.6" stroke-dasharray="4 4"/>
+<path d="M340 214 l6 -7 l6 7 l-6 7 z" fill="var(--gold)"/>
+<rect x="32" y="250" width="268" height="48" rx="7" fill="var(--panel)" stroke="var(--line)"/>
+<rect x="380" y="250" width="268" height="48" rx="7" fill="var(--panel)" stroke="var(--line)"/>
+<text x="46.0" y="270.0" font-size="12" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">交接</text>
+<text x="46.0" y="288.0" font-size="10" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">少写必读，只留路由</text>
+<text x="394.0" y="270.0" font-size="12" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">交接</text>
+<text x="394.0" y="288.0" font-size="10" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">交接必读写成缩微全书</text>
+<path d="M300 274 C330 274 350 274 380 274" fill="none" stroke="var(--line)" stroke-width="1.6" stroke-dasharray="4 4"/>
+<path d="M340 274 l6 -7 l6 7 l-6 7 z" fill="var(--gold)"/>
+<rect x="32" y="310" width="268" height="48" rx="7" fill="var(--panel)" stroke="var(--line)"/>
+<rect x="380" y="310" width="268" height="48" rx="7" fill="var(--panel)" stroke="var(--line)"/>
+<text x="46.0" y="330.0" font-size="12" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">退役</text>
+<text x="46.0" y="348.0" font-size="10" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">到期条件不依赖意愿</text>
+<text x="394.0" y="330.0" font-size="12" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">退役</text>
+<text x="394.0" y="348.0" font-size="10" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">没人正式废除旧规矩</text>
+<path d="M300 334 C330 334 350 334 380 334" fill="none" stroke="var(--line)" stroke-width="1.6" stroke-dasharray="4 4"/>
+<path d="M340 334 l6 -7 l6 7 l-6 7 z" fill="var(--gold)"/>
+<text x="340.0" y="396.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">金菱＝机制对得上但形态不同；虚线＝同构对应</text>
+</svg>
+<figcaption>图 6 · AI 组织与人类组织的五机制对照（图只画关系，判据与归属见正文）</figcaption>
+</figure>
+<!--FIG:END F10-RELATION-->
+<p>AI 组织的角色是分开的（角色划分见 [1]，校验与执行的分工见 [2]）：常驻的那一层只放路由与红线，执行的那一层按需取用，校验的那一层独立于执行。</p>
+<p>拆开看是三件事：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>角色</th>
+<th>职责</th>
+<th>在人这边的对应</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>常驻</td>
+<td>守住少量必须始终在场的约束</td>
+<td>岗位红线、交接必读</td>
+</tr>
+<tr>
+<td>执行</td>
+<td>按需取用，完成具体动作</td>
+<td>一线做事的人</td>
+</tr>
+<tr>
+<td>校验</td>
+<td>独立检查，不参与执行</td>
+<td>复核、审计、质检</td>
+</tr>
+</tbody>
+</table></div>
+<p>第三列是投射的落点。人这边常见的问题是<strong>三者合一</strong>：写规矩的人自己执行，自己检查，自己宣布合格。合一不一定出错，但出错时往往没人发现——因为发现的人就是犯错的人。</p>
+<p>一个可操作的问法：<strong>这件事如果做错了，第一个发现的人是谁？</strong> 如果答案是「做这件事的人」，说明校验角色缺位。</p>
+<h2 id="c10-s4">§4 制度：条文与判据</h2>
+<p>AI 组织的制度有两个特征：写成条文，且每条配判据。</p>
+<p>条文解决「做什么」，判据解决「怎么算做到了」。只有条文没有判据，制度会退化成口号；只有判据没有条文，执行会变成应付检查。</p>
+<p>人这边的制度通常条文齐全、判据稀薄：岗位职责写得很清楚，但「做到什么程度算合格」往往靠上级判断。判据比条文难写——条文可以抄，判据要自己想。</p>
+<p>投射过来的第一个动作不是「补制度」，是<strong>给已有制度补判据</strong>：这套做法是先挑三条最常出问题的职责，各写一句「怎么算做到了」。三句写完，制度的可执行性会明显不同。</p>
+<p>（「条文齐全、判据稀薄」是经验刻画：来自作者对所在组织的观察，属本节的经验刻画，非文献结论。读者若所在组织的判据本已写实，这一节的推断不成立，可直接跳过。）</p>
+<h2 id="c10-s5">§5 审计：检查项</h2>
+<p>AI 组织的审计是一组能跑的检查项：格式、计数、引用、口径，逐项过。</p>
+<p>人这边的审计常停在前一步：有审计制度，没有检查项。于是审计变成听汇报，汇报好听就过关。</p>
+<p>投射的关键是<strong>把审计拆成可观察的项</strong>：</p>
+<ul>
+<li>这件事有没有留下记录</li>
+<li>记录里的关键字段齐不齐</li>
+<li>上一个问题和这一个问题，处理口径一致吗</li>
+<li>上次提出的整改，这次还在不在</li>
+</ul>
+<p>四项多数不需要专业判断，只需要看。看得见的东西才能审计，看不见的只能听。</p>
+<p>（「审计常停在前一步」同为经验刻画；它描述的是「有制度、无检查项」这一形态，不是对所有组织审计水平的判断。）</p>
+<h2 id="c10-s6">§6 交接与退役</h2>
+<p>AI 组织的交接是结构性的：换一个执行者，读常驻层就能接手；退役也是结构性的：到期条件触发，四件事一起做。</p>
+<p>人这边的交接靠人：老员工带一段时间，带得好就接住了，带不好就断。退役更难——一项制度一旦立起来，很少有正式的废除程序。</p>
+<p>两件事的投射落点相同：<strong>都要有触发条件和交接物。</strong></p>
+<ul>
+<li>交接物：不是「工作内容」，是「接住这件事需要读的几页」——红线、口径、常见坑</li>
+<li>退役条件：要是一个可判定的时点或事件；「觉得不需要了」不算条件</li>
+</ul>
+<h2 id="c10-s7">§7 四处差异</h2>
+<p>投射不是照搬。两边不同的地方集中在四处，这四处影响哪些能直接搬、哪些必须改。</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>差异</th>
+<th>AI 组织</th>
+<th>人类组织</th>
+<th>后果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>记忆</td>
+<td>上下文关闭即丢，但不会自我美化</td>
+<td>记得久，但会随立场改写</td>
+<td>人这边的「历史」需要交叉验证</td>
+</tr>
+<tr>
+<td>责任</td>
+<td>没有责任人就没有执行，直接卡住</td>
+<td>可以集体负责，也可以无人负责</td>
+<td>人这边要显式指定单一责任人</td>
+</tr>
+<tr>
+<td>激励</td>
+<td>无内在动机，靠目标函数</td>
+<td>有内在动机，也会被激励反向塑造</td>
+<td>判据会被人用来刷分</td>
+</tr>
+<tr>
+<td>退出成本</td>
+<td>停用一条规则几乎无成本</td>
+<td>废一项制度有政治成本</td>
+<td>退役需要授权，不只是条件</td>
+</tr>
+</tbody>
+</table></div>
+<p>第四条常被低估。在那边，删一条过期规则多半按技术动作处理（经验刻画）；在这边，它可能牵涉到当初力主立这条规矩的人。所以 07 讲的「退役负责人与撰写人分离」，在人这边不是优化，是必要条件。</p>
+<p>上面三条的机制一样：判据一旦成为考核指标，就会被优化对象反向利用。这是人这边更常见的失效模式；在那边也会发生，只是通常会先在检查项上显形（13 §5 讲的是同一件事的另一面）。</p>
+<p><strong>一组对照</strong>，三种形态（机制陈述，非具体案例）：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>形态</th>
+<th>做法</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>正例</td>
+<td>机制对上了：那边的「退役负责人与撰写人分离」，这边对应「制度废改由第三方评估」</td>
+<td>两边的动作一一对上，改的是名分，不是结构</td>
+</tr>
+<tr>
+<td>反例</td>
+<td>只对机制、不看差异：把「上下文关闭即丢」搬成人也会忘，于是给人建记忆库</td>
+<td>人缺的多半是检索，记忆本身不缺：解决的是不存在的问题</td>
+</tr>
+<tr>
+<td>半例</td>
+<td>对应找到了、差异没看：设了独立质检岗，质检的考核由被检部门打分</td>
+<td>岗设了，独立性没了：形式对应，约束没落地</td>
+</tr>
+</tbody>
+</table></div>
+<p>正例之所以成立，是因为它落在「授权」这一层——那层两边同构；反例的误判在于把人这边的瓶颈当成记忆；半例最像做对了，只有一处没看：<strong>考核权在谁手上。</strong></p>
+<p>（三条为机制陈述，不指认具体单位或事件。）</p>
+<h2 id="c10-s8">§8 在人类组织里怎么用</h2>
+<p>三步，按顺序：</p>
+<p><strong>第一步，找对应</strong> [3]。 拿六个动作（判、落、写、检、长、退）逐条问：这个组织里，「判」对应什么动作？「检」对应谁？找不到对应的，就是缺口。</p>
+<p><strong>第二步，看差异。</strong> 缺口找到后，先过一遍 §7 的四处差异：这一条搬过来，会不会因为记忆、责任、激励或退出成本而变形？</p>
+<p><strong>第三步，改到能用。</strong> 变形的地方改参数，不改原则。比如「检查要独立」这条原则不变，但检查频率、检查人、检查方式可以按组织规模调。</p>
+<p>三步走完，得到的不是一套移植过来的制度，是一套<strong>在这个组织里能跑的制度</strong>。两者的区别在于：前者看起来完整，后者能回答「谁来做、什么时候做、做错了谁发现」。</p>
+<h2 id="c10-s9">§9 结语：看的是机制，不是口号</h2>
+<p>透过 AI 组织看人类组织，看的不是「AI 怎么管人」，是<strong>同一套机制在显式环境里长什么样</strong>。</p>
+<p>显式环境的价值在于它不给含糊留余地：没写就是没有，没检就是不知道，没退就是一直挂着。人这边的含糊，多数出自没人被逼到那一步。</p>
+<p>所以这一篇讲的是拿它当尺子：<strong>这件事在那边是怎么写的？这边为什么没写？</strong> 问多了，默契会慢慢变成条文。</p>
+<h3>引用与出处说明</h3>
+<blockquote>
+<p>本篇引用一类：项目实证 3 条。无外部文献、无系列自引（管理学文献的对照集中在 12）。</p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>引用</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[1]</td>
+<td>AI 组织的完整形态：角色、条文、审计、交接、退役</td>
+<td>本项目内部记录（作者留档）（项目实证；登记 M-10-1）</td>
+</tr>
+<tr>
+<td>[2]</td>
+<td>有限决策：模型只填空，决策归人</td>
+<td>本项目内部记录（作者留档）（项目实证；登记 M-10-2）</td>
+</tr>
+<tr>
+<td>[3]</td>
+<td>先找对应、再定名分（源头同位表述：先分工，后名分）</td>
+<td>本项目内部记录（作者留档）（项目实证；登记 M-10-3）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>说明：[1] 支撑 §2「显式程度不同」这一判断；被观察的那套体系是实际运行物，不是设计稿。[2] 支撑 §3 的角色分离；「决策边界划在谁身上」与本书同向，本篇把它投射到组织内的执行与校验分离。[3] 支撑 §8 的第一步「先找对应，再定名分」——源头有同位表述（先分工、后名分），本篇登记的是项目实证，不另引外部文献。项目实证一律标登记号（指向作者留档的《映射表》，不随书发行）：每条有对应实例，抽象只抹载体与专名，不改真假，承担断言级取证。本篇点到其他篇的地方（「见 NN §X」这类指路），属篇间指路，不计入引用表。</p>
+</blockquote>
+<h2 id="c10-h10">延伸阅读</h2>
+<ul>
+<li><strong>00 体系全貌</strong>：§6 给出投射的方向与理由，本篇是它的展开。</li>
+<li><strong>07 退</strong>：§7 第四条「退出成本」的处置，在那一篇。</li>
+<li><strong>12 对照</strong>：管理学体系里已有的名字，在那一篇系统对。</li>
+</ul>
+</section>
+<section class="chapter" id="c11">
+<!--
+SPDX-License-Identifier: CC-BY-SA-4.0
+Copyright (c) 2026 wUwproject
+Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+See https://creativecommons.org/licenses/by-sa/4.0/ for details.
+-->
+
+<h1 id="c11">11｜三种产物——形态决定落点</h1>
+<h2 id="c11-s1">§1 引子：先落差异，再落方法</h2>
+<p>方法论落到具体场景，这套书见到的常见错法是「平移」：把同一套流程原样搬过去，只在标题上换了个说法。</p>
+<p>结果是一部分环节空转，一部分环节缺位。空转的环节被人当成「方法论不适用」，缺位的环节没人发现，直到出事。</p>
+<p>正确做法是先找差异：<strong>这份产物是什么、多久交一次、错了会怎样。</strong> 三问答完，六动作的落点自然不同。</p>
+<p>以产物形态分，三类的答案差别很大：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>产物形态</th>
+<th>交出去的是什么</th>
+<th>节奏</th>
+<th>错了会怎样</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>按版本演进</td>
+<td>可用的功能</td>
+<td>按版本</td>
+<td>返工、延期</td>
+</tr>
+<tr>
+<td>按批出结论</td>
+<td>可追溯的结果与结论</td>
+<td>按批次</td>
+<td>结论不可信，需重来</td>
+</tr>
+<tr>
+<td>按表对齐</td>
+<td>能对上的表与口径</td>
+<td>按周期</td>
+<td>结论偏了，且难发现</td>
+</tr>
+</tbody>
+</table></div>
+<p>这三类不是穷举。多数场景的产物能对上其中一类，或是两类按比例的组合——比如既是按批出的结论、又要按表对齐。归类是手段，目的是把「多久交一次、错了会怎样」问出来。</p>
+<h2 id="c11-s2">§2 按版本演进：落点在版本</h2>
+<p>这一类交的是可用的东西，节奏跟着版本走。所以「判」与「落」要按版本切：这个版本必须守的红线、只在这个版本有效的约定、跨版本通用的方法。</p>
+<p>五层不必都用满。版本生命周期短，会话层与就地层并进项目层，并成三层就够（层数随场景定）：</p>
+<ul>
+<li><strong>常驻</strong>：发布前必过的几条（这套体系取的门槛：不许带已知阻断缺陷、关键路径有回退方案）</li>
+<li><strong>通用</strong>：跨版本不变的方法（怎么定优先级、怎么写变更说明）</li>
+<li><strong>项目（含会话、就地）</strong>：这个版本的接口与依赖、这次的破例、这份发布说明</li>
+</ul>
+<p>这一类常崩的一环是「检」（本系列观察）。原因很实际：版本节奏快，检查被排到最后，赶工期时第一个被砍。</p>
+<p>崩掉的表现是<strong>检查只剩形式</strong>：清单还在，逐项打勾，打勾的人和做事的人是同一个。这时检查的功能从「发现问题」退化成「留下已检查的记录」。</p>
+<p>补法不是加清单，是分离：<strong>打勾的人独立于做事的人</strong>，哪怕只是换一个人复核十分钟。</p>
+<h2 id="c11-s3">§3 按批出结论：先能红，再谈全</h2>
+<p>这一类交的是结论。结论要站得住，靠两件事：判据能红、数据可追。</p>
+<p>「检」在这一类是核心动作，判据落的位置有四个——下限、精度、越界、异常：</p>
+<ul>
+<li><strong>下限</strong>：低于判定下限的结果怎么记，得有一个统一写法。记 0、记「未测出」、记「小于下限」，取哪一种是所属场景自己的惯例，本书不给答案；要的是同一套东西里前后一致，且这个约定写在能被查到的地方</li>
+<li><strong>精度</strong>：跟手段本身的能力走，不跟工具显示的位数走</li>
+<li><strong>越界</strong>：标出判定依据，不只给结论</li>
+<li><strong>异常</strong>：有处理记录，不静默剔除</li>
+</ul>
+<p>四个位置的共同点是同一条：<strong>每一处都能被第三方复核。</strong> 复核的人不需要问「当初怎么想的」，只看记录就能判对错。</p>
+<p>（四个位置是经验刻画：取自多类产物加工中的复核记录。位置是通用的，每处的取值随场景惯例走——本书给位置，不给值。）</p>
+<p>这一类常崩的一环是「写」。因为判据往往存在老师傅的脑子里：什么情况该重来、什么情况算异常、余量该放多少。这些不写下来，换一个人就重新摸索一遍。</p>
+<p>写的难点不在技术，在「觉得这是常识，不用写」。判据：<strong>这件事，一个新来的人会不会做错？</strong> 会，就不是常识，该写。</p>
+<h2 id="c11-s4">§4 按表对齐：判在口径</h2>
+<p>这一类交的是能对上的表。对齐的前提是口径统一：同一个字段，两边定义一致；同一条记录，有唯一键；同一个时间，按同一时区。</p>
+<p>「判」在这一类最重，因为问题多数在开头就埋下了：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>埋点</th>
+<th>后果</th>
+<th>什么时候发现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>口径不同（同一个词在两处指的范围不一样）</td>
+<td>汇总数对不上</td>
+<td>出报告时</td>
+</tr>
+<tr>
+<td>无唯一键，靠名称匹配</td>
+<td>错配、漏配</td>
+<td>抽查时，往往抽查不到</td>
+</tr>
+<tr>
+<td>时区不一致</td>
+<td>跨日数据错位</td>
+<td>对账时</td>
+</tr>
+<tr>
+<td>单位不一致（同一个量，两处差着量级）</td>
+<td>数差了几个数量级</td>
+<td>结论已经写进报告</td>
+</tr>
+</tbody>
+</table></div>
+<p>四类里，<strong>无唯一键不好补</strong>。名称匹配看着能用，实际会在重名、别名、简写上错配；事后补键，要拿历史数据重算一轮。补法是先建键，再比对；建不了键的，按区域匹配并显式标注匹配规则。</p>
+<p>这一类常崩的一环是「判」。因为这类工作往往从「先跑起来」开始，口径问题留到后面再统一。等到要统一时，历史数据已经按错的口径算过一轮，改了要重算，不改要解释。</p>
+<h2 id="c11-s5">§5 三种产物的共同点</h2>
+<p>三种产物看起来差很远，六动作的形态却一致：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>动作</th>
+<th>按版本演进</th>
+<th>按批出结论</th>
+<th>按表对齐</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>判</td>
+<td>按版本分层</td>
+<td>按批次分层</td>
+<td>按口径分层</td>
+</tr>
+<tr>
+<td>落</td>
+<td>红线压到发布清单</td>
+<td>判据压到检验记录</td>
+<td>口径压到字段说明</td>
+</tr>
+<tr>
+<td>写</td>
+<td>变更说明能重建</td>
+<td>判定依据能复核</td>
+<td>匹配规则能复算</td>
+</tr>
+<tr>
+<td>检</td>
+<td>独立复核</td>
+<td>复检与留痕</td>
+<td>对账与抽查</td>
+</tr>
+<tr>
+<td>长</td>
+<td>新品类照旧长</td>
+<td>新项目照旧长</td>
+<td>新来源照旧长</td>
+</tr>
+<tr>
+<td>退</td>
+<td>下线旧版本的约定</td>
+<td>废止旧方法</td>
+<td>弃用旧口径</td>
+</tr>
+</tbody>
+</table></div>
+<p>差别在产物形态。顺序、判据形态是同一套；失效方式各不同——崩的环节不一样。</p>
+<p>（这个结论是本文推导：由上表六动作 × 三种产物逐格对照得出，不引入新命题；三种形态的具体做法取自场景实践 [1]。）</p>
+<p>这也是「投射」这个词的落点。它要做的是看清<strong>同一机制在不同产物上长什么样</strong>，而不是把一个场景的做法搬到另一个场景。</p>
+<h2 id="c11-s6">§6 每种产物最容易崩的一环</h2>
+<p>三种产物在多数情形下各有一个高危环节，且符合同一个规律：<strong>崩在「看起来最不需要写」的地方。</strong></p>
+<ul>
+<li>按版本演进的崩在检：因为「大家都知道要检查」，所以没人写检查项</li>
+<li>按批出结论的崩在写：因为「这是常识」，所以判据留在脑子里</li>
+<li>按表对齐的崩在判：因为「先跑起来再说」，所以口径留到以后</li>
+</ul>
+<p>规律可以推广：<strong>越是觉得理所当然的环节，越容易没被写下来（经验刻画）。</strong> 而没写下来的，正是换人时最先断的。</p>
+<p>所以落地的第一步不是补全六动作，是<strong>找出那个「理所当然」的环节</strong>，先把它写下来。写完会发现，缺的不止一条。</p>
+<p><strong>一组对照</strong>，三种产物各一例：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>形态</th>
+<th>做法</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>正例</td>
+<td>下限以下怎么记，体系内统一，且约定写在能被查到的地方</td>
+<td>复核的人只看记录就能判，不问当初怎么想</td>
+</tr>
+<tr>
+<td>反例</td>
+<td>两批记录没有共同键，只能拿名称去匹配</td>
+<td>重名与别名会错配，错到出结论才发现</td>
+</tr>
+<tr>
+<td>半例</td>
+<td>发布清单还在逐项打勾，打勾的人就是做事的人</td>
+<td>清单齐了、独立性没了：留下的是记录，不是检查</td>
+</tr>
+</tbody>
+</table></div>
+<p>正例靠的是判据写死在一句可复核的话上；反例的病根在「先跑起来」，键没建就先比了；半例最容易发生，也最难改——因为它每天都在按时完成。</p>
+<p>（三条为经验刻画，取自本系列生产记录，作一致性说明，不作独立证据。）</p>
+<h2 id="c11-s7">§7 结语：先问产物，再问方法</h2>
+<p>三种产物的套法，归结成一句：<strong>先问这份产物是什么、多久交一次、错了会怎样，再决定六动作各自落在哪里。</strong></p>
+<p>产物决定落点，节奏决定频率，代价决定严格度。三样定了，方法就是现成的。</p>
+<p>反过来，先定方法再找场景，得到的是一套「什么都能套」的框架。</p>
+<h3>引用与出处说明</h3>
+<blockquote>
+<p>本篇引用一类：项目实证 1 条。无外部文献、无系列自引。</p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>引用</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[1]</td>
+<td>三类产物的实践形态：按版本演进、按批出结论、按表对齐</td>
+<td>本项目内部记录（作者留档）（项目实证；登记 M-11-1；本篇只取形态与落点，不复述其操作细节）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>说明：[1] 为三类产物形态的来源，本篇只取形态与落点，不复述其操作细节。§3 的四个位置属经验刻画，取自多类产物加工中的复核记录，不绑定任何领域的标准；每处的取值以所在场景认可的做法为准。项目实证一律标登记号（指向作者留档的《映射表》，不随书发行）：每条有对应实例，抽象只抹载体与专名，不改真假；按经验刻画计，只承担本系列的观察陈述，不承担断言级取证。本篇点到其他篇的地方（「见 NN §X」这类指路），属篇间指路，不计入引用表。</p>
+</blockquote>
+<h2 id="c11-h8">延伸阅读</h2>
+<ul>
+<li><strong>03 判与落</strong>：本篇每节的「落点」都由它推出。</li>
+<li><strong>05 检</strong>：按版本演进与按批出结论两节的核心动作，判据形态在那一篇。</li>
+<li><strong>10 组织同构</strong>：产物形态之上是组织，投射方法在那一篇。</li>
+</ul>
+</section>
+<section class="chapter" id="c12">
+<!--
+SPDX-License-Identifier: CC-BY-SA-4.0
+Copyright (c) 2026 wUwproject
+Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+See https://creativecommons.org/licenses/by-sa/4.0/ for details.
+-->
+
+<h1 id="c12">12｜对照——机制在先，名字在后</h1>
+<h2 id="c12-s1">§1 引子：先有机制，再找名字</h2>
+<p>这套东西不是从管理学著作里推出来的。它是先在一套 AI 组织里跑起来，回头去找「人类组织里管这个叫什么」。</p>
+<p>顺序决定看到什么。反过来做——先摆一套管理学框架，再回 AI 组织里找例子——套得上也是巧合（只会记得套得上的那几个），套不上就被略过，最后得到的是一篇「管理学 + 工程附录」。</p>
+<p>本篇做的是前者：六条机制，六次找名字，每次三问——<strong>那边怎么运作、这边叫什么、差在哪。</strong></p>
+<h2 id="c12-s2">§2 退：德鲁克的「有组织地放弃」</h2>
+<p>AI 组织里的「退」很具体：一条内容过了触发条件，四件事一起做（留档、通知、摘引用、同步删检查）。不做的后果立刻显形——过期内容污染检索，占着位置，下一轮取到旧版。</p>
+<p>人类组织里的名字是德鲁克的「有组织地放弃」（organized abandonment）。他在 1964 年的《为成果而管理》里提出「有组织地放弃」（organized abandonment），之后在 1973、1985、1999 年的著作里反复重申 [1]（转述，一手原文的章页本篇未核到，按本文推导计）。三条判断标准：还有几年好日子就该弃；保留理由只剩「已经投入过」就该弃；它正在挤占新东西就该弃。</p>
+<p>对照下来，三条触发与本篇三条在形态上相近。<strong>这个对照纠正了一种常见说法</strong>：「管理学只讲目标、不讲废弃」在德鲁克这里不成立——废弃是他明确列出的原则之一。</p>
+<p>差别在对象与判据：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>德鲁克</th>
+<th>本征</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>对象</td>
+<td>产品、服务、市场、渠道</td>
+<td>规则、内容、判据</td>
+</tr>
+<tr>
+<td>判据</td>
+<td>定期审视，管理者判断</td>
+<td>到期条件＋可判定触发</td>
+</tr>
+<tr>
+<td>场景</td>
+<td>企业经营</td>
+<td>日常规则维护</td>
+</tr>
+</tbody>
+</table></div>
+<p>所以本书不是「补上德鲁克缺的那一格」，而是<strong>把他已经确立的原则下沉一层</strong>：从业务组合下到内容条目，并把「判断」换成「可执行的触发条件」。这个位置比「补空缺」稳，也比「另立一套」诚实。</p>
+<h2 id="c12-s3">§3 落：PMBOK 的「组织过程资产」</h2>
+<p>AI 组织里的「落」是：一处正文，别处只引用；常驻层只放路由与红线；其余按层存放。</p>
+<p>人类组织里的近亲是 PMBOK 的「组织过程资产」（Organizational Process Assets, OPA）——组织积累的流程、模板、历史信息；在传统的过程框架里，它是多数项目的输入[2]。</p>
+<p>对照下来，两者的差别只有一个，但这个差别很关键：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>PMBOK / OPA</th>
+<th>本征</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>积累</td>
+<td>本篇未见删减机制</td>
+<td>有到期条件</td>
+</tr>
+<tr>
+<td>状态</td>
+<td>有更新（OPA updates），未见失效判定</td>
+<td>有失效判定</td>
+</tr>
+<tr>
+<td>检索</td>
+<td>依赖组织记忆与文档管理</td>
+<td>分层＋路由，常驻层可读完</td>
+</tr>
+</tbody>
+</table></div>
+<p>PMBOK 的 OPA 确实会更新——「更新组织过程资产」（OPA updates）本身就是若干过程的正式输出。但更新不等于失效：本篇未见任何一处把「多久没人用」当作失效判据。（「OPA 只区分由谁更新，不区分是否还有效」是本文判断，依据是 OPA 的两类构成——过程政策程序、组织知识库——其分类轴是更新权限，不是有效性 [2]。）这是本书补上的一格：<strong>资产要有保质期</strong>。</p>
+<p>补这一格的代价是要给出判据，否则「保质期」变成拍脑袋。07 给的四档处置与三个触发，就是这一格的实现。</p>
+<h2 id="c12-s4">§4 长：NPDP 的产品生命周期</h2>
+<p>AI 组织里的「长」是产物反推：先定交付物，再倒推工序，再配判据，七步成一套。</p>
+<p>人类组织里的近亲是产品生命周期管理（Product Life Cycle）：导入、成长、成熟、衰退，配产品退市决策 [3]（本篇只取「有结束」这一结构，不复述其决策流程）。</p>
+<p>对照下来，两者共享「有开始也有结束」的结构，差别在驱动源：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>NPDP</th>
+<th>本征</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>驱动</td>
+<td>市场信号（销量、份额）</td>
+<td>使用信号（引用次数、交接需求）</td>
+</tr>
+<tr>
+<td>决策</td>
+<td>组合评审会</td>
+<td>阈值＋触发记录</td>
+</tr>
+<tr>
+<td>结束</td>
+<td>退市（本篇只取结构）</td>
+<td>四档处置（改／并／降／删）</td>
+</tr>
+</tbody>
+</table></div>
+<p>有一点要说准：生命周期给出的是阶段划分；退市在 [3] 里是单独的决策环节。所以差别不在「有没有决策」，在<strong>决策依据是外部信号还是内部可查记录</strong>。</p>
+<h2 id="c12-s5">§5 检：Six Sigma 的控制图</h2>
+<p>AI 组织里的「检」是：每条纪律配一个能失败的检查；能穷举的交给机器，穷举不了的换成问句。</p>
+<p>人类组织里的近亲是统计过程控制（SPC）与控制图，以及 DMAIC 的「控制」阶段[4]。控制图做的事与本征的判据同源：<strong>找「过程何时失控」的可观测信号。</strong>（控制图的判异规则见 [4] 第 8 章。）</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>SPC</th>
+<th>本征</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>对象</td>
+<td>制造过程的产品特性</td>
+<td>规则本身的遵守与有效性</td>
+</tr>
+<tr>
+<td>信号</td>
+<td>超出控制限、链状趋势</td>
+<td>检查失败、红率异常、基线不降</td>
+</tr>
+<tr>
+<td>目的</td>
+<td>过程稳定</td>
+<td>规则可信</td>
+</tr>
+</tbody>
+</table></div>
+<p>差别在对象：SPC 管产品，本征管规则。相同处在逻辑：两者判的都是过程有没有失控，不是有没有做到零缺陷——控制图给的是判异规则，不是合格线（[4] 第 8 章）。</p>
+<p>这一条对照的价值是给出一个成本参照：SPC 需要采样、需要维护控制限；本征的检查同样需要维护成本，所以 05 才要写「什么时候不值得检」。</p>
+<h2 id="c12-s6">§6 渐进：CMMI 的成熟度等级</h2>
+<p>AI 组织里的「渐进」是：每一步有启动阈值，阈值要留痕，不到规模不做。</p>
+<p>人类组织里的近亲是 CMMI 的成熟度等级（1 初始到 5 优化）[5]。</p>
+<p>两者都主张「按阶段推进」，差别在评级来源：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>CMMI</th>
+<th>本征</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>等级</td>
+<td>外部评估授予</td>
+<td>内部阈值触发，不评级</td>
+</tr>
+<tr>
+<td>目的</td>
+<td>能力证明（对客户、对采购）</td>
+<td>自我约束（避免过早建设）</td>
+</tr>
+<tr>
+<td>风险</td>
+<td>为评级而做文档</td>
+<td>为达标而堆结构</td>
+</tr>
+</tbody>
+</table></div>
+<p>这个差别值得展开：CMMI 的成熟度等级由评估确认（[5] 的定义段）；等级因此可以拿给客户与采购方看，这是本文的判断（本文推导，依据是「等级由第三方评估确认」这一制度事实）。本征的阈值只对自己负责，所以它可以用「不做」作为正确答案。（「有对外用途就会长出为评级而做的动作」是本文的机制性推断，不是 CMMI 的自述；该推断的依据是等级由第三方评估授予这一制度事实。）<strong>同一件事，一旦有了外部评级，就很容易长出与目的无关的动作。</strong></p>
+<h2 id="c12-s7">§7 目标与度量：OKR、KPI</h2>
+<p>AI 组织里的对应物是「判据」：每条纪律配一个能失败的检查。</p>
+<p>人类组织里最接近的不是 OKR 或 KPI，而是它们的失败形态。OKR 是目标与关键结果，通行用法按季度设定 [6]（转述，非原文页码）；KPI 是持续度量的指标（此取通行用法：关键绩效指标＝持续监测的量化指标；它没有单一权威定义，故属经验刻画，不挂文献）。两者都是「把要做的事变成可观察的数」。</p>
+<p>对照下来，它们与本征的判据有三个不同：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>OKR / KPI</th>
+<th>本征的判据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>作用</td>
+<td>驱动（让人往某个方向走）</td>
+<td>验证（判断有没有做到）</td>
+</tr>
+<tr>
+<td>失效</td>
+<td>被优化对象反向利用</td>
+<td>假红或零红，可被发现</td>
+</tr>
+<tr>
+<td>寿命</td>
+<td>季度或年度重置</td>
+<td>随规则一起退役</td>
+</tr>
+</tbody>
+</table></div>
+<p>第二行是关键的差别。指标一旦成为目标，就会被优化——古德哈特定律说的正是这件事：当一个度量变成目标，它就不再是一个好度量[7]。本征的判据不承担驱动功能，所以它不需要「好看」，只需要「能红」。</p>
+<p>这也是为什么本书不把 OKR、KPI 放在「对照」的核心位置：它们回答的是「往哪走、做到多少」（OKR 的用法见 [6]），规则的有效性不归它们管。提它们，是为了说清这条边界，不是为了凑一家。</p>
+<h2 id="c12-s8">§8 对照之后：本征的位置</h2>
+<p>六次对照下来，位置可以一句话说清：</p>
+<blockquote>
+<p><strong>这些体系各自管住了「目标、过程、产品、能力」中的一段，本征管的是「规则与内容本身的寿命」——并且要求这个寿命可判定。</strong></p>
+</blockquote>
+<p>三条边界必须写清，否则容易被误读成「包打天下」：</p>
+<ul>
+<li>不管目标怎么定（那是 OKR、战略的事）</li>
+<li>不管过程怎么优化（那是 Six Sigma、精益的事）</li>
+<li>不管法定记录的留存（那是档案学与法规的事；期限与销毁程序由法规定，本篇不引条文）</li>
+</ul>
+<p>（这条位置陈述是本文推导：由 §2–§7 六次对照的差异项取并集得出；各体系原义出处见 [1]–[8]。）</p>
+<p>第三条尤其要说。记录管理（records management）有成熟的保管期限表制度，中国也有明确的归档范围与保管期限规定[8]。本征不碰这一块：法定留存走法规，日常规则走本征，两者的判据不同，混在一起会把「可以退的」和「不能退的」一起处理掉。</p>
+<p><strong>一组对照</strong>，三种形态：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>形态</th>
+<th>做法</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>正例</td>
+<td>德鲁克三条判断标准与本篇三条触发逐条对上，出处可查</td>
+<td>名字对得上，位置站得住：不必另立一套</td>
+</tr>
+<tr>
+<td>反例</td>
+<td>把 OKR 的数值当成本征的判据：数成了目标，被优化对象刷分</td>
+<td>判据失守：数好看，事没做到</td>
+</tr>
+<tr>
+<td>半例</td>
+<td>CMMI 等级对内可用来自检，一旦对外评级，就长出为评级而做的文档</td>
+<td>差一维：对内是尺子，对外成了证明</td>
+</tr>
+</tbody>
+</table></div>
+<p>正例说明「找得到名字」本身就是一种校验；反例是古德哈特定律的实例形态 [7]；半例最接近本征的做法，只差在等级是给谁看的。</p>
+<p>（三条为机制陈述；正例的出处见 [1]–[6]，反例依据 [7]。）</p>
+<h2 id="c12-s9">§9 结语：名字找得到，位置才站得住</h2>
+<p>六条机制，六个已有的名字。找得到名字，说明这套东西不是凭空发明；说得出差异，说明它有自己的位置。</p>
+<p>最后一句：<strong>找不到名字的「新方法」，多数只是旧方法换了个说法。</strong></p>
+<h3>引用与出处说明</h3>
+<blockquote>
+<p>本篇引用分两类：外部文献 7 条、法规 1 条、项目实证 0 条。</p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>引用</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[1]</td>
+<td>有组织地放弃：三条标准与反复重申</td>
+<td>Drucker, P. F. (1964). <em>Managing for Results</em>. Harper &amp; Row；另见 <em>Management: Tasks, Responsibilities, Practices</em> (1973)、<em>Innovation and Entrepreneurship</em> (1985)、<em>Management Challenges for the 21st Century</em> (1999, p. 74)（联网核验）</td>
+</tr>
+<tr>
+<td>[2]</td>
+<td>组织过程资产（OPA）及其更新</td>
+<td>Project Management Institute. <em>A Guide to the Project Management Body of Knowledge (PMBOK Guide)</em>. 第 6 版及以前将 OPA 列为多数过程的输入；第 7 版取消 ITTO 结构；第 8 版（2025 年底）设 2.2.2 专节，并将「OPA 更新」列为过程输出（联网核验）</td>
+</tr>
+<tr>
+<td>[3]</td>
+<td>产品生命周期与退市决策</td>
+<td>PDMA. <em>Product Development and Management Body of Knowledge</em>（PDMA Body of Knowledge；NPDP 认证所依据的知识体系，2026-11 起启用第三版）（联网核验）</td>
+</tr>
+<tr>
+<td>[4]</td>
+<td>控制图与 DMAIC 控制阶段</td>
+<td>Pyzdek, T. &amp; Keller, P. (2018). <em>The Six Sigma Handbook</em> (5th ed.). McGraw-Hill Education；控制图见第 8 章「Process Behavior Charts」，控制／验证阶段见第 12 章（联网核验）</td>
+</tr>
+<tr>
+<td>[5]</td>
+<td>成熟度等级 1–5</td>
+<td>ISACA（原 CMMI Institute）, <em>CMMI Development Model</em>；成熟度等级传统表述为 1（初始）–5（优化），V3.0 另设 0 级 Incomplete（联网核验）</td>
+</tr>
+<tr>
+<td>[6]</td>
+<td>OKR：目标与关键结果</td>
+<td>Doerr, J. (2018). <em>Measure What Matters</em>. Portfolio/Penguin；OKR 通常按季度设定，亦可按年度（联网核验）</td>
+</tr>
+<tr>
+<td>[7]</td>
+<td>古德哈特定律</td>
+<td>Goodhart, C. (1975). Problems of Monetary Management: The U.K. Experience. In <em>Papers in Monetary Economics</em> (Vol. 1). Reserve Bank of Australia；今通行表述「当一个度量成为目标，它就不再是好度量」出自 Strathern, M. (1997), p. 308 的转述，非 Goodhart 原文（联网核验）</td>
+</tr>
+<tr>
+<td>[8]</td>
+<td>归档范围与保管期限（永久／30 年／10 年）</td>
+<td>《企业文件材料归档范围和档案保管期限规定》，国家档案局令第 10 号，2013 年施行（联网核验）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>说明：[1]–[6] 用于核对各体系的原义与关键主张，本篇只取与本征机制直接对应的一条，不做体系综述。[7] 用于支撑 §7「指标成为目标即失效」这一判断。[8] 用于划清 §8 的第三条边界；该规定给出三档期限与处置程序，本篇不引具体条目。本篇点到其他篇的地方（「见 NN §X」这类指路），属篇间指路，不计入引用表。</p>
+</blockquote>
+<h2 id="c12-h10">延伸阅读</h2>
+<ul>
+<li><strong>07 退</strong>：德鲁克那条对照的落地形态。</li>
+<li><strong>10 组织同构</strong>：投射方法与四处差异。</li>
+<li><strong>08 裁</strong>：各体系的「情境调整」与本征裁剪的异同。</li>
+</ul>
+</section>
+<section class="chapter" id="c13">
+<!--
+SPDX-License-Identifier: CC-BY-SA-4.0
+Copyright (c) 2026 wUwproject
+Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+See https://creativecommons.org/licenses/by-sa/4.0/ for details.
+-->
+
+<h1 id="c13">13｜入表——数据质量的外部验收</h1>
+<h2 id="c13-s0">§0 引子：算得出的账</h2>
+<p>数据入表，说到底是算两笔账：这笔支出归到哪个对象上，这项利益凭什么说会流进来。</p>
+<p>两笔账都不难算——如果这个数据服务本来就有账的话。</p>
+<p>难的是另一种情形：数据跑了三年，口径改过四轮，边界从来没定过，每次分析都是现取现算。这时候要入表，得回头把三年前的支出重新归集，把当时的判断依据重新找出来。找不到；就算找得到，也是补的。</p>
+<p>这里要先分清一件事：跑了三年的数据不必然落到这一步。如果这三年里每一步还留着原始记录——谁称的、哪台仪器、用的哪个口径、哪次审批——那是另一回事：沿链能把它找回来，只是费工。补不回来的，是链已经断了的那些。</p>
+<p>这一篇讲的不是怎么应付审计，是另一件事：<strong>账是跑的时候逐笔留下的；审的时候只能去取，取不到就是没有。</strong></p>
+<h2 id="c13-s1">§1 入表考的是服务，不是文档</h2>
+<p>先看外部标准要什么。《企业会计准则第 6 号——无形资产》对一项资产设了五层 [1]：</p>
+<ul>
+<li><strong>定义（第三条）</strong>：无形资产，是企业<strong>拥有或者控制</strong>的、没有实物形态的<strong>可辨认非货币性</strong>资产。可辨认有两条路：能从企业中分离或者划分出来，并能单独或者与相关合同、资产、负债一起用于出售、转移、授予许可、租赁或者交换；或者源自合同性权利或其他法定权利。</li>
+<li><strong>确认条件（第四条）</strong>：同时满足两条才能确认——与<strong>该无形资产有关</strong>的经济利益很可能流入企业；该无形资产的成本能够可靠地计量。</li>
+<li><strong>判断要求（第五条）</strong>：判断经济利益是否很可能流入时，应当对无形资产在预计使用寿命内可能存在的各种经济因素作出合理估计，并且<strong>应当有明确证据支持</strong>。</li>
+<li><strong>自行开发的加试（第七条至第九条）</strong>：内部研究开发项目的支出先分研究阶段与开发阶段，研究阶段当期费用化；开发阶段的支出要<strong>同时</strong>满足五项才能确认——技术上可行、有完成并使用或出售的意图、能说明产生经济利益的方式（在内部使用的，应当证明其有用性）、有足够的技术财务资源和其他资源支持、归属于开发阶段的支出能够可靠计量。</li>
+<li><strong>成本起点（第十三条）</strong>：自行开发的无形资产，成本只包括<strong>自满足第四条和第九条之后</strong>至达到预定用途前发生的支出；以前期间已经费用化的支出，不再调整。</li>
+</ul>
+<p>五层里，第九条那一层是主考场。数据服务多半是自行开发——没有现成的资产可以买，是一批一批跑出来的 [5]；外购那一层的成本构成（第十二条）对它用不上 [1]。确认这一关要走的，是第九条那五项；成本从哪儿起算，另按第十三条。</p>
+<p>第四条那句要看清用词：原文是「与<strong>该无形资产有关</strong>的经济利益」，不是「该资产产生的经济利益」。差这一个词，范围差很多——有关的，包括它支撑别的产品赚钱这种间接流入；产生的，就要求它自己能卖钱。条文用的是前一个词，后一个词是读的时候顺手补上去的。（用词比对见 [1] 第三条至第五条条文，属文献结论；「范围差多少」属本文解读，本文推导。）</p>
+<p>第五条那半句话是这一篇的钥匙：<strong>应当有明确证据支持</strong>。它把举证责任放到申报方身上，而且要求的不是「结果会好」，是「对预计使用寿命内可能存在的各种经济因素作过合理估计」。准则用的是「很可能」，不是「一定」：结果验证不了，能验证的就只剩当时的判断依据。</p>
+<p>关键在于下一句：<strong>这几层里，声明能替代的很少。</strong>（本文推导：由第三条的「拥有或者控制」与第五条的「应当有明确证据支持」逐项反推，声明与证据落在不同位置。）</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>条文要件</th>
+<th>声明长什么样</th>
+<th>实际要什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>拥有或者控制（第三条）</td>
+<td>「本公司拥有该数据」</td>
+<td>取得或形成的凭据：自建的开发记录、外购的合同、授权的许可</td>
+</tr>
+<tr>
+<td>可辨认（第三条）</td>
+<td>「本数据集边界清晰」</td>
+<td>指得出它被出售、许可或转移时的对象与范围；或指得出它源自哪一份合同权利</td>
+</tr>
+<tr>
+<td>与该资产有关的经济利益（第四条）</td>
+<td>「预计带来收益」</td>
+<td>指得出利益从哪条路来：自用降本、对外许可、支撑销售</td>
+</tr>
+<tr>
+<td>成本可靠计量（第四条、第九条第五项）</td>
+<td>「成本已归集」</td>
+<td>每一笔支出真能落到这个对象上，且只有一个落点</td>
+</tr>
+<tr>
+<td>明确证据（第五条）</td>
+<td>「已支撑三项决策」</td>
+<td>有调用记录、有结算、有下游登记</td>
+</tr>
+</tbody>
+</table></div>
+<p>（把「明确证据」落到调用记录、结算凭证、引用登记三类，是本文的操作化——准则只给了那六个字，没规定证据长什么样。本文推导。）</p>
+<p>这张表里没有一行写着「写一份说明就够了」。<strong>声明只能表达主张，主张不构成证据；能当证据的，是当时做那个动作留下的东西。</strong></p>
+<p>这也解释了一件事：<strong>入表难，难在第九条那五项里，除第三项（经济利益的方式）之外，其余四项都是「当时有没有做」的记录，不是「现在说不说得清」的表述。</strong> 技术可行性要有立项、审批、技术文档、验证记录；意图要有经批准的书面决策文件；资源支持要有当时的安排；支出可计量要每一笔都归过集。财政部会计司对数据资源项目给出的问答，把这五项逐条落成了这些材料 [5]。</p>
+<p>门槛之所以看着高，是因为它要的东西，本来就是数据服务跑起来时该有的样子——只是这套书见到的服务，多数没照这个样子长（经验刻画）。</p>
+<h2 id="c13-s2">§2 质量的三种来历：做出来的、转出来的、补出来的</h2>
+<p>入表要的是一份能被核的东西。核什么？核它的每一步能不能指回一条原始记录。按这条线切，数据落在三种位置上。</p>
+<p><strong>一、做出来的。</strong> 数据产生的那一刻，口径、边界、单位、时区、版本就定死了；每一次判定都留了依据；每一处改动都留了两份账。它没有「后来统一口径」这个阶段，因为没有两个口径并存过。</p>
+<p><strong>二、转出来的。</strong> 手上是早先攒下的数据，但链没断：原始记录、称量、日志、审批、交接都还在，只是散在不同台账里，从来没按同一个口径对齐过。这种能转——沿链回溯，把口径对齐，把成本归到各自的集合，把证据装配起来。转出来的东西和做出来的一样可核，只是贵。</p>
+<p><strong>三、补出来的。</strong> 链断了：源头追不回，口径改过没留痕，时间戳补不上。剩下一条路，凭记忆把账凑齐。凑出来的有三个特征：时间戳对不上、口径与当时不一致、算不回去。第三个最难遮——补的记录要写下当时的判定人和设备，而那个人当年在不在这个项目上、那台仪器当年在不在这个实验室，对上去就出来了。（这是经验刻画：取自本系列见过的补账形态，不是准则的规定。）</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th></th>
+<th>做出来的</th>
+<th>转出来的</th>
+<th>补出来的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>起点</td>
+<td>数据还没产生</td>
+<td>已有一堆，链完整</td>
+<td>已有一堆，链断</td>
+</tr>
+<tr>
+<td>手段</td>
+<td>判据卡在生产现场</td>
+<td>沿链回溯、对齐、归集、装配</td>
+<td>凭记忆凑</td>
+</tr>
+<tr>
+<td>质量取决于</td>
+<td>体系还在不在跑</td>
+<td>链还剩多少</td>
+<td>无，只看凑得像不像</td>
+</tr>
+<tr>
+<td>成本曲线</td>
+<td>前置，一次性</td>
+<td>越晚越贵</td>
+<td>凑得再像也过不了对账</td>
+</tr>
+</tbody>
+</table></div>
+<p>三种的差别不在投入多少，在<strong>链还剩多少</strong>。链全，做出来的最便宜；链在，转出来的能救，只是贵；链断，补出来的问题不在质量，在性质——它从数据变成了一个说法。</p>
+<p>实际的数据多半落在中间：链是半断的，有的地方留着记录，有的没有。那就看断口在哪里——断在归集之前，还能救回一部分；断在源头，救不回来。三种位置是一条线上的三段，不是一个三选一。</p>
+<p>制度要分清它管哪一段。准则第十三条写的是：自行开发的无形资产，成本只从满足第四条和第九条之后算起，以前期间已经费用化的支出不再调整 [1]。《企业数据资源相关会计处理暂行规定》把同一条原则搬到了数据上：施行前已经费用化计入损益的支出，不再调整 [2]。</p>
+<p>这一句只回答一件事：起点之前的那笔算不算进去，不算。它没有回答存量数据能不能入表——那是第九条五项的事，另判。所以存量改造能入表，但成本基数从起点起算：本文的读法是：算得进这次为此发生的清洗、整合、鉴证，算不进当年生产它的那笔；实际归属以准则与主管部门解释为准。</p>
+<p>一句话收这一节：<strong>当时做对最便宜。链在，晚做只是贵；链断，晚做等于没有。</strong></p>
+<p>（三态划分与「链」这条判据是本文推导：由第五条「明确证据」与第九条五项的过程性要求反推——证据得能指向原始记录，而原始记录在不在，与数据由谁产出无关。制度那段的读法同为本文解读，实际适用以准则与主管部门解释为准。）</p>
+<h2 id="c13-s3">§3 体系在业务里留下的是哪几种痕迹</h2>
+<p>这里要先破一个说法：<strong>不是先有一套文件，再拿去套业务。</strong></p>
+<p>条文离开业务就是一份没人执行的稿子，那不叫体系，叫稿子。体系是业务带着规矩在跑——它在跑的时候才存在，也只有在这时候才产生东西。</p>
+<p>跑起来之后，留下的痕迹能不能对上第九条那五项，逐项看：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>第九条的条件</th>
+<th>要的证据</th>
+<th>体系跑起来留下的痕迹</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>（一）技术上可行</td>
+<td>立项与审批、技术文档、测试验证</td>
+<td>写与检：阈值有来历、判定有记录、判据能红</td>
+</tr>
+<tr>
+<td>（二）完成并使用或出售的意图</td>
+<td>经批准的书面决策文件、业务模式与应用场景</td>
+<td>立规：边界、口径、到期条件</td>
+</tr>
+<tr>
+<td>（三）产生经济利益的方式</td>
+<td>市场证据，或内部使用的有用性证明</td>
+<td><strong>供不出</strong>——这是市场判断，见 §4</td>
+</tr>
+<tr>
+<td>（四）有足够的技术财务资源支持</td>
+<td>当时的资源安排</td>
+<td>长：每阶段有交付物、有判据</td>
+</tr>
+<tr>
+<td>（五）支出能够可靠计量</td>
+<td>归属于该开发阶段的支出可单独归集</td>
+<td>落与一处正文 ＋ 判与分层：一个落点、边界唯一</td>
+</tr>
+</tbody>
+</table></div>
+<p>（对应关系是本文推导：条文见 [1] 第九条，六动作的名字见 [4]。这张表故意留了一行「供不出」——五行全对上的表，通常是为了对上而画的。）</p>
+<p>这几样不是为了入表长的。它们各有各的用途，全是体系为了自己在业务里活下去必须长的东西——不防串味，分层就白做；不防漂移，一处正文就成了摆设；不防假绿，检查等于没跑。</p>
+<p><strong>入表这个考场，一半的题目在体系跑起来的时候就答好了，另一半不归体系答——它把两半收在同一张卷子上。</strong></p>
+<p>一份跑过三年的数据服务，边界唯一、成本落在一个点上、每次判定都有依据、阶段分得开——第（一）（四）（五）项已经备好了，第（二）项要补一份书面决策，第（三）项不归它管。</p>
+<p>反过来也成立：一份入不了表的数据服务，多半不是「没做入表准备」，是它的判、落、写、检本来就有洞。账算不出来，是这些洞的显影。</p>
+<h2 id="c13-s4">§4 体系管不到的那一半</h2>
+<!--FIG:BEGIN F13-BOUNDARY-->
+<figure class="fig" data-fig="F13-BOUNDARY">
+<svg viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="体系管得到与管不到的边界图">
+<rect x="18" y="20" width="644" height="272" rx="12" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="8 6"/>
+<text x="34.0" y="44.0" font-size="12" fill="var(--muted)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">入表的另一半：账上真有钱（市场问题，体系管不到）</text>
+<rect x="76" y="68" width="528" height="196" rx="11" fill="var(--td)" stroke="var(--gold)" stroke-width="2"/>
+<text x="340.0" y="94.0" font-size="15" fill="var(--gold)" text-anchor="middle" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">体系管得到：有账可算</text>
+<rect x="96" y="116" width="156" height="116" rx="8" fill="var(--panel)" stroke="var(--line)"/>
+<text x="174.0" y="145.0" font-size="20" fill="var(--fg)" text-anchor="middle" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">造</text>
+<text x="174.0" y="170.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">定结构：字段、类型</text>
+<text x="174.0" y="185.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">、必填、单位、时区</text>
+<text x="174.0" y="200.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">、版本</text>
+<rect x="268" y="116" width="156" height="116" rx="8" fill="var(--panel)" stroke="var(--line)"/>
+<text x="346.0" y="145.0" font-size="20" fill="var(--fg)" text-anchor="middle" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">存</text>
+<text x="346.0" y="170.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">定边界：这一份归哪</text>
+<text x="346.0" y="185.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">、谁能改、旧版去哪</text>
+<rect x="440" y="116" width="156" height="116" rx="8" fill="var(--panel)" stroke="var(--line)"/>
+<text x="518.0" y="145.0" font-size="20" fill="var(--fg)" text-anchor="middle" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">供</text>
+<text x="518.0" y="170.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">定出口：调用方是谁</text>
+<text x="518.0" y="185.0" font-size="10" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">、多久更新、谁维护</text>
+<text x="340.0" y="318.0" font-size="12" fill="var(--muted)" text-anchor="middle" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">分界线不是「体系好不好」，是「谁管得了」</text>
+</svg>
+<figcaption>图 7 · 体系管得到与管不到的分界（图只画关系，判据与归属见正文）</figcaption>
+</figure>
+<!--FIG:END F13-BOUNDARY-->
+<p>得把话说清，免得读成「按体系做就能入表」。</p>
+<p>入表要两样：<strong>有账可算</strong>，和<strong>账上真有钱</strong>。体系管前者，管不了后者。</p>
+<p>后者是商业实质：有没有人在用、有没有结算、下一年的需求还在不在。这是市场问题，不是数据质量问题。一份数据加工得再干净，没人用，经济利益就流不进来，账上立不住。</p>
+<p>准则自己也把这一半当估计：第五条规定，判断经济利益是否很可能流入时，要对预计使用寿命内可能存在的各种经济因素作出合理估计 [1]。「各种经济因素」不是账能做出来的，它要市场信息。</p>
+<p>（「有账可算／账上真有钱」这个切法是本文的，不是准则的分类。准则把两条并列为确认条件，把估计经济因素作为判断要求；本文按「谁管得了」重新切。本文推导。）</p>
+<p>还有一件事常被误当成缺的那一格：<strong>数据要能被外部取用，中间还隔着几道工程活。</strong>（造、存、供三分是本文的切法，属本文推导；切几道随场景定。）</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>动作</th>
+<th>干什么</th>
+<th>少了它的后果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>造</td>
+<td>定结构：字段、类型、必填、单位、时区、版本</td>
+<td>能看不能用，口径每次重新解释</td>
+</tr>
+<tr>
+<td>存</td>
+<td>定边界：这一份归哪、谁能改、旧版去哪</td>
+<td>找不到最新版，成本归不到一个对象</td>
+</tr>
+<tr>
+<td>供</td>
+<td>定出口：调用方是谁、多久更新、谁维护</td>
+<td>没有使用记录，流入证据无从谈起</td>
+</tr>
+</tbody>
+</table></div>
+<p>这三件常被当成体系的补丁，其实是<strong>数据服务的交付形态</strong>。体系产出的是可核的加工过程；要让这个过程变成别人能取用的东西，得有结构、有边界、有出口。</p>
+<p>「造」这一格最容易被做成表面功夫。一张表合格，看的不是排版，是<strong>离开作者还能不能用</strong>。同一个字段在两张表里叫两个名，同一个量在两处用了不同单位（差几个数量级），时间字段有的本地时区有的 UTC——任何一样没定，「造」就没完成。这三条与 11 篇 §4 讲的四类口径问题同源，差别在于 11 是出错之后怎么发现，这里是动手之前怎么定下。</p>
+<p>（这三条是经验刻画：本系列数据加工里返工过的几处，都落在字段命名、单位、时区这三个位置上。不是准则要求——准则管的是支出能否归集、技术上是否可行；表结构怎么设计，本文未见准则作规定。）</p>
+<h2 id="c13-s5">§5 反面：账会反过来塑造体系</h2>
+<p>有了外部用途，往往会长出与目的无关的动作。12 篇 §7 讲的是指标一经成为目标就会被优化，那个机制在入表上是同一个形状。</p>
+<p>数据入表这件事上，能看见三种：</p>
+<ul>
+<li><strong>为入表造数据</strong>：先定「我们要有几项数据资产」，再去找数据填。顺序反了，产物是为账生的，不是为用生的</li>
+<li><strong>为摊销凑寿命</strong>：使用寿命成了财务参数，工程侧按摊销年限倒推「这条数据还能用几年」</li>
+<li><strong>为凭证补记录</strong>：调用记录本来是使用的副产品，变成要专门维护的指标，于是有了刷调用量的动机</li>
+</ul>
+<p>三种的共同点：<strong>账本该是产物用过之后的痕迹；痕迹本身成了目标，痕迹就开始被制造。</strong></p>
+<p>（这是机制性推断，不是实证。依据有两条：12 篇 §7 关于指标成为目标之后被优化的分析，以及古德哈特定律的一般形式 [3]。）</p>
+<p>一条可用的防御，与 07 篇 §6 同一个做法：<strong>分离授权。</strong> 判「这套东西还有没有用」的人，和判「这笔支出怎么摊」的人，不能是同一个。合在一起，摊销年限会反过来决定「还有没有用」。</p>
+<h2 id="c13-s6">§6 四条边界</h2>
+<p>这一篇管得窄，得说清窄在哪：</p>
+<ul>
+<li><strong>不管内容为真。</strong> 体系保证可核，不保证正确。一份数据可以全程按规矩加工、留痕齐全、算得回去，而源头的测量是错的——留痕再全也核不出来，除非有阴性对照和跨源校验兜底</li>
+<li><strong>不管会计政策。</strong> 资本化还是费用化，是企业与准则的事</li>
+<li><strong>不管计价与披露。</strong> 评估方法、附注写法，是评估机构与审计的事</li>
+<li><strong>不管商业实质。</strong> 有没有人用，是市场的事</li>
+</ul>
+<p>它只管一件事：<strong>这份数据服务有没有一本算得出的账。</strong></p>
+<p>顺带纠一个常见误读：能入表不等于有价值。一条排查经验极有用，但它分离不出来、也没有成本归集，进不了账；反过来，一份为入表而造的数据，账上立着，没人用，第二年就该减值。<strong>账认的是形状，不是价值。</strong></p>
+<h2 id="c13-s7">§7 检测也是产出的一环</h2>
+<p>前面讲的都是数据。检测的结果也是数据——谁、在什么条件下、按哪条判据、查过什么、留下什么结论。它同样要有一本账，也同样分三种来历。</p>
+<p><strong>做出来的。</strong> 判据在设计的时候就写成能红的：阈值有来历，判定有记录，判据失效会被发现。检测跟着产出走，每一步跑一遍，记录是生产的副产品。</p>
+<p><strong>转出来的。</strong> 交付前才集中检，但链在：原文、判据、修改记录都在，能重建当时的现场。贵，可核。</p>
+<p><strong>补出来的。</strong> 自己判自己。刚写完就在同一个会话里评自己的稿，它审的是「为什么这么写」；「这段站不站得住」不在它问的范围里。执笔的那一方容易替自己的文本辩护：多数句子都拿得出理由，理由还都听得通。这种检测报告格式完整、结论齐整，内容上只是自我确认。</p>
+<p>这三档与 §2 那三档是同一件事，只是对象从数据换成了检测记录。</p>
+<p>怎么让它落进前两档？答案是换判定者：判据不变，只把稿子交给一个不知道写作意图、不知道改过几轮、不知道上一次结论的人。换判定者为什么有效、隔离判定要花多少钱、全绿为什么要再判一次、检测的有效性怎么由「看得见多少 × 担不担得起」相乘得出——05 §8 讲的是同一件事的另一半。这里只留一句与本篇有关的：</p>
+<p><strong>检测记录要能当证据用，就得在它产生的那一刻留下链，而不是在申报前补一份报告。</strong></p>
+<p>（检测记录的三种形状取自本系列的生产记录，经验刻画；「检测也是产物」这一对应是本文推导。）</p>
+<p>这也回到 §2 那条成本曲线：体系在跑的时候检测，成本摊在每一次产出上；等要交付才补，得重建当时的现场；重建不了，就只能自己确认自己。<strong>质量的价钱不付在检测上，付在「检测的时候还找得到当时的现场」上。</strong></p>
+<h2 id="c13-s8">§8 结语：标尺，不是目的</h2>
+<p>入表的意义不在那张报表上，在它给出的那把尺子上。</p>
+<p>内部判据是自己写的，红不红由写判据的人定。这一关的判据不归自己定，也不许商量——它问的两件事，正是数据服务质量的两个可验证面：成本归得清不清，利益举得出证举不出。</p>
+<p>拿这把尺子回头量，能量出体系在哪儿有洞。</p>
+<p><strong>一组对照</strong>，三种顺序：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>形态</th>
+<th>做法</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>正例</td>
+<td>体系在业务里跑，数据带着口径与判据长出来；入表时账是追认</td>
+<td>账跟着数据走，摊销年限可按业务调</td>
+</tr>
+<tr>
+<td>反例</td>
+<td>先定「要有几项数据资产」，再找数据填</td>
+<td>账上有了，没人用；第二年被减值</td>
+</tr>
+<tr>
+<td>半例</td>
+<td>造、存做到了，供没做</td>
+<td>成本归得清、边界也唯一，就是拿不出流入的证据——卡在「有没有人用」这一格（这一格是会计判断，本文只描述它卡在哪一步）</td>
+</tr>
+</tbody>
+</table></div>
+<p>正例的关键是顺序：体系在前，账在后。反例把顺序倒了，账就成了目标。半例常停在这个位置：前两个动作是工程活，一个人干得完；第三个动作要跨部门，于是停在门口。</p>
+<p><strong>为什么要「体系在前」？</strong> 因为账上要的两个数——成本落到哪个对象、证据指不指得回原始记录——都是生产时的动作留下的。顺序倒了，就是先给产物定价，再倒过来要求生产配合这个价；那个价没有对应的成本可归，账只能靠摊。</p>
+<p>这条链子五个节点，一个扣一个：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>节点</th>
+<th>谁在做</th>
+<th>交付的是</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① 立规</td>
+<td>人</td>
+<td>判据、口径、到期条件</td>
+</tr>
+<tr>
+<td>② 执行</td>
+<td>被体系管着的 AI</td>
+<td>全量跑判据、逐条留痕</td>
+</tr>
+<tr>
+<td>③ 产物</td>
+<td>② 这条路径产出的数据</td>
+<td>只要链没断，都能往下走</td>
+</tr>
+<tr>
+<td>④ 转换</td>
+<td>体系与同一个执行者</td>
+<td>沿链回溯、对齐、归集、装配</td>
+</tr>
+<tr>
+<td>⑤ 申报与判定</td>
+<td>企业申报，审计来判</td>
+<td>证据指得回原始记录，入表是取件</td>
+</tr>
+</tbody>
+</table></div>
+<p>存量数据没有前两个节点——它在体系之前就产出了，进来时直接从第三个节点接上。所以第四个节点是常设的，不是给谁打的补丁：新数据走完前两个节点之后走它，存量数据进来时唯一要走的就是它。两条路在这里合流。</p>
+<p>前四个节点都在体系这一侧，第五个不在。第三个尤其要看住：数据由谁产出不起决定作用，链断没断才起决定作用。人产的数据，只要每一步都留了原始记录，一样能转成熟的数据服务去入表；AI 产出的，链断了也一样入不了。</p>
+<p>（这一段是经验刻画。能举的例子只有一处，且是这套书自己的生产过程：源文二十余篇压成几篇总纲，另有十几篇实践一直没进正文——造和存都做了，供没做。自证不成证据，只作说明。）</p>
+<p>这条线对检测一样成立。检测的三种来历里，只有前两档的结论能当证据；自己判自己那一档，报告再齐整也只是自我确认。而这一关的门槛不在判据条数，在两件事：手段够不够看见，成本担不担得起。</p>
+<p>一句话收这一篇：<strong>数据质量有三种来历——做出来的、转出来的、补出来的。前两种体系都救得了；第三种救不了，它缺的是链，不是规矩。入表是检验前两种的最硬一道关，也是把第三种挡在门外的那道门。</strong></p>
+<h3>引用与出处说明</h3>
+<blockquote>
+<p>本篇引用分两类：外部 4 条（会计准则、数据资源会计规定、数据资源会计处理问答、古德哈特定律）、自引 1 条（六动作产出列）。外部条款均落到条文号，落不到条文的不写。</p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>引用</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[1]</td>
+<td>无形资产的定义与确认：<strong>第三条</strong>（拥有或控制、无实物形态、可辨认、非货币性；可辨认性两条路）、<strong>第四条</strong>（与该无形资产有关的经济利益很可能流入；成本能够可靠计量）、<strong>第五条</strong>（对预计使用寿命内可能存在的各种经济因素作出合理估计，须有明确证据支持）、<strong>第七条</strong>（区分研究阶段与开发阶段）、<strong>第八条</strong>（研究阶段支出当期费用化）、<strong>第九条</strong>（开发阶段支出同时满足五项方可确认）、<strong>第十三条</strong>（自行开发的成本自满足第四条和第九条之后起算；以前期间已费用化的不再调整）、<strong>第十六条</strong>（取得时分析判断使用寿命）</td>
+<td>财政部《企业会计准则第 6 号——无形资产》（财会〔2006〕3 号），财政部会计司发布文本与会计财务评价中心文本两处一致（联网核验 2026-11-22）</td>
+</tr>
+<tr>
+<td>[2]</td>
+<td>数据资源的入账路径、成本口径、使用寿命的关注因素，以及施行前已费用化支出不再调整</td>
+<td>财政部《企业数据资源相关会计处理暂行规定》（财会〔2023〕11 号，2024-01-01 施行）（联网核验）</td>
+</tr>
+<tr>
+<td>[3]</td>
+<td>古德哈特定律</td>
+<td>Goodhart, C. (1975). Problems of Monetary Management: The U.K. Experience. In <em>Papers in Monetary Economics</em> (Vol. 1). Reserve Bank of Australia；通行表述出自 Strathern, M. (1997), p. 308（联网核验）</td>
+</tr>
+<tr>
+<td>[4]</td>
+<td>六动作与产出列</td>
+<td>本书 00 §2、14 速查卡（自引）</td>
+</tr>
+<tr>
+<td>[5]</td>
+<td>数据资源开发阶段支出资本化条件的判断：须区分研究阶段与开发阶段，开发阶段五项条件逐项判断；技术可行性须有立项审批、技术文档、测试验证，意图须有经批准的书面决策文件并说明业务模式与应用场景</td>
+<td>财政部会计司《企业数据资源会计处理实施问答》（2024-10-30，kjs.mof.gov.cn，联网核验）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>说明：[1][2][5] 为法规与主管部门口径，条款号已核到财政部发布文本。[1] 本篇的取用范围：§1 的五层结构与要件表、§2 第十三条的资本化起点、§4 第五条的经济因素估计。[3] 为外部文献，本篇只取其一般形式，未引其货币政策论证。[4] 为本书内部结构，不构成外部证据。本篇点到其他篇的地方（「见 NN §X」这类指路），属篇间指路，不计入引用表。</p>
+</blockquote>
+<h2 id="c13-h10">延伸阅读</h2>
+<ul>
+<li><strong>00 体系全貌</strong>：六动作与产出列的完整版本。</li>
+<li><strong>05 检</strong>：内部判据怎么设计，存量债为什么不追。</li>
+<li><strong>07 退</strong>：到期条件与授权分离的完整版本。</li>
+<li><strong>11 三种产物</strong>：按表对齐那一类问题的完整版本。</li>
+</ul>
+</section>
+<section class="chapter" id="c14">
+<!--
+SPDX-License-Identifier: CC-BY-SA-4.0
+Copyright (c) 2026 wUwproject
+Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+See https://creativecommons.org/licenses/by-sa/4.0/ for details.
+-->
+
+<h1 id="c14">14｜速查卡——一页纸的六个动作</h1>
+<h2 id="c14-s0">§0 引子：什么时候翻这一页</h2>
+<!--FIG:BEGIN F14-CARD-->
+<figure class="fig" data-fig="F14-CARD">
+<svg viewBox="0 0 680 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="速查卡一页总览">
+<rect x="12" y="12" width="656" height="396" rx="12" fill="var(--td)" stroke="var(--line)"/>
+<rect x="30" y="30" width="306" height="82" rx="8" fill="var(--bg)" stroke="var(--line)"/>
+<rect x="30" y="30" width="3" height="82" fill="var(--gold)"/>
+<text x="46.0" y="58.0" font-size="13" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">六动作</text>
+<text x="46.0" y="82.0" font-size="11" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">判 · 落 · 写 · 检 ·</text>
+<text x="46.0" y="100.0" font-size="11" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif"> 长 · 退</text>
+<rect x="356" y="30" width="306" height="82" rx="8" fill="var(--bg)" stroke="var(--line)"/>
+<rect x="356" y="30" width="3" height="82" fill="var(--gold)"/>
+<text x="372.0" y="58.0" font-size="13" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">五层</text>
+<text x="372.0" y="82.0" font-size="11" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">L0 常驻 → L4 就地，按寿命落</text>
+<rect x="30" y="124" width="306" height="82" rx="8" fill="var(--bg)" stroke="var(--line)"/>
+<rect x="30" y="124" width="3" height="82" fill="var(--gold)"/>
+<text x="46.0" y="152.0" font-size="13" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">三红线</text>
+<text x="46.0" y="176.0" font-size="11" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">一处正文／判据能红／渐进加载</text>
+<rect x="356" y="124" width="306" height="82" rx="8" fill="var(--bg)" stroke="var(--line)"/>
+<rect x="356" y="124" width="3" height="82" fill="var(--gold)"/>
+<text x="372.0" y="152.0" font-size="13" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">五问</text>
+<text x="372.0" y="176.0" font-size="11" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">活多久 · 谁读 · 一页能用</text>
+<text x="372.0" y="194.0" font-size="11" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif"> · 能红 · 谁判</text>
+<rect x="30" y="218" width="306" height="82" rx="8" fill="var(--bg)" stroke="var(--line)"/>
+<rect x="30" y="218" width="3" height="82" fill="var(--gold)"/>
+<text x="46.0" y="246.0" font-size="13" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">退四档</text>
+<text x="46.0" y="270.0" font-size="11" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">改 → 并 → 降 → 删</text>
+<rect x="356" y="218" width="306" height="82" rx="8" fill="var(--bg)" stroke="var(--line)"/>
+<rect x="356" y="218" width="3" height="82" fill="var(--gold)"/>
+<text x="372.0" y="246.0" font-size="13" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">三自检</text>
+<text x="372.0" y="270.0" font-size="11" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">无内部编号 · 无自证 · 无</text>
+<text x="372.0" y="288.0" font-size="11" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">幽灵引用</text>
+<rect x="30" y="312" width="306" height="82" rx="8" fill="var(--bg)" stroke="var(--line)"/>
+<rect x="30" y="312" width="3" height="82" fill="var(--gold)"/>
+<text x="46.0" y="340.0" font-size="13" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">抗漂一问</text>
+<text x="46.0" y="364.0" font-size="11" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">这次判，锚在参照物还是上一版？</text>
+<rect x="356" y="312" width="306" height="82" rx="8" fill="var(--bg)" stroke="var(--line)"/>
+<rect x="356" y="312" width="3" height="82" fill="var(--gold)"/>
+<text x="372.0" y="340.0" font-size="13" fill="var(--gold)" text-anchor="start" font-weight="600" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">两把尺</text>
+<text x="372.0" y="364.0" font-size="11" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">看得见 × 担得起；抽象只抹载</text>
+<text x="372.0" y="382.0" font-size="11" fill="var(--fg)" text-anchor="start" font-weight="400" font-family="Source Han Sans SC,PingFang SC,system-ui,sans-serif">体不改真假</text>
+</svg>
+<figcaption>图 8 · 速查卡一页总览（图只画关系，判据与归属见正文）</figcaption>
+</figure>
+<!--FIG:END F14-CARD-->
+<p>一页纸的东西，用法就是现场判断。翻它的时机是三个——动手前不知道从哪儿问；两套说法打架，不知道信哪套；这套东西建起来了，不知道还该不该往下建。</p>
+<p>前面十三篇给理由，这一页只给问句。</p>
+<h2 id="c14-s1">§1 六个动作</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>动作</th>
+<th>问一句</th>
+<th>产出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>判</td>
+<td>能活多久、谁会读</td>
+<td>落点</td>
+</tr>
+<tr>
+<td>落</td>
+<td>只读这页能不能正确行动</td>
+<td>一页红线</td>
+</tr>
+<tr>
+<td>写</td>
+<td>没参与的人能不能重建</td>
+<td>一份规范</td>
+</tr>
+<tr>
+<td>检</td>
+<td>这条判据自己红过吗</td>
+<td>一组检查</td>
+</tr>
+<tr>
+<td>长</td>
+<td>能不能长出下一套</td>
+<td>一条工序</td>
+</tr>
+<tr>
+<td>退</td>
+<td>今天还会开始做它吗</td>
+<td>到期单</td>
+</tr>
+</tbody>
+</table></div>
+<p>体系在业务里跑，留下的是可核的痕迹。这些痕迹恰好对应入表要的成本归集与明确证据 [4]。</p>
+<h2 id="c14-s2">§2 五层落点</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>层</th>
+<th>判据</th>
+<th>寿命</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L0 常驻</td>
+<td>不读任何东西也必须守</td>
+<td>按年</td>
+</tr>
+<tr>
+<td>L1 通用</td>
+<td>换个项目还成立</td>
+<td>跨项目</td>
+</tr>
+<tr>
+<td>L2 项目</td>
+<td>只在这个项目里真</td>
+<td>随项目</td>
+</tr>
+<tr>
+<td>L3 会话</td>
+<td>只在这一轮里有效</td>
+<td>一次会话</td>
+</tr>
+<tr>
+<td>L4 就地</td>
+<td>只对读这一份的人有效</td>
+<td>随件</td>
+</tr>
+</tbody>
+</table></div>
+<p>两刀定层：先看寿命，再看读者。冲突时以读者为准 [1]。</p>
+<h2 id="c14-s3">§3 三条红线 [2]</h2>
+<ul>
+<li>同一句话不许有两个完整版，别处只指向</li>
+<li>常驻层只放路由与红线，条目有上限</li>
+<li>每条规矩配一个能失败的检查，红不了就降为人判</li>
+</ul>
+<h2 id="c14-s4">§4 五问判定（放不放得进去）</h2>
+<ol>
+<li>换掉载体还成立吗——成立，进；不成立，是参数</li>
+<li>一年内会改吗——会改，别写死</li>
+<li>反例能列完吗——能，交机器；不能，交人</li>
+<li>谁会来主动找它——没人找，别放常驻层</li>
+<li>违反一次的代价，高于维护成本吗——低于，先别设检查</li>
+</ol>
+<h2 id="c14-s5">§5 到期与退役 [3]</h2>
+<ul>
+<li>到期条件：时间、事件、计数、替代，四选一，且第三方可判</li>
+<li>三个触发：好日子快到头／只剩沉没成本／正在挤占新东西</li>
+<li>四档处置：改 → 并 → 降 → 删</li>
+<li>收尾四件：留档、通知、摘引用、删对应检查</li>
+<li>授权：退役负责人与撰写人分离</li>
+</ul>
+<h2 id="c14-s6">§6 三条自检</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>自检</th>
+<th>问句</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>唯一</td>
+<td>这句话有没有两个完整版</td>
+</tr>
+<tr>
+<td>能红</td>
+<td>这条规矩坏了，谁知道</td>
+</tr>
+<tr>
+<td>到期</td>
+<td>它什么时候该退，谁来决定</td>
+</tr>
+</tbody>
+</table></div>
+<p>三条过不了，说明这套东西自己没守自己的规矩。</p>
+<h2 id="c14-s7">§7 抗漂一问</h2>
+<p>同一件事做过很多遍之后，先问这一句：<strong>这次是照着原文做的，还是照着上一版改的？</strong></p>
+<p>照着上一版，偏差逐次叠加；照着原文，偏差不累积。四种距离（上下文、工期、次数、交接）与这条判据的论证，见 02 §6。</p>
+<h2 id="c14-s8">§8 结语：一页的用法</h2>
+<p>这一页不是摘要，是判据集：多数条目能当场回答是或否。</p>
+<p>答「否」的地方，就是下一步要动的地方。</p>
+<p><strong>一组对照</strong>，三种用法：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>形态</th>
+<th>用法</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>正例</td>
+<td>拿这一页逐条自问，答「否」的记下来，按篇号回查</td>
+<td>一轮下来能出一张待办</td>
+</tr>
+<tr>
+<td>反例</td>
+<td>把这一页当成「已经做到」的证明</td>
+<td>页上的问句一句没答，体系却宣布建成</td>
+</tr>
+<tr>
+<td>半例</td>
+<td>只用前三条红线，后面的自检一条没用</td>
+<td>红线守住了，规矩坏了没人知道</td>
+</tr>
+</tbody>
+</table></div>
+<p>正例的关键是「先答再改」；反例把判据集当验收单；半例藏得深——前三行看得懂，后三行要动脑，于是只用前三行（经验刻画，单例，不足以证明普遍）。</p>
+<p>（本条为经验刻画，取自这套书自己的使用记录；条目本身压缩自 00–13，论证在各篇。）</p>
+<h3>引用与出处说明</h3>
+<blockquote>
+<p>本篇不新增引用，全部条目压缩自 00 到 13。</p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>引用</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[1]</td>
+<td>六动作与五层</td>
+<td>本书 00、03（自引）</td>
+</tr>
+<tr>
+<td>[2]</td>
+<td>三条红线与自检</td>
+<td>本书 02、05（自引）</td>
+</tr>
+<tr>
+<td>[3]</td>
+<td>到期与四档处置</td>
+<td>本书 07（自引）</td>
+</tr>
+<tr>
+<td>[4]</td>
+<td>入表的两笔账、数据质量的三种来历</td>
+<td>本书 13（自引）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>说明：本篇为压缩件，正文不挂编号，编号只用于回查论证所在篇；所有判据的论证在前十三篇，本篇不复述。本篇点到其他篇的地方（「见 NN §X」这类指路），属篇间指路，不计入引用表。</p>
+</blockquote>
+<h2 id="c14-h10">延伸阅读</h2>
+<ul>
+<li><strong>00 体系全貌</strong>：六动作的完整版本。</li>
+<li><strong>07 退</strong>：退役四档与授权的完整版本。</li>
+<li><strong>13 入表</strong>：数据质量怎么变成可算的账，完整版本。</li>
+</ul>
+</section>
+</article>
+</main>
+<div id="tools">
+  <button id="t-theme" title="明/暗">◐</button>
+  <button id="t-minus" title="缩小字号">A−</button>
+  <button id="t-plus" title="放大字号">A+</button>
+  <button id="t-top" title="回到顶部">↑</button>
+</div>
+<script>
+(function(){
+  var links=[].slice.call(document.querySelectorAll('#sidebar nav a'));
+  var map={};links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+  var targets=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1));}).filter(Boolean);
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(a){a.classList.remove('on');});
+        var a=map[e.target.id];if(a){a.classList.add('on');}
+      }
+    });
+  },{rootMargin:'-15% 0px -70% 0px'});
+  targets.forEach(function(t){io.observe(t);});
+
+  var root=document.documentElement, KEY='half-life-theme';
+  var saved=localStorage.getItem(KEY);
+  if(saved){root.setAttribute('data-theme',saved);}
+  else if(window.matchMedia('(prefers-color-scheme: dark)').matches){root.setAttribute('data-theme','dark');}
+  document.getElementById('t-theme').onclick=function(){
+    var n=root.getAttribute('data-theme')==='dark'?'light':'dark';
+    root.setAttribute('data-theme',n);localStorage.setItem(KEY,n);
+  };
+  var fs=parseFloat(localStorage.getItem('half-life-fs')||'17');
+  root.style.setProperty('--fs',fs+'px');
+  document.getElementById('t-plus').onclick=function(){fs=Math.min(22,fs+1);root.style.setProperty('--fs',fs+'px');localStorage.setItem('half-life-fs',fs);};
+  document.getElementById('t-minus').onclick=function(){fs=Math.max(14,fs-1);root.style.setProperty('--fs',fs+'px');localStorage.setItem('half-life-fs',fs);};
+  document.getElementById('t-top').onclick=function(){window.scrollTo({top:0,behavior:'smooth'});};
+})();
+</script>
+</body>
+</html>
