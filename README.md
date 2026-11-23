@@ -12,15 +12,35 @@ Copyright (c) 2026 wUwproject
 
 ## 收录的书
 
-| 书 | 状态 | 一句话 | 协议 |
+<table>
+  <tr>
+    <td width="240" align="center"><a href="本征/README.md"><img src="本征/book/cover.png" width="240" alt="《本征》"></a></td>
+    <td width="240">&nbsp;</td>
+    <td width="240">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center"><strong>本征</strong><br>一本把治理写成结构的书：寿命分层、不变量与可重建</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center">回答"怎么让规矩活到该活的时候"</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+| 书 | 状态 | 篇幅 | 协议 |
 |---|---|---|---|
-| [本征](本征/README.md) | 已出片 | 从一套已运行的 AI 组织管理体系中抽出的规则工程方法：六个动作、四条不变量、两条横切 | CC BY-SA 4.0 |
+| [本征](本征/README.md) | 已出片（19 章 · 57,084 字 · PDF 116 页） | 15 篇正文＋版权页／序言／阅读指南／结语／附录 A | CC BY-SA 4.0 |
+
+**在线阅读**：<https://ldxs001.github.io/maby_report/>（书入口页 → 在线阅读整本书）。字数口径：汉字＋英文单词＋数字串，图块与图注不计字，与《我思故我写》《我写故我播》一致。
 
 ## 仓库定位
 
 maby_report 与 maby_agent、maby_skills、maby_tool 平级：后三者分别托管智能体、技能与工具，本仓库托管**成书与报告**。2026-11-22 建立，本征为第一个项目。
 
-**入库白名单（硬约束）**：每个项目下只有 `单篇/`（可独立阅读的正文）与 `book/`（成书成品：HTML／PDF／封面）两处。其余一律不推——方法论规划、写作规划、原稿、RGS 规范包、工具脚本（`*.py`）、映射表、名词表、五检报告、任务地图、备份目录。这些留在作者本地工作区，不进公开仓库。
+**入库白名单（硬约束）**：每个项目下只有 `单篇/`（可独立阅读的正文）与 `book/`（成书成品：HTML／PDF／封面）两处；仓库根的 `index.html` 是 GitHub Pages 站点入口，属唯一例外。其余一律不推——写作规划、原稿、内部规范包、工具脚本（`*.py`）、证据底账、名词表、检查记录、任务过程文件与备份目录。这些留在作者本地工作区，不进公开仓库。
 
 ## 协议说明
 
@@ -37,11 +57,12 @@ maby_report 与 maby_agent、maby_skills、maby_tool 平级：后三者分别托
 ```
 maby_report/
 ├── LICENSE                    # CC BY-SA 4.0 协议全文
-├── README.md                  # 本文件
+├── README.md                  # 本文件（仓库门面）
+├── index.html                 # GitHub Pages 入口页：封面＋在线阅读／下载
 └── 本征/
-    ├── README.md              # 书页：篇目、获取、目录结构
+    ├── README.md              # 书页：封面、篇目、获取、字数口径
     ├── 单篇/                  # 15 篇正文（00–14）
-    └── book/                  # 成书：本征.html / 本征.pdf / cover.png
+    └── book/                  # 成书：HTML / PDF / 封面三件套
 ```
 
 ## 维护约定
