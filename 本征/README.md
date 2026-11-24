@@ -19,11 +19,13 @@ See https://creativecommons.org/licenses/by-sa/4.0/ for details.
 
 ## 获取与下载
 
+当前版本 **v1.1.0**（2026-11-25）；变更明细见 [`CHANGELOG.md`](CHANGELOG.md)。
+
 | 方式 | 入口 | 说明 |
 |---|---|---|
 | **在线阅读整本书** | GitHub Pages：<https://ldxs001.github.io/maby_report/>（书入口页 → 在线阅读） | 单文件 HTML，手机与桌面均可读 |
-| **下载 HTML（网页版）** | [`book/本征.html`](book/本征.html) | 内联 SVG 插图 8 张，可切明／暗主题、调字号 |
-| **下载 PDF（打印版）** | [`book/本征.pdf`](book/本征.pdf) | A4，116 页（封面 1 ＋ 正文 115），有目录点线、书签，内嵌字体 |
+| **下载 SMD（自包含版）** | [`book/本征.smd`](book/本征.smd) | 单文件，正文＋8 张 SVG 全在包内，可用 Markdown Editor 打开、批注 |
+| **下载 PDF（打印版）** | [`book/本征.pdf`](book/本征.pdf) | A4，125 页（封面 1 ＋ 正文 124），188 条书签，内嵌字体 |
 | **书稿源码（单篇）** | [`单篇/`](单篇/) | 15 篇 Markdown（00–14），可独立阅读 |
 | **封面素材** | [`book/cover.png`](book/cover.png) · [`book/cover.svg`](book/cover.svg) · [`book/cover_wechat.png`](book/cover_wechat.png) | A4 印刷封面／矢量源／社媒图 |
 
@@ -36,7 +38,7 @@ See https://creativecommons.org/licenses/by-sa/4.0/ for details.
 | 00 | 体系全貌 | 六个动作怎么串成一条链；两条横切从哪切 |
 | 01 | 为什么会烂 | 三种不报警的腐坏；为什么越完整烂得越快 |
 | 02 | 四条不变量 | 哪四条删不掉；为什么是四条而不是五条 |
-| 03 | 判与落 | 五层怎么判；四个执行点位怎么选 |
+| 03 | 判与落 | 五层怎么判；唯一推动点位与承载方式怎么选 |
 | 04 | 写 | 九问缺一问会怎样；什么算可重建 |
 | 05 | 检 | 判据怎么才会红；红不了的东西算不算规矩 |
 | 06 | 长 | 新领域从零长一套的七步 |
@@ -73,13 +75,15 @@ See https://creativecommons.org/licenses/by-sa/4.0/ for details.
 ```
 本征/
 ├── README.md            # 本文件（书页）
+├── CHANGELOG.md         # 版本记录
 ├── 单篇/                # 15 篇正文（00–14）
 └── book/                # 成书成品
     ├── cover.png        # A4 300dpi 印刷封面
     ├── cover.svg        # 1200×630 矢量封面源
     ├── cover_wechat.png # 900×383 社媒图
     ├── 本征.html        # 在线阅读版
-    └── 本征.pdf         # 打印版
+    ├── 本征.pdf         # 打印版
+    └── 本征.smd         # 自包含版（正文＋8 图）
 ```
 
 本书与《我思故我写》《我写故我播》同属 wUwproject 的方法论系列，三册协议一致，均为 CC BY-SA 4.0。引用时请按各册版权页标注。
